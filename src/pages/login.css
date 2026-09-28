@@ -1,0 +1,221 @@
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, Arial, "Segoe UI", sans-serif;
+}
+
+.login-page {
+  --login-accent: #185582;
+  --login-bg: #eaf4fd;
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  color: #0b0f13;
+  background: #e9eceb;
+}
+
+.login-mobile-shell {
+  width: min(500px, 100vw);
+  min-height: 100dvh;
+  padding: 30px 24px 36px;
+  display: grid;
+  align-content: start;
+  gap: 22px;
+  background: linear-gradient(180deg, #edf7ff 0%, #e5f2fd 100%);
+}
+
+.login-brand-card,
+.login-card {
+  width: 100%;
+  border: 1px solid #e4e8e7;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(24, 85, 130, 0.07);
+}
+
+.login-brand-card {
+  min-height: 116px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-radius: 24px;
+}
+
+.login-brand-mark {
+  width: 66px;
+  height: 66px;
+  flex: 0 0 66px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px dashed #c6d7e4;
+  border-radius: 16px;
+  background: #f8fbfe;
+}
+
+.login-brand-mark img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.login-brand-card > div:last-child {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.login-brand-card strong {
+  color: var(--login-accent);
+  font-size: 25px;
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.login-brand-card span {
+  color: #68716f;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.login-card {
+  padding: 28px 24px 24px;
+  border-radius: 24px;
+}
+
+.login-card-head {
+  margin-bottom: 24px;
+}
+
+.login-card-head h1 {
+  margin: 0 0 6px;
+  color: #090d10;
+  font-size: 24px;
+  line-height: 1.16;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.login-card-head p {
+  margin: 0;
+  color: #66706e;
+  font-size: 14px;
+}
+
+.login-form .ant-form-item {
+  margin-bottom: 18px;
+}
+
+.login-form .ant-form-item-label {
+  padding-bottom: 7px;
+}
+
+.login-form .ant-form-item-label > label {
+  color: #111519;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.login-input.ant-input-affix-wrapper,
+.login-input.ant-input,
+.login-autocomplete .ant-input-affix-wrapper {
+  min-height: 54px !important;
+  padding-inline: 15px !important;
+  border: 1px solid #d8dfdd !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.login-input.ant-input-affix-wrapper:hover,
+.login-input.ant-input-affix-wrapper-focused,
+.login-input.ant-input:hover,
+.login-input.ant-input:focus,
+.login-autocomplete .ant-input-affix-wrapper:hover,
+.login-autocomplete .ant-input-affix-wrapper-focused {
+  border-color: var(--login-accent) !important;
+  box-shadow: 0 0 0 3px rgba(24, 85, 130, 0.08) !important;
+}
+
+.login-input .ant-input-prefix,
+.login-autocomplete .ant-input-prefix,
+.login-input .ant-input-password-icon {
+  color: #73807c;
+  font-size: 17px;
+}
+
+.login-input .ant-input,
+.login-autocomplete .ant-input {
+  color: #111519 !important;
+  font-size: 15px !important;
+  background: transparent !important;
+}
+
+.login-button.ant-btn {
+  height: 58px;
+  margin-top: 4px;
+  border: 0 !important;
+  border-radius: 14px;
+  background: var(--login-accent) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.login-button.ant-btn:hover,
+.login-button.ant-btn:focus,
+.login-button.ant-btn:active {
+  background: #12466c !important;
+}
+
+@media (max-width: 520px) {
+  .login-mobile-shell {
+    width: 100vw;
+    padding: 24px 18px 30px;
+  }
+
+  .login-brand-card,
+  .login-card {
+    border-radius: 22px;
+  }
+}
+
+@media (max-height: 720px) {
+  .login-mobile-shell {
+    padding-top: 18px;
+    gap: 14px;
+  }
+
+  .login-brand-card {
+    min-height: 92px;
+    padding-block: 13px;
+  }
+
+  .login-brand-mark {
+    width: 58px;
+    height: 58px;
+    flex-basis: 58px;
+  }
+
+  .login-card {
+    padding-top: 22px;
+  }
+
+  .login-form .ant-form-item {
+    margin-bottom: 13px;
+  }
+}
