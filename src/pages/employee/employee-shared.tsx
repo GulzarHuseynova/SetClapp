@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Button, Card, Select, Tooltip } from "antd";
 import { BankOutlined, CloseOutlined, LinkOutlined, PlusOutlined } from "@ant-design/icons";
 import { iconBox } from "../../features/employee/employee-card";
+import { BRAND_COLOR } from "../../constants/theme";
 
 const PHONE_TYPES = ["İş", "Şəxsi", "WhatsApp", "Viber", "Telegram", "Ev"];
 const SOCIAL_PLATFORMS = ["Instagram", "LinkedIn", "Facebook", "X", "YouTube", "Telegram", "TikTok", "WhatsApp", "Sayt", "Telefon", "E-poçt", "Ünvan", "Görüş", "Kart hesabı", "Özəl link", "CV / PDF"];
@@ -10,7 +11,7 @@ export function FieldLabel({ children }: { children: ReactNode }) {
   return <div className="employee-field-label">{children}</div>;
 }
 
-export function Section({ title, icon, accent = "#6366f1", children }: {
+export function Section({ title, icon, accent = BRAND_COLOR, children }: {
   title: string;
   icon: ReactNode;
   accent?: string;
@@ -62,7 +63,7 @@ export function CopyBtn({ text }: { text: string }) {
   );
 }
 
-export function InfoRow({ icon, label, value, color = "#6366f1" }: { icon: ReactNode; label: string; value?: string; color?: string }) {
+export function InfoRow({ icon, label, value, color = BRAND_COLOR }: { icon: ReactNode; label: string; value?: string; color?: string }) {
   return (
     <div className="employee-info-row">
       <div style={iconBox(`${color}16`, color, 38)}>{icon}</div>
@@ -79,7 +80,7 @@ export function InfoRow({ icon, label, value, color = "#6366f1" }: { icon: React
 export function CompanyInfoLine({ company }: { company: string }) {
   return (
     <div className="employee-info-row" style={{ marginTop: 12 }}>
-      <BankOutlined style={{ color: "#6366f1", fontSize: 18 }} />
+      <BankOutlined style={{ color: BRAND_COLOR, fontSize: 18 }} />
       <span style={{ color: "#64748b", fontSize: 13 }}>Şirkət:</span>
       <strong style={{ color: "#0f172a", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{company || "-"}</strong>
     </div>

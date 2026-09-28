@@ -42,7 +42,7 @@ export const ROLE_CONFIG: Record<AppRole, RoleConfig> = {
     userTitle: "Əməkdaş",
     userStatus: "● Employee",
     userTag: "Əməkdaş",
-    tagColor: "blue",
+    tagColor: "processing",
     menu: [
       { key: "business-card", label: "Vizitkart", path: "/employee/business-card", icon: <IdcardOutlined /> },
     ],

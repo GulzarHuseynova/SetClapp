@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode } from "react";
-import { message } from "antd";
+import { message } from "../../utils/antd-static";
 import { userActions } from "../../helpers/user.helper";
 import { authSessionStorage } from "../../storage/auth-session.storage";
 import { useAuthSelector } from "../../store/authStore";

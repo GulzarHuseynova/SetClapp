@@ -1,14 +1,14 @@
-import { useState, type ChangeEvent, type Dispatch, type SetStateAction } from 'react';
-import { Avatar, Checkbox, Form, Input, message, Modal, Space, Switch, Upload } from 'antd';
-import type { FormInstance } from 'antd';
+import { useState, type ChangeEvent } from 'react';
+import { Avatar, Checkbox, Form, Input, Modal, Space, Switch, Upload } from 'antd';
+import { message } from '../../../../utils/antd-static';
 import {CalendarOutlined,CreditCardOutlined,DeleteOutlined,DownloadOutlined,EditOutlined,EnvironmentOutlined,FacebookOutlined,FileExcelOutlined,GlobalOutlined,Html5Outlined,ImportOutlined,InstagramOutlined,LinkOutlined,LinkedinOutlined,MailOutlined,PhoneOutlined,PlusOutlined,SendOutlined,TikTokOutlined,UploadOutlined,UserOutlined,WhatsAppOutlined,XOutlined,YoutubeOutlined,} from '@ant-design/icons';
-import type { AddUserFormValues, UserData } from '../../../../types/company-admin.type';
+import type { AddUserFormValues } from '../../../../types/company-admin.type';
 import type { EditableProfileValues } from '../../../../types/layout.type';
 import CompanyAdminProfileView from '../../../../components/company-admin-profile-view';
-import type { ExportLoadingType, ImportResultState } from '../../../../types/business-card.type';
 import { PhoneCountryInput } from '../../../../components/phone-country-input';
 import { getEmployeeFullName, userIdentity } from '../../../../features/company-admin/business-card';
 import { AppButton } from '../../../../components/ui/app-button';
+import type { AddEmployeeModalProps, BirthDateInputProps, EditEmployeeModalProps, HtmlExportModalProps, ImportEmployeesModalProps } from '../../../../types/business-card.type';
 
 const EMPLOYEE_LINK_PRESETS = [
   { name: 'Telefon', category: 'contact', icon: <PhoneOutlined />, helper: 'Telefon nömrəsini daxil edin.' },
@@ -77,12 +77,6 @@ const normalizeLinkValueForPlatform = (platformName: string, value?: string) => 
   if (key.includes('youtube') && text.startsWith('@')) return `https://youtube.com/${text}`;
   if (key.includes('ünvan') && !/^https?:\/\//i.test(text)) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(text)}`;
   return text;
-};
-
-type BirthDateInputProps = {
-  id?: string;
-  value?: string;
-  onChange?: (value: string) => void;
 };
 
 const birthDateForDisplay = (value?: string) => {
@@ -370,16 +364,6 @@ function EmployeeCardFields() {
   );
 }
 
-interface AddEmployeeModalProps {
-  form: FormInstance<AddUserFormValues>;
-  isOpen: boolean;
-  submitLoading: boolean;
-  photoPreview: string;
-  onClose: () => void;
-  onSubmit: (values: AddUserFormValues) => void | Promise<void>;
-  onPhotoSelect: (file: File) => Promise<boolean>;
-}
-
 export function AddEmployeeModal({
   form,
   isOpen,
@@ -393,7 +377,7 @@ export function AddEmployeeModal({
     <Modal
       title={
         <div>
-          <UserOutlined className="!mr-2 !text-[#4b9ada]" />
+          <UserOutlined className="mr-2! text-[#4b9ada]!" />
           Yeni işçi əlavə et
         </div>
       }
@@ -419,10 +403,10 @@ export function AddEmployeeModal({
             }}
           >
             {photoPreview ? (
-              <Avatar src={photoPreview} size={96} className="!border !border-slate-200" />
+              <Avatar src={photoPreview} size={96} className="border! border-slate-200!" />
             ) : (
               <div>
-                <UploadOutlined className="!text-xl !text-slate-400" />
+                <UploadOutlined className="text-xl! text-slate-400!" />
                 <div className="mt-2 text-xs">Foto yüklə</div>
               </div>
             )}
@@ -494,21 +478,6 @@ export function AddEmployeeModal({
       </Form>
     </Modal>
   );
-}
-
-interface EditEmployeeModalProps {
-  form: FormInstance<Partial<AddUserFormValues>>;
-  isOpen: boolean;
-  companyUsers: UserData[];
-  selectedEditUser?: UserData;
-  selectedEditUserId: string;
-  editPhotoPreview: string;
-  editSubmitLoading: boolean;
-  onClose: () => void;
-  onSubmit: (values: Partial<AddUserFormValues>) => void | Promise<void>;
-  onPhotoSelect: (file: File) => Promise<boolean>;
-  onOpenUser: (user: UserData) => void;
-  companyName?: string;
 }
 
 export function EditEmployeeModal({
@@ -643,16 +612,6 @@ export function EditEmployeeModal({
   );
 }
 
-interface HtmlExportModalProps {
-  isOpen: boolean;
-  exportableUsers: UserData[];
-  selectedHtmlExportIds: string[];
-  exportLoading: ExportLoadingType;
-  setSelectedHtmlExportIds: Dispatch<SetStateAction<string[]>>;
-  onClose: () => void;
-  onExportSelectedHtml: () => void | Promise<void>;
-}
-
 export function HtmlExportModal({
   isOpen,
   exportableUsers,
@@ -666,7 +625,7 @@ export function HtmlExportModal({
     <Modal
       title={
         <div>
-          <Html5Outlined className="!mr-2 !text-[#5aa8e8]" />
+          <Html5Outlined className="mr-2! text-[#5aa8e8]!" />
           Offline HTML ixracı
         </div>
       }
@@ -677,12 +636,12 @@ export function HtmlExportModal({
       centered
       width={640}
     >
-      <Space className="!mb-3" wrap>
+      <Space className="mb-3!" wrap>
         <AppButton onClick={() => setSelectedHtmlExportIds(exportableUsers.map(userIdentity))}>Hamısını seç</AppButton>
         <AppButton onClick={() => setSelectedHtmlExportIds([])}>Seçimi təmizlə</AppButton>
       </Space>
 
-      <div className="mb-4 max-h-[260px] overflow-auto rounded-xl border border-slate-200 p-3">
+      <div className="mb-4 max-h-260px overflow-auto rounded-xl border border-slate-200 p-3">
         <Checkbox.Group
           className="grid gap-2"
           value={selectedHtmlExportIds}
@@ -715,22 +674,6 @@ export function HtmlExportModal({
   );
 }
 
-interface ImportEmployeesModalProps {
-  isOpen: boolean;
-  importFile: File | null;
-  importResult: ImportResultState | null;
-  importLoading: boolean;
-  templateLoading: boolean;
-  isLimitReached: boolean;
-  currentEmployeesCount: number;
-  employeeLimit: number;
-  setImportFile: Dispatch<SetStateAction<File | null>>;
-  setImportResult: Dispatch<SetStateAction<ImportResultState | null>>;
-  onClose: () => void;
-  onDownloadTemplate: () => void | Promise<void>;
-  onImportSubmit: () => void | Promise<void>;
-}
-
 export function ImportEmployeesModal({
   isOpen,
   importFile,
@@ -750,7 +693,7 @@ export function ImportEmployeesModal({
     <Modal
       title={
         <div>
-          <ImportOutlined className="!mr-2 !text-[#4b9ada]" />
+          <ImportOutlined className="mr-2! text-[#4b9ada]!" />
           Kütləvi işçi idxalı (CSV/Excel)
         </div>
       }
@@ -764,7 +707,7 @@ export function ImportEmployeesModal({
       <div className="mb-4 rounded-[10px] border border-slate-200 bg-slate-50 p-4">
         <strong>1. Boş şablonu yükləyin</strong>
         <br />
-        <AppButton icon={<FileExcelOutlined className="!text-[#5aa8e8]" />} onClick={onDownloadTemplate} loading={templateLoading} className="!mt-2.5">
+        <AppButton icon={<FileExcelOutlined className="text-[#5aa8e8]!" />} onClick={onDownloadTemplate} loading={templateLoading} className="mt-2.5!">
           Şablonu yüklə
         </AppButton>
       </div>
@@ -786,7 +729,7 @@ export function ImportEmployeesModal({
           }}
           fileList={importFile ? [{ uid: '-1', name: importFile.name, status: 'done' as const }] : []}
         >
-          <AppButton icon={<UploadOutlined />} className="!mt-2.5 !w-full">
+          <AppButton icon={<UploadOutlined />} className="mt-2.5! w-full!">
             CSV/Excel faylını seç
           </AppButton>
         </Upload>

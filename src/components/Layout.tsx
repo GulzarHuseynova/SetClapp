@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Avatar, Divider, Form, Input, message, Modal, Popover, Space, Tag, Tooltip } from "antd";
+import { Avatar, Divider, Form, Input, Modal, Popover, Space, Tag, Tooltip } from "antd";
+import { message } from "../utils/antd-static";
 import {ClockCircleOutlined,LockOutlined,LogoutOutlined,MenuFoldOutlined,MenuUnfoldOutlined,SafetyCertificateOutlined,SettingOutlined,UserOutlined,} from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router";
 import type { AppLayoutProps } from "../types/layout.type";
@@ -24,7 +25,6 @@ export default function AppLayout({
   onSaveProfile,
   onUploadProfilePhoto,
   onUploadCardBackground,
-  onUploadSocialIcon,
   companyLogo,
   companyInfoPath = "/company-admin/settings",
   companyUsage,
@@ -103,7 +103,7 @@ export default function AppLayout({
     : 'border-[rgba(255,255,255,0.08)]';
 
   const sidebarLogoClass = isLightTheme
-    ? 'bg-gradient-to-br from-[#dff1ff] to-[#8cc7ef] text-[#234d68] shadow-[0_8px_20px_rgba(35,78,104,0.12)]'
+    ? 'bg-[#185582] text-white shadow-[0_8px_20px_rgba(24,85,130,0.22)]'
     : 'bg-gradient-to-br from-[#818cf8] to-[#a78bfa] text-white shadow-[0_2px_12px_rgba(99,102,241,0.4)]';
 
   const mainOffsetClass = isMobileLayout
@@ -193,7 +193,7 @@ export default function AppLayout({
           className={cn(
             'shrink-0!',
             role === ROLES.COMPANY_ADMIN || isLightTheme
-              ? 'bg-[linear-gradient(135deg,#dff1ff,#5aa8e8)]!'
+              ? 'bg-[#185582]!'
               : 'bg-[linear-gradient(135deg,#6366f1,#8b5cf6)]!',
           )}
         >
@@ -217,7 +217,7 @@ export default function AppLayout({
         </div>
         <div className="flex items-center gap-2.5 text-slate-600">
           <ClockCircleOutlined
-            className={role === ROLES.COMPANY_ADMIN || isLightTheme ? 'text-[#4b9ada]!' : 'text-indigo-500!'}
+            className={role === ROLES.COMPANY_ADMIN || isLightTheme ? 'text-[#185582]!' : 'text-indigo-500!'}
           />
           <span className="text-[13px]">Profil ayarlarını buradan idarə edin</span>
         </div>
@@ -462,7 +462,6 @@ export default function AppLayout({
                   onSave={onSaveProfile}
                   onUploadPhoto={onUploadProfilePhoto}
                   onUploadCardBackground={onUploadCardBackground}
-                  onUploadSocialIcon={onUploadSocialIcon}
                   companyLogo={companyLogo}
                 />
               ) : children}
@@ -555,7 +554,7 @@ export default function AppLayout({
                     'flex w-full cursor-pointer items-center gap-3 rounded-[10px] border-0 border-l-[3px] text-sm transition-colors duration-150',
                     collapsed ? 'justify-center px-0 py-2.75' : 'justify-start py-2.75 pl-3.5 pr-3',
                     isActive && isLightTheme &&
-                      'border-l-[#4b9ada] bg-white/90 font-semibold text-[#234d68] shadow-[0_8px_22px_rgba(35,78,104,0.07)]',
+                      'border-l-[#185582] bg-white/90 font-semibold text-[#185582] shadow-[0_8px_22px_rgba(24,85,130,0.08)]',
                     isActive && !isLightTheme &&
                       'border-l-[#818cf8] bg-linear-to-r from-indigo-400/25 to-violet-400/10 font-semibold text-[#c7d2fe]',
                     !isActive && isLightTheme &&
@@ -584,7 +583,7 @@ export default function AppLayout({
               src={avatarSrc || undefined}
               className={cn(
                 'shrink-0!',
-                'bg-[linear-gradient(135deg,#dff1ff,#5aa8e8)]!',
+                'bg-[#185582]!',
               )}
             >
               {!avatarSrc && initials}
@@ -604,7 +603,7 @@ export default function AppLayout({
                   className={cn(
                     'mt-0.5 inline-block rounded-full px-2 py-px text-[10px] font-bold uppercase tracking-[0.5px]',
                     isLightTheme
-                      ? 'bg-[rgba(90,168,232,0.16)] text-[#35627f]'
+                      ? 'bg-[#e7f0f8] text-[#185582]'
                       : 'bg-[rgba(52,211,153,0.18)] text-[#34d399]',
                   )}
                 >
@@ -672,7 +671,7 @@ export default function AppLayout({
                   size={28}
                   src={avatarSrc || undefined}
                   className={cn(
-                    'bg-[linear-gradient(135deg,#dff1ff,#5aa8e8)]!',
+                    'bg-[#185582]!',
                   )}
                 >
                   {!avatarSrc && initials}

@@ -34,3 +34,15 @@ export interface ExportedEmployeePhotoRow {
   photo: string;
 }
 
+export type ExportAssetRow = {
+  employee: HtmlExportEmployee;
+  photo: string;
+  background: string;
+};
+
+export interface ResolvedHtmlEmployeeAssets {
+  photo: string;
+  background: string;
+}
+
+export type ExportImportLoadingAction = 'all-excel' | 'selected-excel' | 'template' | 'import' | 'all-html' | 'selected-html' | null;

@@ -44,3 +44,13 @@ export interface ApiErrorResponse {
 export interface LoginProps {
   onLoginSuccess: () => void;
 }
+
+export interface PasswordChangeState {
+  role: Role | '';
+  backendFirstLoginFlag?: boolean;
+  employeePasswordChangeCompleted: boolean;
+  employeePasswordChangeRequired: boolean;
+  employeeStoredFirstLogin?: boolean;
+}
+
+export type LoginPayload = LoginFormValues | Record<string, unknown>;

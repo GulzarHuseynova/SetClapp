@@ -4,11 +4,18 @@ import type { AuthAction, AuthState } from '../types/auth-store.type';
 
 export type { AuthAction, AuthState, UserRole } from '../types/auth-store.type';
 
-let state: AuthState = getInitialAuthState();
+// İlkin vəziyyət modul import olunanda yox, ilk istifadədə oxunur: main.tsx əvvəlcə
+// IndexedDB-dəki davamlı məlumatları (rol daxil) bərpa edir, sonra tətbiqi render edir.
+let state: AuthState | null = null;
 const listeners = new Set<() => void>();
 
+const getState = (): AuthState => {
+  state ??= getInitialAuthState();
+  return state;
+};
+
 export const authStore = {
-  getState: () => state,
+  getState,
 
   subscribe: (listener: () => void) => {
     listeners.add(listener);
@@ -16,7 +23,7 @@ export const authStore = {
   },
 
   dispatch: (action: AuthAction) => {
-    state = authReducer(state, action);
+    state = authReducer(getState(), action);
     listeners.forEach((listener) => listener());
   },
 };

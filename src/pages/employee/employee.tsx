@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Button, Form, Input, message, Modal } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import { Navigate, Route, Routes } from "react-router";
 import AppLayout from "../../components/Layout";
 import { authOperations } from "../../helpers/auth.helper";
@@ -15,7 +15,11 @@ import EmployeeBusinessCard from "./employee-pages/business-card";
 import EmployeeContacts from "./employee-pages/contacts";
 import EmployeeIdentifiers from "./employee-pages/identifiers";
 import EmployeeProfile from "./employee-pages/profile";
+import { BRAND_THEME } from "../../constants/theme";
+import { AntdAppProvider } from "../../components/antd-app-provider";
+import { message } from "../../utils/antd-static";
 import "./employee.css";
+import { confirmLogout } from "../../components/confirm-logout";
 
 const normalizeObjectKey = (value: string) => value.toLowerCase().replace(/[\s_.-]/g, "");
 
@@ -175,17 +179,10 @@ function EmployeeShell({ onLogout }: EmployeeProps) {
   };
 
   const handleLogout = () => {
-    Modal.confirm({
-      title: "Çıxış etmək istəyirsiniz?",
-      content: "Sistemdən çıxış edəcəksiniz.",
-      okText: "Bəli",
-      cancelText: "Xeyr",
-      okButtonProps: { danger: true },
-      onOk: () => {
-        authSessionStorage.clear();
-        if (onLogout) onLogout();
-        else window.location.href = "/login";
-      },
+    confirmLogout(() => {
+      authSessionStorage.clear();
+      if (onLogout) onLogout();
+      else window.location.href = "/login";
     });
   };
 
@@ -273,8 +270,10 @@ function EmployeeShell({ onLogout }: EmployeeProps) {
 
 export default function Employee({ onLogout }: EmployeeProps) {
   return (
-    <EmployeeProvider>
-      <EmployeeShell onLogout={onLogout} />
-    </EmployeeProvider>
+    <AntdAppProvider theme={BRAND_THEME}>
+      <EmployeeProvider>
+        <EmployeeShell onLogout={onLogout} />
+      </EmployeeProvider>
+    </AntdAppProvider>
   );
 }

@@ -4,8 +4,9 @@ import type { ReactNode } from "react";
 import { useEmployee } from "../../hooks/use-employee";
 import {AddBtn,CompanyInfoLine,CopyBtn,DynRow,EmptyLine,FieldLabel,InfoRow,PhoneTypeSelect,Section,SocialSelect,} from "./employee-shared";
 import { iconBox, inputStyle, shortText, uuid } from "../../features/employee/employee-card";
+import { BRAND_COLOR, BRAND_TINT } from "../../constants/theme";
 
-const SOCIAL_COLOR = "#185582";
+const SOCIAL_COLOR = BRAND_COLOR;
 
 const SOCIAL_META: Record<string, { icon: ReactNode; color: string }> = {
   Instagram: { icon: <InstagramOutlined />, color: SOCIAL_COLOR },
@@ -100,7 +101,7 @@ export function EmployeeHero() {
           <div>
             <div className="employee-profile-top">
               <div className="employee-avatar-wrap">
-                <Avatar src={d.photo || undefined} size={90} style={{ background: "linear-gradient(135deg,#38bdf8,#6366f1)", fontSize: 32, fontWeight: 900, border: "4px solid #e0f2fe" }}>
+                <Avatar src={d.photo || undefined} size={90} style={{ background: BRAND_COLOR, fontSize: 32, fontWeight: 900, border: `4px solid ${BRAND_TINT}` }}>
                   {!d.photo && (d.firstName?.[0] || "E")}
                 </Avatar>
                 {editing && (
@@ -110,7 +111,7 @@ export function EmployeeHero() {
                 )}
                 <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handlePhoto} />
               </div>
-              <Tag color="blue" style={{ borderRadius: 999, fontWeight: 800, margin: 0 }}>Employee Card</Tag>
+              <Tag color="processing" style={{ borderRadius: 999, fontWeight: 800, margin: 0 }}>Employee Card</Tag>
             </div>
 
             {editing && (
@@ -149,14 +150,14 @@ export function EmployeeHero() {
           </div>
 
           <div className="employee-mini-grid">
-            <InfoRow icon={<IdcardOutlined />} label="Daxili" value={d.internalNumber || "-"} color="#0891b2" />
+            <InfoRow icon={<IdcardOutlined />} label="Daxili" value={d.internalNumber || "-"} color={BRAND_COLOR} />
             <InfoRow icon={<QrcodeOutlined />} label="QR UID" value={shortText(d.qrUid)} color="#7c3aed" />
           </div>
         </div>
 
         <div className="employee-hero-info">
           <div>
-            <Tag color="cyan" style={{ borderRadius: 999, marginBottom: 12 }}>Yalnız öz vizitkart məlumatların</Tag>
+            <Tag color="processing" style={{ borderRadius: 999, marginBottom: 12 }}>Yalnız öz vizitkart məlumatların</Tag>
             <h1>Vizitkart paneli</h1>
             <p>Şəxsi kart məlumatlarını rahat kart görünüşündə yoxla və icazən varsa redaktə et.</p>
             {!canEditCard && (
@@ -183,7 +184,7 @@ export function PersonalInfoSection() {
   const { editing, draft, currentCard: d, fullName, setField } = useEmployee();
 
   return (
-    <Section title="Şəxsi məlumat" icon={<UserOutlined />} accent="#6366f1">
+    <Section title="Şəxsi məlumat" icon={<UserOutlined />} accent={BRAND_COLOR}>
       {editing ? (
         <>
           <div className="employee-edit-grid-3">
@@ -208,10 +209,10 @@ export function PersonalInfoSection() {
         </>
       ) : (
         <div className="employee-info-grid">
-          <InfoRow icon={<UserOutlined />} label="Ad Soyad" value={fullName} color="#6366f1" />
-          <InfoRow icon={<BankOutlined />} label="Şirkət" value={d.company} color="#0ea5e9" />
+          <InfoRow icon={<UserOutlined />} label="Ad Soyad" value={fullName} color={BRAND_COLOR} />
+          <InfoRow icon={<BankOutlined />} label="Şirkət" value={d.company} color={BRAND_COLOR} />
           <InfoRow icon={<IdcardOutlined />} label="Vəzifə" value={d.position} color="#8b5cf6" />
-          <InfoRow icon={<QrcodeOutlined />} label="Daxili nömrə" value={d.internalNumber} color="#0891b2" />
+          <InfoRow icon={<QrcodeOutlined />} label="Daxili nömrə" value={d.internalNumber} color={BRAND_COLOR} />
         </div>
       )}
     </Section>

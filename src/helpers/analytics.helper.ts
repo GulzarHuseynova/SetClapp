@@ -1,4 +1,5 @@
-import { analyticsService, type AnalyticsQueryParams, type ScanLogParams } from '../services/analytics.service';
+import { analyticsService } from '../services/analytics.service';
+import type { AnalyticsQueryParams, ScanLogParams } from '../types/company-admin.type';
 import { asNumber, findDeep, normalizeArray, unwrapData } from '../utils/api.utils';
 import { getLocalAnalytics } from '../storage/local-auth/employee-local-auth';
 import { getSavedCompanyId, getSavedCompanyVoen } from '../storage/company.storage';
@@ -149,13 +150,15 @@ const buildLocalRanking = (rows: unknown[]) => {
     }));
 };
 
+// Lokal fallback (storage oxunması və parse) yalnız API istifadə oluna bilməyəndə hesablanır;
+// əks halda hər filtr klikində sorğudan əvvəl əsas thread boş yerə yüklənirdi.
 const requestOrFallback = async <T>(
   request: () => Promise<{ data: unknown }>,
-  fallback: T,
+  getFallback: () => T,
   mapper: (data: unknown) => T,
   companyId?: string,
 ) => {
-  if (!companyId) return fallback;
+  if (!companyId) return getFallback();
 
   try {
     const response = await request();
@@ -163,65 +166,66 @@ const requestOrFallback = async <T>(
     // replace them with unfiltered local data; that made the period filters look broken.
     return mapper(response.data);
   } catch {
-    return fallback;
+    return getFallback();
   }
 };
 
+const hasAnalyticsFilter = (params?: AnalyticsQueryParams) =>
+  Boolean(params?.startDate || params?.endDate || params?.employeeId);
+
 export const analyticsActions = {
   getScansCount: async (params?: AnalyticsQueryParams) => {
-    const local = getMergedLocalAnalytics();
-    const filteredLocalRows = filterLocalLogs(local.scanLogs, params);
-    const hasFilter = Boolean(params?.startDate || params?.endDate || params?.employeeId);
-    const fallbackCount = hasFilter ? filteredLocalRows.length : local.totalScans;
     const requestParams = getAnalyticsParams(params);
+    const getFallback = () => {
+      const local = getMergedLocalAnalytics();
+      return hasAnalyticsFilter(params) ? filterLocalLogs(local.scanLogs, params).length : local.totalScans;
+    };
 
     return requestOrFallback(
       () => analyticsService.getScansCount(requestParams),
-      fallbackCount,
+      getFallback,
       readCount,
       requestParams.companyId,
     );
   },
 
   getScansChart: async (params?: AnalyticsQueryParams) => {
-    const local = getMergedLocalAnalytics();
-    const filteredLocalRows = filterLocalLogs(local.scanLogs, params);
-    const hasFilter = Boolean(params?.startDate || params?.endDate || params?.employeeId);
-    const fallback = hasFilter ? buildLocalChart(filteredLocalRows) : local.chart;
     const requestParams = getAnalyticsParams(params);
+    const getFallback = () => {
+      const local = getMergedLocalAnalytics();
+      return hasAnalyticsFilter(params) ? buildLocalChart(filterLocalLogs(local.scanLogs, params)) : local.chart;
+    };
 
     return requestOrFallback(
       () => analyticsService.getScansChart(requestParams),
-      fallback,
+      getFallback,
       (data) => normalizeArray(data),
       requestParams.companyId,
     );
   },
 
   getEmployeesRanking: async (params?: AnalyticsQueryParams) => {
-    const local = getMergedLocalAnalytics();
-    const filteredLocalRows = filterLocalLogs(local.scanLogs, params);
-    const hasFilter = Boolean(params?.startDate || params?.endDate || params?.employeeId);
-    const fallback = hasFilter ? buildLocalRanking(filteredLocalRows) : local.ranking;
     const requestParams = getAnalyticsParams(params);
+    const getFallback = () => {
+      const local = getMergedLocalAnalytics();
+      return hasAnalyticsFilter(params) ? buildLocalRanking(filterLocalLogs(local.scanLogs, params)) : local.ranking;
+    };
 
     return requestOrFallback(
       () => analyticsService.getEmployeesRanking(requestParams),
-      fallback,
+      getFallback,
       (data) => normalizeArray(data),
       requestParams.companyId,
     );
   },
 
   getScansLogs: async (params?: ScanLogParams) => {
-    const local = getMergedLocalAnalytics();
-    const filteredLocalRows = filterLocalLogs(local.scanLogs, params);
-    const fallback = paginateLocalRows(filteredLocalRows, params);
     const requestParams = getAnalyticsParams(params);
+    const getFallback = () => paginateLocalRows(filterLocalLogs(getMergedLocalAnalytics().scanLogs, params), params);
 
     return requestOrFallback(
       () => analyticsService.getScansLogs(requestParams),
-      fallback,
+      getFallback,
       (data) => normalizeArray(data),
       requestParams.companyId,
     );

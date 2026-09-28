@@ -61,7 +61,6 @@ export interface AppLayoutProps {
   onSaveProfile?: (values: EditableProfileValues) => Promise<void>;
   onUploadProfilePhoto?: (file: File) => Promise<void>;
   onUploadCardBackground?: (file: File) => Promise<string>;
-  onUploadSocialIcon?: (file: File) => Promise<string>;
   companyLogo?: string;
   companyInfoPath?: string;
   companyUsage?: { current: number; limit: number };

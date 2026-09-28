@@ -2,3 +2,30 @@
 @import "./styles/company-admin.css";
 
 @config "../tailwind.config.js";
+
+/* Çıxış modalındakı "Xeyr" düyməsi. Selektor company-admin.css-dəki ümumi modal
+   düymə qaydasından (0,7,1) güclü olmalıdır ki, hər üç paneldə eyni görünsün. */
+.ant-modal-root .ant-modal-wrap .ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled) {
+  border-color: #185582 !important;
+  background: #185582 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 6px 14px rgba(24, 85, 130, 0.18) !important;
+}
+
+.ant-modal-root .ant-modal-wrap .ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled):hover,
+.ant-modal-root .ant-modal-wrap .ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled):focus-visible {
+  border-color: #12466c !important;
+  background: #12466c !important;
+  color: #ffffff !important;
+}
+
+/* antd <App> yalnız message/modal kontekstini vermək üçündür: öz div-i layout-a və
+   tipoqrafiyaya (Poppins şrifti, rəng, sətir hündürlüyü) təsir etməməlidir. */
+.antd-app-root.ant-app {
+  display: contents;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+}

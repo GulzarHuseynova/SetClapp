@@ -7,12 +7,7 @@ import {
   ReloadOutlined,
   TrophyOutlined,
 } from '@ant-design/icons';
-import type { SuperAdminController } from '../../hooks/use-super-admin-controller';
-import type { CompanyScanRankingRow } from '../../types/super.type';
-
-type SuperStatisticsProps = {
-  controller: SuperAdminController;
-};
+import type { CompanyScanRankingRow, SuperAdminControllerProps } from '../../types/super.type';
 
 const statIcons = [
   <ApartmentOutlined key="companies" />,
@@ -21,7 +16,7 @@ const statIcons = [
   <QrcodeOutlined key="scans" />,
 ];
 
-export default function SuperStatistics({ controller }: SuperStatisticsProps) {
+export default function SuperStatistics({ controller }: SuperAdminControllerProps) {
   const {
     companyScanRanking,
     dashboardStats,
@@ -34,7 +29,7 @@ export default function SuperStatistics({ controller }: SuperStatisticsProps) {
     <div className="super-statistics-page">
       <section className="super-statistics-hero">
         <div>
-          <Tag color="blue" className="super-statistics-tag">Super Admin</Tag>
+          <Tag color="processing" className="super-statistics-tag">Super Admin</Tag>
           <h1>Statistika</h1>
           <p>Şirkətlərin aktivlik vəziyyətini və skan sayına görə populyarlıq reytinqini izləyin.</p>
         </div>
@@ -69,7 +64,7 @@ export default function SuperStatistics({ controller }: SuperStatisticsProps) {
             </Space>
             <p>Skan sayına görə azalan sıra ilə göstərilir.</p>
           </div>
-          <Tag color="blue">{companyScanRanking.length} şirkət</Tag>
+          <Tag color="processing">{companyScanRanking.length} şirkət</Tag>
         </div>
 
         <Table<CompanyScanRankingRow>

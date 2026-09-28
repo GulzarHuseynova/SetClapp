@@ -4,10 +4,7 @@ import { normalizeAssetUrl } from '../../utils/asset-url.utils';
 import { findStringDeep, isRecord } from '../../utils/api.utils';
 import { stripSocialLinksFromAdditionalInfo } from '../profile/profile-info';
 import type { AddUserPayload, UpdateUserPayload } from '../../types/company.type';
-
-export type EmployeeSocialPayload = Pick<Partial<AddUserPayload & UpdateUserPayload>, 'linkedin' | 'facebook' | 'instagram'>;
-
-type CustomSocialAccount = { platformName?: string; profileUrl?: string; iconUrl?: string };
+import type { CustomSocialAccount, EmployeeSocialPayload } from '../../types/company.type';
 
 const primarySocialKeys = ['linkedin', 'facebook', 'instagram'];
 
@@ -29,7 +26,6 @@ const normalizeCustomSocialAccounts = (value: unknown): CustomSocialAccount[] | 
       return !primarySocialKeys.some((key) => marker.includes(key));
     });
 };
-
 
 export const backendPhotoUrlValue = (value: unknown) => {
   const text = String(value ?? '').trim();

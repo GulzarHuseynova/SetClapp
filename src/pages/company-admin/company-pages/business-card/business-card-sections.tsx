@@ -1,25 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
-import { Avatar, Modal, QRCode, Segmented, Space, Switch, Tooltip, message } from 'antd';
+import { Avatar, Segmented, Space, Switch, Tooltip } from 'antd';
+import { message } from '../../../../utils/antd-static';
 import { ArrowLeftOutlined, ContactsOutlined, DownloadOutlined, EyeOutlined, GlobalOutlined, QrcodeOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import type { UserData } from '../../../../types/company-admin.type';
-import type { NormalizedCompanyInfo } from '../../../../types/company.type';
 import { stripSocialLinksFromAdditionalInfo } from '../../../../features/profile/profile-info';
 import { getEmployeePhotoFromRecord } from '../../../../features/public-card/public-card-shared';
-import type {BusinessCardTableRow,EmployeeStatusTab,} from '../../../../types/business-card.type';
 import { AppButton } from '../../../../components/ui/app-button';
-import { CommonBusinessCardView, type BusinessCardViewModel } from '../../../../components/common-business-card-view';
+import { CommonBusinessCardView } from '../../../../components/common-business-card-view';
+import type { BusinessCardViewModel } from '../../../../types/business-card-view.type';
+import { cleanText } from '../../../../components/business-card-links';
+import { CardQrModal } from '../../../../components/card-qr-modal';
 import {downloadQrByFormat,downloadVCard,getQrPayload,normalizeUserToPublicProfile,} from '../../../../features/public-card/public-card';
 import { userActions } from '../../../../helpers/user.helper';
-
-interface BusinessCardToolbarProps {
-  activeUsersCount: number;
-  archivedUsersCount: number;
-  currentEmployeesCount: number;
-  employeeLimit: number;
-  isLimitReached: boolean;
-  onOpenAdd: () => void;
-}
+import type { BusinessCardToolbarProps, EmployeesTableProps } from '../../../../types/business-card.type';
 
 export function BusinessCardToolbar({
   activeUsersCount,
@@ -50,32 +44,6 @@ export function BusinessCardToolbar({
   );
 }
 
-interface EmployeesTableProps {
-  employeeStatusTab: EmployeeStatusTab;
-  activeUsersCount: number;
-  archivedUsersCount: number;
-  tableRows: BusinessCardTableRow[];
-  hasMore: boolean;
-  onLoadMore: () => void;
-  company: NormalizedCompanyInfo;
-  companyLogo?: string;
-  companyCardBackground?: string;
-  protectedAdminKeys: string[];
-  vcfLoadingId: string | null;
-  onStatusTabChange: (value: string | number) => void;
-  onOpenEditUser: (user: UserData) => void;
-  onToggleUserStatus: (id: string, currentStatus: boolean) => void | Promise<void>;
-  onToggleUserCanEdit: (id: string, currentCanEdit: boolean) => void | Promise<void>;
-  onDownloadVcf: (user: UserData) => void | Promise<void>;
-  onViewPublicCard: (user: UserData) => void;
-  onOpenResetPassword: (user: UserData) => void;
-}
-
-const cleanText = (value?: string) => {
-  const text = String(value || '').trim();
-  return text && text.toLowerCase() !== 'string' ? text : '';
-};
-
 const employeeName = (user: UserData) => {
   const fullName = [cleanText(user.firstName), cleanText(user.lastName)].filter(Boolean).join(' ');
   return fullName || cleanText(user.email) || 'İşçi';
@@ -86,6 +54,8 @@ const employeeInitials = (user: UserData) => {
   const last = cleanText(user.lastName).charAt(0);
   return `${first}${last}`.toUpperCase() || 'İ';
 };
+
+const normalizeIdentity = (value: unknown) => String(value || '').trim().toLowerCase();
 
 export function EmployeesTable({
   employeeStatusTab,
@@ -161,7 +131,6 @@ export function EmployeesTable({
   const isEmployeeDetailLoading = Boolean(selectedRouteId) && employeeDetailState.key !== selectedRouteId;
   const selectedStatus = selectedEmployee?.isActive !== false;
   const selectedCanEdit = selectedEmployee?.canEdit !== false;
-  const normalizeIdentity = (value: unknown) => String(value || '').trim().toLowerCase();
   const isProtectedAdmin = (user?: UserData | null) => {
     if (!user) return false;
     const keys = [user.id, user.email].map(normalizeIdentity).filter(Boolean);
@@ -178,14 +147,6 @@ export function EmployeesTable({
     selectedEmployee?.additionalInfo,
     [selectedEmployee?.linkedin, selectedEmployee?.facebook, selectedEmployee?.instagram],
   );
-
-  const openEditFromPreview = () => {
-    if (selectedEmployee) onOpenEditUser(selectedEmployee);
-  };
-
-  const openPasswordFromPreview = () => {
-    if (selectedEmployee) onOpenResetPassword(selectedEmployee);
-  };
 
   const handleStatusChange = async () => {
     if (!selectedEmployee) return;
@@ -250,10 +211,10 @@ export function EmployeesTable({
           company,
         ),
         actions: {
-          onEdit: openEditFromPreview,
+          onEdit: () => onOpenEditUser(selectedEmployee),
           onAddContact: () => onDownloadVcf(selectedEmployee),
           addContactLoading: vcfLoadingId === selectedEmployee.id,
-          onChangeCode: openPasswordFromPreview,
+          onChangeCode: () => onOpenResetPassword(selectedEmployee),
           onQrCode: () => setQrEmployee(selectedEmployee),
         },
         settings: {
@@ -262,7 +223,7 @@ export function EmployeesTable({
           onCanEditChange: handleCanEditChange,
           showStatus: !isProtectedAdmin(selectedEmployee),
           isActive: selectedStatus,
-          onStatusChange: () => handleStatusChange(),
+          onStatusChange: handleStatusChange,
         },
       }
     : null;
@@ -377,47 +338,28 @@ export function EmployeesTable({
         </section>
       )}
 
-
-      <Modal
-        open={Boolean(qrEmployee)}
-        onCancel={() => setQrEmployee(null)}
-        footer={null}
-        destroyOnHidden
-        centered
-        width={390}
-        className="employee-qr-modal"
-        title={null}
+      <CardQrModal
+        open={Boolean(qrEmployee && qrProfile)}
+        onClose={() => setQrEmployee(null)}
+        icon={<QrcodeOutlined />}
+        title={qrEmployee ? `${employeeName(qrEmployee)} QR kodu` : ''}
+        subtitle="Kontakta əlavə et və QR faylını yüklə"
+        qrValue={qrProfile ? getQrPayload(qrProfile) : ''}
       >
-        {qrEmployee && qrProfile && (
-          <div className="employee-qr-modal-content">
-            <div className="employee-qr-heading">
-              <QrcodeOutlined />
-              <div>
-                <strong>{employeeName(qrEmployee)} QR kodu</strong>
-                <span>Kontakta əlavə et və QR faylını yüklə</span>
-              </div>
-            </div>
+        <div className="employee-qr-download-grid">
+          <AppButton icon={<DownloadOutlined />} loading={qrBusy === 'png'} onClick={() => void runQrAction('png')}>PNG yüklə</AppButton>
+          <AppButton icon={<DownloadOutlined />} loading={qrBusy === 'svg'} onClick={() => void runQrAction('svg')}>SVG yüklə</AppButton>
+        </div>
 
-            <div className="employee-qr-code-wrap">
-              <QRCode value={getQrPayload(qrProfile)} size={230} bordered={false} errorLevel="M" />
-            </div>
-
-            <div className="employee-qr-download-grid">
-              <AppButton icon={<DownloadOutlined />} loading={qrBusy === 'png'} onClick={() => void runQrAction('png')}>PNG yüklə</AppButton>
-              <AppButton icon={<DownloadOutlined />} loading={qrBusy === 'svg'} onClick={() => void runQrAction('svg')}>SVG yüklə</AppButton>
-            </div>
-
-            <div className="employee-qr-contact-grid">
-              <AppButton className="force-navy-action" icon={<ContactsOutlined />} loading={qrBusy === 'offline-vcf'} onClick={() => void runQrAction('offline-vcf')}>
-                İnternetsiz kontakta əlavə et
-              </AppButton>
-              <AppButton className="force-navy-action" icon={<GlobalOutlined />} loading={qrBusy === 'online-vcf'} onClick={() => void runQrAction('online-vcf')}>
-                İnternetlə kontakta əlavə et
-              </AppButton>
-            </div>
-          </div>
-        )}
-      </Modal>
+        <div className="employee-qr-contact-grid">
+          <AppButton className="force-navy-action" icon={<ContactsOutlined />} loading={qrBusy === 'offline-vcf'} onClick={() => void runQrAction('offline-vcf')}>
+            İnternetsiz kontakta əlavə et
+          </AppButton>
+          <AppButton className="force-navy-action" icon={<GlobalOutlined />} loading={qrBusy === 'online-vcf'} onClick={() => void runQrAction('online-vcf')}>
+            İnternetlə kontakta əlavə et
+          </AppButton>
+        </div>
+      </CardQrModal>
     </>
   );
 }

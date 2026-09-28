@@ -1,3 +1,5 @@
+import type { SuperAdminController } from '../hooks/use-super-admin-controller';
+
 export interface ApiCompany {
   id: string;
   name: string;
@@ -132,3 +134,39 @@ export interface CompanyAdminFormValues {
   phone?: string;
   password: string;
 }
+
+export type CreatedAdminInfo = {
+  company: ApiCompany;
+  companyName: string;
+  voen: string;
+  email: string;
+  password: string;
+  address: string;
+  contact: string;
+  companyEmail: string;
+  phone: string;
+  limit: number;
+  logoName: string;
+};
+
+export type CompanyLogoProps = {
+  company: ApiCompany;
+  size?: number;
+};
+
+export type SuperAdminControllerProps = {
+  controller: SuperAdminController;
+};
+
+export interface AuditChange {
+  key: string;
+  label: string;
+  before: string;
+  after: string;
+}
+
+export type AuditActionKind = 'create' | 'update' | 'delete' | 'login' | 'logout' | 'scan' | 'other';
+
+export type CompanyWritePayload = CreateCompanyPayload | Record<string, unknown>;
+
+export type CompanyAdminWritePayload = CreateCompanyAdminPayload | Record<string, unknown>;

@@ -406,28 +406,28 @@ body{min-height:100svh;overflow-x:hidden;overscroll-behavior:none;}
 .ca-compact-root .employee-public-view-button.ant-btn:hover,.ca-compact-root .employee-public-view-button.ant-btn:focus{color:#2f7fb4 !important;}
 .super-admin-layout-theme{background:#eef7ff !important;}
 .super-statistics-page{display:flex;flex-direction:column;gap:22px;}
-.super-statistics-hero{min-height:180px;padding:30px 32px;display:flex;align-items:center;justify-content:space-between;gap:22px;border:1px solid #d5e8f4;border-radius:26px;background:radial-gradient(circle at 88% 10%,rgba(90,168,232,0.18),transparent 28%),linear-gradient(135deg,#eff8ff 0%,#ffffff 56%,#e5f4ff 100%);box-shadow:0 18px 42px rgba(71,120,153,0.11);}
+.super-statistics-hero{min-height:180px;padding:30px 32px;display:flex;align-items:center;justify-content:space-between;gap:22px;border:1px solid #d5e8f4;border-radius:26px;background:radial-gradient(circle at 88% 10%,rgba(24,85,130,0.10),transparent 28%),linear-gradient(135deg,#eff8ff 0%,#ffffff 56%,#e5f4ff 100%);box-shadow:0 18px 42px rgba(71,120,153,0.11);}
 .super-statistics-tag{margin-bottom:10px !important;border-radius:999px !important;}
 .super-statistics-hero h1{margin:0;color:#263445;font-size:clamp(28px,4vw,38px);line-height:1.1;font-weight:950;}
 .super-statistics-hero p{max-width:700px;margin:10px 0 0;color:#607f94;font-size:15px;line-height:1.55;}
-.super-statistics-refresh.ant-btn{height:44px;padding-inline:18px;border-radius:13px;border-color:#b8daf0;background:#ffffff;color:#356b89;font-weight:800;box-shadow:0 8px 22px rgba(71,120,153,0.10);}
+.super-statistics-refresh.ant-btn{height:44px;padding-inline:18px;border-radius:13px;border-color:#c9dbe8;background:#ffffff;color:#185582;font-weight:800;box-shadow:0 8px 22px rgba(71,120,153,0.10);}
 .super-statistics-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
 .super-stat-card.ant-card{border:1px solid #dcebf5;border-radius:20px;box-shadow:0 12px 30px rgba(71,120,153,0.08);}
 .super-stat-card .ant-card-body{min-height:122px;padding:20px;display:flex;align-items:center;gap:15px;}
-.super-stat-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:15px;background:#edf8ff;color:#4b9ada;font-size:22px;}
+.super-stat-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:15px;background:#e7f0f8;color:#185582;font-size:22px;}
 .super-stat-card span{display:block;color:#7890a2;font-size:13px;font-weight:700;}
 .super-stat-card strong{display:block;margin-top:4px;color:#263445;font-size:28px;line-height:1;font-weight:950;}
 .super-ranking-card.ant-card{overflow:hidden;border:1px solid #dcebf5;border-radius:22px;box-shadow:0 14px 34px rgba(71,120,153,0.08);}
 .super-ranking-header{padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #e7f1f8;}
 .super-ranking-header h2{margin:0;color:#263445;font-size:22px;font-weight:900;}
 .super-ranking-header p{margin:5px 0 0;color:#7890a2;font-size:13px;}
-.super-ranking-title-icon{color:#4b9ada;font-size:20px;}
-.super-rank-number{width:32px;height:32px;display:inline-grid;place-items:center;border-radius:10px;background:#edf8ff;color:#397da9;font-weight:900;}
-.super-ranking-logo{background:#dff1ff !important;color:#356b89 !important;}
+.super-ranking-title-icon{color:#185582;font-size:20px;}
+.super-rank-number{width:32px;height:32px;display:inline-grid;place-items:center;border-radius:10px;background:#e7f0f8;color:#185582;font-weight:900;}
+.super-ranking-logo{background:#e7f0f8 !important;color:#185582 !important;}
 .super-ranking-company strong,.super-ranking-company span{display:block;}
 .super-ranking-company strong{color:#263445;font-weight:900;}
 .super-ranking-company span{margin-top:3px;color:#8ba0af;font-size:12px;}
-.super-scan-count{display:inline-flex;min-width:54px;justify-content:center;padding:5px 12px;border-radius:999px;background:#e6f4ff;color:#1677c8;font-weight:900;}
+.super-scan-count{display:inline-flex;min-width:54px;justify-content:center;padding:5px 12px;border-radius:999px;background:#e7f0f8;color:#185582;font-weight:900;}
 @media (max-width:980px){.super-statistics-cards{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 @media (max-width:620px){.super-statistics-page{gap:14px;}
@@ -437,8 +437,8 @@ body{min-height:100svh;overflow-x:hidden;overscroll-behavior:none;}
 .super-ranking-header{align-items:flex-start;padding:18px;}
 }
 .ca-route-switching .ca-compact-sidebar,.ca-route-switching .ca-compact-screen,.ca-route-switching .ca-menu-backdrop{transition:none !important;}
-.super-company-action-icon.ant-btn{width:38px;min-width:38px;height:38px;padding:0;display:inline-grid;place-items:center;border:0 !important;border-radius:11px;color:#386d8b;background:#eef8ff;box-shadow:none !important;font-size:17px;}
-.super-company-action-icon.ant-btn:hover,.super-company-action-icon.ant-btn:focus-visible{color:#17679a !important;background:#dff1ff !important;}
+.super-company-action-icon.ant-btn{width:38px;min-width:38px;height:38px;padding:0;display:inline-grid;place-items:center;border:0 !important;border-radius:11px;color:#185582;background:#e7f0f8;box-shadow:none !important;font-size:17px;}
+.super-company-action-icon.ant-btn:hover,.super-company-action-icon.ant-btn:focus-visible{color:#12466c !important;background:#d5e4f0 !important;}
 .super-company-view-modal .ant-modal-content{border-radius:18px;overflow:hidden;}
 .super-company-view-modal .ant-modal-title{color:#1e293b;font-size:19px;font-weight:900;}
 .super-company-view-form{display:grid;gap:18px;}
@@ -451,7 +451,7 @@ body{min-height:100svh;overflow-x:hidden;overscroll-behavior:none;}
 .super-company-view-grid .super-company-view-wide{grid-column:1 / -1;}
 .super-company-view-grid .ant-input,.super-company-view-grid .ant-input-number{min-height:42px;border-radius:10px;background:#f8fafc;border-color:#dfe7ee;color:#334155;box-shadow:none;}
 .super-company-view-grid .ant-input-number-input{height:40px;}
-.super-company-view-note{padding:12px 14px;border:1px solid #cfe5f4;border-radius:13px;background:#eff8ff;color:#456b82;font-size:12.5px;line-height:1.55;}
+.super-company-view-note{padding:12px 14px;border:1px solid #c9dbe8;border-radius:13px;background:#e7f0f8;color:#185582;font-size:12.5px;line-height:1.55;}
 @media (max-width:680px){.super-company-view-grid{grid-template-columns:1fr;}
 .super-company-view-grid .super-company-view-wide{grid-column:auto;}
 .super-company-view-status{align-items:flex-start;flex-direction:column;}

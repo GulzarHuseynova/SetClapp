@@ -1,19 +1,5 @@
 import type { ApiCompany, CompanyCreateFormValues, CompanyEditFormValues } from '../../types/super.type';
 
-export type CreatedAdminInfo = {
-  company: ApiCompany;
-  companyName: string;
-  voen: string;
-  email: string;
-  password: string;
-  address: string;
-  contact: string;
-  companyEmail: string;
-  phone: string;
-  limit: number;
-  logoName: string;
-};
-
 export const getCompanyInitials = (name: string) => {
   return (
     name

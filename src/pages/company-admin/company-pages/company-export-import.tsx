@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Select, Upload, message } from 'antd';
+import { Select, Upload } from 'antd';
+import { message } from '../../../utils/antd-static';
 import {
   DownloadOutlined,
   FileExcelOutlined,
@@ -18,10 +19,9 @@ import {
   parseEmployeesCsv,
   validateImportedEmployee,
 } from '../../../features/company-admin/business-card';
+import type { ExportImportLoadingAction } from '../../../types/export-import.type';
 
 const { Dragger } = Upload;
-
-type LoadingAction = 'all-excel' | 'selected-excel' | 'template' | 'import' | 'all-html' | 'selected-html' | null;
 
 export default function CompanyExportImport() {
   const {
@@ -35,7 +35,7 @@ export default function CompanyExportImport() {
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [selectedHtmlIds, setSelectedHtmlIds] = useState<string[]>([]);
-  const [loading, setLoading] = useState<LoadingAction>(null);
+  const [loading, setLoading] = useState<ExportImportLoadingAction>(null);
 
   const companyUsers = useMemo(
     () => usersList.filter((user) => !isSuperAdminRow(user)),

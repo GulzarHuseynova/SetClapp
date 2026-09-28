@@ -1,58 +1,17 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode } from "react";
-import { Avatar, Form, Input, message, Modal, QRCode } from "antd";
-import {CalendarOutlined,CameraOutlined,ContactsOutlined,CreditCardOutlined,DeleteOutlined,EnvironmentOutlined,FacebookOutlined,GlobalOutlined,InstagramOutlined,LinkOutlined,LinkedinOutlined,MailOutlined,MessageOutlined,PhoneOutlined,PlusOutlined,SendOutlined,TikTokOutlined,UploadOutlined,WhatsAppOutlined,XOutlined,YoutubeOutlined,} from "@ant-design/icons";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { Avatar, Form, Input, Modal, QRCode } from "antd";
+import { message } from "../utils/antd-static";
+import {CalendarOutlined,CameraOutlined,CreditCardOutlined,DeleteOutlined,EnvironmentOutlined,FacebookOutlined,GlobalOutlined,InstagramOutlined,LinkOutlined,LinkedinOutlined,MailOutlined,PhoneOutlined,PlusOutlined,SendOutlined,TikTokOutlined,UploadOutlined,WhatsAppOutlined,XOutlined,YoutubeOutlined,} from "@ant-design/icons";
 import type { EditableProfileValues, ProfileSocialAccount } from "../types/layout.type";
+import type { PublicCardProfile } from "../types/public-card.type";
+import { downloadVCard, getQrPayload } from "../features/public-card/public-card";
 import { AppButton } from './ui/app-button';
-import { CommonBusinessCardView, type BusinessCardViewModel } from './common-business-card-view';
+import { CommonBusinessCardView } from './common-business-card-view';
+import { cleanText, platformIcon, platformMarker } from './business-card-links';
+import type { AdminCardProfileInput, BusinessCardViewModel, CompanyAdminProfileViewProps, LinkPreset } from '../types/business-card-view.type';
 
-interface CompanyAdminProfileViewProps {
-  displayName: string;
-  companyName?: string;
-  companyLogo?: string;
-  avatarSrc?: string;
-  initials: string;
-  profileDetails?: { label: string; value?: string }[];
-  initialValues?: EditableProfileValues;
-  onSave?: (values: EditableProfileValues) => Promise<void>;
-  onUploadPhoto?: (file: File) => Promise<void>;
-  onUploadCardBackground?: (file: File) => Promise<string>;
-  onUploadSocialIcon?: (file: File) => Promise<string>;
-  initialEditing?: boolean;
-  onCancelEdit?: () => void;
-  successMessage?: string;
-}
-
-const clean = (value?: string) => String(value || "").trim();
-
-const escapeVCardValue = (value?: string) =>
-  clean(value)
-    .replace(/\\/g, "\\\\")
-    .replace(/\r?\n/g, "\\n")
-    .replace(/,/g, "\\,")
-    .replace(/;/g, "\\;");
-
-const platformMarker = (platform?: string, profileUrl?: string) => `${clean(platform)} ${clean(profileUrl)}`.toLowerCase();
-
-const socialIcon = (platform?: string, profileUrl?: string) => {
-  const value = platformMarker(platform, profileUrl);
-  if (value.includes("linkedin")) return <LinkedinOutlined />;
-  if (value.includes("facebook")) return <FacebookOutlined />;
-  if (value.includes("instagram")) return <InstagramOutlined />;
-  if (value.includes("tiktok")) return <TikTokOutlined />;
-  if (value.includes("twitter") || value.includes("x.com") || clean(platform).toLowerCase() === "x") return <XOutlined />;
-  if (value.includes("phone") || value.includes("telefon") || value.includes("tel:")) return <PhoneOutlined />;
-  if (value.includes("email") || value.includes("mail") || value.includes("e-poçt")) return <MailOutlined />;
-  if (value.includes("whatsapp") || value.includes("wa.me")) return <WhatsAppOutlined />;
-  if (value.includes("telegram") || value.includes("t.me")) return <SendOutlined />;
-  if (value.includes("message") || value.includes("sms") || value.includes("mesaj")) return <MessageOutlined />;
-  if (value.includes("youtube")) return <YoutubeOutlined />;
-  if (value.includes("contact") || value.includes("kontakt")) return <ContactsOutlined />;
-  if (value.includes("kart hesab") || value.includes("iban")) return <CreditCardOutlined />;
-  if (value.includes("görüş") || value.includes("meeting") || value.includes("calend")) return <CalendarOutlined />;
-  if (value.includes("map") || value.includes("ünvan") || value.includes("address")) return <EnvironmentOutlined />;
-  if (value.includes("site") || value.includes("web") || value.includes("http")) return <GlobalOutlined />;
-  return <LinkOutlined />;
-};
+const errorText = (error: unknown, fallback: string) =>
+  (error instanceof Error && error.message) || fallback;
 
 const normalizePlatformKey = (platform?: string, profileUrl?: string) => {
   const value = platformMarker(platform, profileUrl).replace(/[\s._-]+/g, "");
@@ -63,7 +22,7 @@ const normalizePlatformKey = (platform?: string, profileUrl?: string) => {
   if (value.includes("youtube")) return "youtube";
   if (value.includes("tiktok")) return "tiktok";
   if (value.includes("telegram") || value.includes("t.me")) return "telegram";
-  if (value.includes("twitter") || value.includes("x.com") || clean(platform).toLowerCase() === "x") return "x";
+  if (value.includes("twitter") || value.includes("x.com") || cleanText(platform).toLowerCase() === "x") return "x";
   if (value.includes("telefon") || value.includes("phone") || value.includes("tel:")) return "telefon";
   if (value.includes("email") || value.includes("mail") || value.includes("epoçt")) return "e-poçt";
   if (value.includes("ünvan") || value.includes("address") || value.includes("maps")) return "ünvan";
@@ -71,26 +30,17 @@ const normalizePlatformKey = (platform?: string, profileUrl?: string) => {
   if (value.includes("karthesabı") || value.includes("iban")) return "kart hesabı";
   if (value.includes("sayt") || value.includes("website") || value.includes("web")) return "sayt";
   if (value.includes("özəllink") || value.includes("custom")) return "özəl link";
-  return clean(platform).toLowerCase();
+  return cleanText(platform).toLowerCase();
 };
 
 const normalizeUrlKey = (url?: string) =>
-  clean(url)
+  cleanText(url)
     .toLowerCase()
     .replace(/^https?:\/\//, "")
     .replace(/^www\./, "")
     .replace(/\/+$/, "");
 
 const STANDARD_SOCIAL_KEYS = new Set(["linkedin", "facebook", "instagram"]);
-
-type LinkPreset = {
-  name: string;
-  label: string;
-  category: "contact" | "social" | "business";
-  icon: ReactNode;
-  placeholder: string;
-  helper: string;
-};
 
 const LINK_ICON_PRESETS: LinkPreset[] = [
   { name: "Telefon", label: "Telefon", category: "contact", icon: <PhoneOutlined />, placeholder: "+994 50 000 00 00", helper: "Telefon nömrəsini daxil edin." },
@@ -110,15 +60,24 @@ const LINK_ICON_PRESETS: LinkPreset[] = [
   { name: "Özəl link", label: "Özəl link", category: "business", icon: <LinkOutlined />, placeholder: "https://...", helper: "İstənilən əlavə linki daxil edin." },
 ];
 
+const CUSTOM_LINK_PRESET = LINK_ICON_PRESETS[LINK_ICON_PRESETS.length - 1];
+
+const LINK_PRESET_GROUPS = [
+  { key: "contact", label: "ƏLAQƏ" },
+  { key: "social", label: "SOSİAL ŞƏBƏKƏ" },
+  { key: "business", label: "İŞ VƏ ÖDƏNİŞ" },
+] as const;
+
+const findPreset = (name: string) => LINK_ICON_PRESETS.find((item) => item.name === name) || CUSTOM_LINK_PRESET;
+
 const presetForAccount = (item?: ProfileSocialAccount) => {
   const key = normalizePlatformKey(item?.platformName, item?.profileUrl);
-  return LINK_ICON_PRESETS.find((preset) => normalizePlatformKey(preset.name) === key) ||
-    LINK_ICON_PRESETS.find((preset) => preset.name === "Özəl link")!;
+  return LINK_ICON_PRESETS.find((preset) => normalizePlatformKey(preset.name) === key) || CUSTOM_LINK_PRESET;
 };
 
 const canonicalizeAccount = (item: ProfileSocialAccount): ProfileSocialAccount => {
   const preset = presetForAccount(item);
-  const currentName = clean(item.platformName);
+  const currentName = cleanText(item.platformName);
   const currentKey = normalizePlatformKey(currentName, item.profileUrl);
   const presetKey = normalizePlatformKey(preset.name);
   const isGenericName = !currentName || currentKey === "özəl link";
@@ -126,14 +85,14 @@ const canonicalizeAccount = (item: ProfileSocialAccount): ProfileSocialAccount =
   return {
     ...item,
     platformName: isGenericName && presetKey !== "özəl link" ? preset.name : (currentName || preset.name),
-    profileUrl: clean(item.profileUrl),
-    iconUrl: clean(item.iconUrl),
+    profileUrl: cleanText(item.profileUrl),
+    iconUrl: cleanText(item.iconUrl),
   };
 };
 
 const displayPlatformName = (item: ProfileSocialAccount) => {
   const preset = presetForAccount(item);
-  const currentName = clean(item.platformName);
+  const currentName = cleanText(item.platformName);
   const currentKey = normalizePlatformKey(currentName, item.profileUrl);
   return (!currentName || currentKey === "özəl link") && normalizePlatformKey(preset.name) !== "özəl link"
     ? preset.label
@@ -141,7 +100,7 @@ const displayPlatformName = (item: ProfileSocialAccount) => {
 };
 
 const normalizePresetValue = (presetName: string, rawValue: string) => {
-  const text = clean(rawValue);
+  const text = cleanText(rawValue);
   if (!text) return "";
   const key = normalizePlatformKey(presetName);
   if (key === "telefon") return /^tel:/i.test(text) ? text : `tel:${text}`;
@@ -167,7 +126,7 @@ const editorAccountsFromValues = (values?: EditableProfileValues): ProfileSocial
     { platformName: "WhatsApp", profileUrl: values?.whatsappPhone },
     { platformName: "Ünvan", profileUrl: values?.googleMapsUrl },
     ...(values?.socialAccounts || []).map((item) => ({ ...item })),
-  ].filter((item) => clean(item.profileUrl)).map(canonicalizeAccount));
+  ].filter((item) => cleanText(item.profileUrl)).map(canonicalizeAccount));
 
 const dedupeSocialAccounts = (items: ProfileSocialAccount[]) => {
   const seenPlatforms = new Set<string>();
@@ -191,6 +150,78 @@ const customOnlySocialAccounts = (items: ProfileSocialAccount[]) =>
   dedupeSocialAccounts(items).filter(
     (item) => !STANDARD_SOCIAL_KEYS.has(normalizePlatformKey(item.platformName, item.profileUrl)),
   );
+
+const handleImageInput = async (
+  event: ChangeEvent<HTMLInputElement>,
+  setBusy: (busy: boolean) => void,
+  upload: (file: File) => Promise<unknown>,
+  texts: { success: string; error: string },
+) => {
+  const file = event.target.files?.[0];
+  event.target.value = "";
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    message.error("Yalnız şəkil faylı seçin.");
+    return;
+  }
+
+  try {
+    setBusy(true);
+    await upload(file);
+    message.success(texts.success);
+  } catch (error) {
+    message.error(errorText(error, texts.error));
+  } finally {
+    setBusy(false);
+  }
+};
+
+const buildAdminCardProfile = ({ values, companyName, companyLogo, avatarSrc, email, voen }: AdminCardProfileInput): PublicCardProfile => {
+  const additionalInfo = cleanText(values?.additionalInfo);
+
+  return {
+    id: 'company-admin',
+    employeeId: '',
+    companyId: '',
+    companyVoen: voen,
+    companyName: cleanText(companyName),
+    companyLogo: cleanText(companyLogo),
+    firstName: cleanText(values?.firstName),
+    lastName: cleanText(values?.lastName),
+    middleName: cleanText(values?.middleName),
+    jobTitle: cleanText(values?.jobTitle) || 'Şirkət admini',
+    email,
+    photo: cleanText(avatarSrc),
+    cardBackground: cleanText(values?.cardBackgroundUrl),
+    dateOfBirth: cleanText(values?.dateOfBirth),
+    address: cleanText(companyName),
+    googleMapsUrl: cleanText(values?.googleMapsUrl),
+    phones: [
+      { type: 'İş', number: cleanText(values?.phone1) },
+      { type: 'Şəxsi', number: cleanText(values?.phone2) },
+      { type: 'WhatsApp', number: cleanText(values?.whatsappPhone) },
+    ].filter((item) => item.number),
+    socials: [
+      { platform: 'LinkedIn', url: cleanText(values?.linkedinUrl) },
+      { platform: 'Facebook', url: cleanText(values?.facebookUrl) },
+      { platform: 'Instagram', url: cleanText(values?.instagramUrl) },
+      ...customOnlySocialAccounts(values?.socialAccounts || []).map((item) => ({
+        platform: cleanText(item.platformName) || 'Link',
+        url: cleanText(item.profileUrl),
+        iconUrl: cleanText(item.iconUrl) || undefined,
+      })),
+    ].filter((item) => item.url),
+    extras: additionalInfo ? [{ label: 'Haqqında', value: additionalInfo }] : [],
+    nfcUrl: '',
+    qrUid: '',
+    cardUrl: '',
+    isActive: true,
+    status: 'active',
+    scans: 0,
+    updatedAt: '',
+  };
+};
 
 export default function CompanyAdminProfileView({
   displayName,
@@ -244,40 +275,25 @@ export default function CompanyAdminProfileView({
   }, [editing, form, initialValues]);
 
   const details = useMemo(() => {
-    const map = new Map(profileDetails.map((item) => [item.label.toLowerCase(), clean(item.value)]));
+    const map = new Map(profileDetails.map((item) => [item.label.toLowerCase(), cleanText(item.value)]));
     return {
       email: map.get("e-poçt") || map.get("email") || "",
-      role: map.get("rol") || "CompanyAdmin",
       voen: map.get("vöen") || map.get("voen") || "",
     };
   }, [profileDetails]);
 
-  const customLinks = useMemo(
-    () => customOnlySocialAccounts(initialValues?.socialAccounts || []),
-    [initialValues?.socialAccounts],
-  );
-
   const fullName = [initialValues?.firstName, initialValues?.lastName].filter(Boolean).join(" ").trim() || displayName;
-  const phone = clean(initialValues?.phone1);
-  const whatsapp = clean(initialValues?.whatsappPhone);
-  const info = clean(initialValues?.additionalInfo);
-  const backgroundUrl = clean(initialValues?.cardBackgroundUrl);
-  const shareQrPayload = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
-    `N:${escapeVCardValue(initialValues?.lastName)};${escapeVCardValue(initialValues?.firstName)};;;`,
-    `FN:${escapeVCardValue(fullName)}`,
-    companyName ? `ORG:${escapeVCardValue(companyName)}` : "",
-    initialValues?.jobTitle ? `TITLE:${escapeVCardValue(initialValues.jobTitle)}` : "",
-    phone ? `TEL;TYPE=WORK:${phone}` : "",
-    clean(initialValues?.phone2) ? `TEL;TYPE=CELL:${clean(initialValues?.phone2)}` : "",
-    whatsapp ? `TEL;TYPE=CELL;TYPE=VOICE:${whatsapp}` : "",
-    details.email ? `EMAIL;TYPE=WORK:${details.email}` : "",
-    clean(initialValues?.googleMapsUrl) ? `URL:${escapeVCardValue(initialValues?.googleMapsUrl)}` : "",
-    "END:VCARD",
-  ].filter(Boolean).join("\r\n");
-
-  const startEdit = () => setEditing(true);
+  const cardProfile = buildAdminCardProfile({
+    values: initialValues,
+    companyName,
+    companyLogo,
+    avatarSrc,
+    email: details.email,
+    voen: details.voen,
+  });
+  // Kartda şirkət adı ünvan kimi göstərilir, amma vCard-a ev ünvanı kimi yazılmamalıdır.
+  const contactProfile: PublicCardProfile = { ...cardProfile, address: "" };
+  const shareQrPayload = getQrPayload(contactProfile);
 
   const prepareProfileValues = (
     values: EditableProfileValues,
@@ -295,7 +311,7 @@ export default function CompanyAdminProfileView({
     const whatsappItem = take("whatsapp");
     const addressItem = take("ünvan");
 
-    const whatsappValue = clean(whatsappItem?.profileUrl)
+    const whatsappValue = cleanText(whatsappItem?.profileUrl)
       .replace(/^https?:\/\/wa\.me\//i, "")
       .replace(/^tel:/i, "");
 
@@ -306,11 +322,11 @@ export default function CompanyAdminProfileView({
 
     return {
       ...values,
-      linkedinUrl: clean(linkedin?.profileUrl),
-      facebookUrl: clean(facebook?.profileUrl),
-      instagramUrl: clean(instagram?.profileUrl),
+      linkedinUrl: cleanText(linkedin?.profileUrl),
+      facebookUrl: cleanText(facebook?.profileUrl),
+      instagramUrl: cleanText(instagram?.profileUrl),
       whatsappPhone: whatsappValue || values.whatsappPhone,
-      googleMapsUrl: clean(addressItem?.profileUrl) || values.googleMapsUrl,
+      googleMapsUrl: cleanText(addressItem?.profileUrl) || values.googleMapsUrl,
       socialAccounts: customAccounts,
     };
   };
@@ -329,56 +345,29 @@ export default function CompanyAdminProfileView({
       setLinkModalStep(null);
       message.success(successMessage || "Məlumatlar yeniləndi.");
     } catch (error) {
-      const detail = error instanceof Error ? error.message : "";
-      message.error(detail || "CompanyAdmin məlumatları yenilənmədi.");
+      message.error(errorText(error, "CompanyAdmin məlumatları yenilənmədi."));
     } finally {
       setSaving(false);
     }
   };
 
-  const uploadPhoto = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file || !onUploadPhoto) return;
-
-    if (!file.type.startsWith("image/")) {
-      message.error("Yalnız şəkil faylı seçin.");
-      return;
-    }
-
-    try {
-      setPhotoUploading(true);
-      await onUploadPhoto(file);
-      message.success("Profil şəkli yeniləndi.");
-    } catch (error) {
-      const detail = error instanceof Error ? error.message : "";
-      message.error(detail || "Profil şəkli yüklənmədi.");
-    } finally {
-      setPhotoUploading(false);
-    }
+  const uploadPhoto = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!onUploadPhoto) return;
+    void handleImageInput(event, setPhotoUploading, onUploadPhoto, {
+      success: "Profil şəkli yeniləndi.",
+      error: "Profil şəkli yüklənmədi.",
+    });
   };
 
-  const uploadBackground = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file || !onUploadCardBackground) return;
-
-    if (!file.type.startsWith("image/")) {
-      message.error("Yalnız şəkil faylı seçin.");
-      return;
-    }
-
-    try {
-      setBackgroundUploading(true);
+  const uploadBackground = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!onUploadCardBackground) return;
+    void handleImageInput(event, setBackgroundUploading, async (file) => {
       const url = await onUploadCardBackground(file);
       if (editing) form.setFieldValue("cardBackgroundUrl", url);
-      message.success("Kart fonu yeniləndi.");
-    } catch (error) {
-      const detail = error instanceof Error ? error.message : "";
-      message.error(detail || "Kart fonu yüklənmədi.");
-    } finally {
-      setBackgroundUploading(false);
-    }
+    }, {
+      success: "Kart fonu yeniləndi.",
+      error: "Kart fonu yüklənmədi.",
+    });
   };
 
   const openLinkPicker = () => {
@@ -394,8 +383,8 @@ export default function CompanyAdminProfileView({
     const preset = presetForAccount(account);
     setEditingLinkIndex(index);
     setSelectedPresetName(preset.name);
-    setLinkDraftValue(clean(account.profileUrl));
-    setLinkDraftLabel(clean(account.platformName) || preset.label);
+    setLinkDraftValue(cleanText(account.profileUrl));
+    setLinkDraftLabel(cleanText(account.platformName) || preset.label);
     setLinkModalStep("details");
   };
 
@@ -407,7 +396,7 @@ export default function CompanyAdminProfileView({
   };
 
   const saveLinkDraft = async () => {
-    const preset = LINK_ICON_PRESETS.find((item) => item.name === selectedPresetName) || LINK_ICON_PRESETS[LINK_ICON_PRESETS.length - 1];
+    const preset = findPreset(selectedPresetName);
     const normalizedValue = normalizePresetValue(preset.name, linkDraftValue);
     if (!normalizedValue) {
       message.warning("Link və ya əlaqə məlumatını daxil edin.");
@@ -416,7 +405,7 @@ export default function CompanyAdminProfileView({
 
     const next = [...(form.getFieldValue("socialAccounts") || [])];
     const nextItem: ProfileSocialAccount = {
-      platformName: preset.name === "Özəl link" ? (clean(linkDraftLabel) || "Özəl link") : preset.name,
+      platformName: preset.name === "Özəl link" ? (cleanText(linkDraftLabel) || "Özəl link") : preset.name,
       profileUrl: normalizedValue,
       iconUrl: "",
     };
@@ -433,8 +422,7 @@ export default function CompanyAdminProfileView({
         await onSave(prepareProfileValues({ ...currentValues, socialAccounts: next }, next));
         message.success(editingLinkIndex === null ? "Link əlavə edildi." : "Link yeniləndi.");
       } catch (error) {
-        const detail = error instanceof Error ? error.message : "";
-        message.error(detail || "Link yadda saxlanılmadı.");
+        message.error(errorText(error, "Link yadda saxlanılmadı."));
         return;
       } finally {
         setSaving(false);
@@ -453,40 +441,30 @@ export default function CompanyAdminProfileView({
     form.setFieldValue("socialAccounts", next);
   };
 
-  const linkPresetGroups = [
-    { key: "contact", label: "ƏLAQƏ" },
-    { key: "social", label: "SOSİAL ŞƏBƏKƏ" },
-    { key: "business", label: "İŞ VƏ ÖDƏNİŞ" },
-  ] as const;
-
   const addedPlatformLabels = Array.from(new Set(
     editorAccounts.map((item) => presetForAccount(item).label).filter(Boolean),
   ));
 
-  const downloadContact = () => {
-    const rows = [
-      "BEGIN:VCARD",
-      "VERSION:3.0",
-      `FN:${fullName}`,
-      `N:${clean(initialValues?.lastName)};${clean(initialValues?.firstName)};;;`,
-      companyName ? `ORG:${companyName}` : "",
-      initialValues?.jobTitle ? `TITLE:${initialValues.jobTitle}` : "",
-      phone ? `TEL;TYPE=CELL:${phone}` : "",
-      details.email ? `EMAIL:${details.email}` : "",
-      "END:VCARD",
-    ].filter(Boolean);
-
-    const blob = new Blob([rows.join("\r\n")], { type: "text/vcard;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `${fullName || "company-admin"}.vcf`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-  };
+  const shareModal = (
+    <Modal
+      title="CompanyAdmin QR kodu"
+      open={shareOpen}
+      onCancel={() => setShareOpen(false)}
+      footer={null}
+      centered
+      width={360}
+      className="ca-admin-share-modal"
+    >
+      <div className="ca-admin-share-qr">
+        <QRCode value={shareQrPayload} size={230} bordered={false} errorLevel="M" />
+        <strong>{fullName}</strong>
+        <span>QR kodu skan etdikdə kontakt məlumatları açılacaq.</span>
+      </div>
+    </Modal>
+  );
 
   if (editing) {
-    const selectedPreset = LINK_ICON_PRESETS.find((item) => item.name === selectedPresetName) || LINK_ICON_PRESETS[LINK_ICON_PRESETS.length - 1];
+    const selectedPreset = findPreset(selectedPresetName);
 
     if (linkModalStep !== null) {
       return (
@@ -504,7 +482,7 @@ export default function CompanyAdminProfileView({
                   <div className="flex flex-wrap gap-2">{addedPlatformLabels.map((label) => <b className="rounded-full bg-[#e7f0f8] px-3 py-1 text-[12px] font-medium text-[#185582]" key={label}>{label}</b>)}</div>
                 </div>
               )}
-              {linkPresetGroups.map((group) => {
+              {LINK_PRESET_GROUPS.map((group) => {
                 const rows = LINK_ICON_PRESETS.filter((preset) => preset.category === group.key);
                 if (rows.length === 0) return null;
                 return (
@@ -614,10 +592,10 @@ export default function CompanyAdminProfileView({
                 return (
                   <div key={`${item.platformName || "link"}-${item.profileUrl || index}-${index}`} className="ca-vcard-link-row">
                     <button type="button" className="ca-vcard-link-main" onClick={() => openLinkEditor(index)}>
-                      <span className="ca-vcard-link-icon">{socialIcon(item.platformName, item.profileUrl)}</span>
+                      <span className="ca-vcard-link-icon">{platformIcon(item.platformName, item.profileUrl)}</span>
                       <span className="ca-vcard-link-copy">
                         <strong>{displayPlatformName(item)}</strong>
-                        <small>{clean(item.profileUrl) || "Məlumat əlavə edin"}</small>
+                        <small>{cleanText(item.profileUrl) || "Məlumat əlavə edin"}</small>
                       </span>
                     </button>
                     <button type="button" className="ca-vcard-link-delete" onClick={() => removeEditorLink(index)} aria-label="Linki sil"><DeleteOutlined /></button>
@@ -640,85 +618,16 @@ export default function CompanyAdminProfileView({
           </div>
         </Form>
 
-        <Modal
-          title="CompanyAdmin QR kodu"
-          open={shareOpen}
-          onCancel={() => setShareOpen(false)}
-          footer={null}
-          centered
-          width={360}
-          className="ca-admin-share-modal"
-        >
-          <div className="ca-admin-share-qr">
-            <QRCode value={shareQrPayload} size={230} bordered={false} errorLevel="M" />
-            <strong>{fullName}</strong>
-            <span>QR kodu skan etdikdə kontakt məlumatları açılacaq.</span>
-          </div>
-        </Modal>
-
-
+        {shareModal}
       </div>
     );
   }
 
-  const primaryContactHref = phone
-    ? `tel:${phone}`
-    : details.email
-      ? `mailto:${details.email}`
-      : undefined;
-
   const businessCard: BusinessCardViewModel = {
-    profile: {
-      id: 'company-admin',
-      employeeId: '',
-      companyId: '',
-      companyVoen: details.voen,
-      companyName: clean(companyName),
-      companyLogo: clean(companyLogo),
-      firstName: clean(initialValues?.firstName),
-      lastName: clean(initialValues?.lastName),
-      middleName: clean(initialValues?.middleName),
-      jobTitle: clean(initialValues?.jobTitle) || 'Şirkət admini',
-      email: details.email,
-      photo: clean(avatarSrc),
-      cardBackground: backgroundUrl,
-      dateOfBirth: clean(initialValues?.dateOfBirth),
-      address: clean(companyName),
-      googleMapsUrl: clean(initialValues?.googleMapsUrl),
-      phones: [
-        ...(phone ? [{ type: 'İş', number: phone }] : []),
-        ...(clean(initialValues?.phone2) ? [{ type: 'Şəxsi', number: clean(initialValues?.phone2) }] : []),
-        ...(whatsapp ? [{ type: 'WhatsApp', number: whatsapp }] : []),
-      ],
-      socials: [
-        ...(clean(initialValues?.linkedinUrl)
-          ? [{ platform: 'LinkedIn', url: clean(initialValues?.linkedinUrl) }]
-          : []),
-        ...(clean(initialValues?.facebookUrl)
-          ? [{ platform: 'Facebook', url: clean(initialValues?.facebookUrl) }]
-          : []),
-        ...(clean(initialValues?.instagramUrl)
-          ? [{ platform: 'Instagram', url: clean(initialValues?.instagramUrl) }]
-          : []),
-        ...customLinks.map((item) => ({
-          platform: clean(item.platformName) || 'Link',
-          url: clean(item.profileUrl),
-          iconUrl: clean(item.iconUrl) || undefined,
-        })),
-      ].filter((item) => Boolean(item.url)),
-      extras: info ? [{ label: 'Haqqında', value: info }] : [],
-      nfcUrl: '',
-      qrUid: '',
-      cardUrl: '',
-      isActive: true,
-      status: 'active',
-      scans: 0,
-      updatedAt: '',
-    },
+    profile: cardProfile,
     actions: {
-      onEdit: onSave ? startEdit : undefined,
-      onAddContact: downloadContact,
-      contactHref: primaryContactHref,
+      onEdit: onSave ? () => setEditing(true) : undefined,
+      onAddContact: () => downloadVCard(contactProfile),
       onQrCode: () => setShareOpen(true),
     },
   };
@@ -726,22 +635,7 @@ export default function CompanyAdminProfileView({
   return (
     <div className="ca-admin-profile-page ca-admin-profile-card-page">
       <CommonBusinessCardView card={businessCard} />
-
-      <Modal
-        title="CompanyAdmin QR kodu"
-        open={shareOpen}
-        onCancel={() => setShareOpen(false)}
-        footer={null}
-        centered
-        width={360}
-        className="ca-admin-share-modal"
-      >
-        <div className="ca-admin-share-qr">
-          <QRCode value={shareQrPayload} size={230} bordered={false} errorLevel="M" />
-          <strong>{fullName}</strong>
-          <span>QR kodu skan etdikdə kontakt məlumatları açılacaq.</span>
-        </div>
-      </Modal>
+      {shareModal}
     </div>
   );
 

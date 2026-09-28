@@ -155,15 +155,6 @@ export interface AnalyticsScanLogRow {
 
 
 
-export interface AnalyticsFilterParams {
-  companyId?: string;
-  startDate?: string;
-  endDate?: string;
-  employeeId?: string;
-  page?: number;
-  pageSize?: number;
-}
-
 export interface CompanyAdminContextValue {
   company: NormalizedCompanyInfo;
   usersList: UserData[];
@@ -182,7 +173,8 @@ export interface CompanyAdminContextValue {
 
   loadCompanyInfo: () => Promise<string>;
   fetchUsers: (id?: string) => Promise<void>;
-  fetchAnalytics: (params?: AnalyticsFilterParams) => Promise<void>;
+  fetchAnalytics: (params?: ScanLogParams, cacheKey?: string) => Promise<void>;
+  prefetchAnalytics: (params: ScanLogParams, cacheKey: string) => Promise<void>;
   fetchAuditLogs: () => Promise<void>;
 
   addUser: (values: AddUserFormValues) => Promise<void>;
@@ -196,4 +188,27 @@ export interface CompanyAdminContextValue {
 
 export interface CompanyAdminProps {
   onLogout?: () => void;
+}
+
+export type AnalyticsPeriodKey = 'day' | 'week' | 'month' | 'year';
+
+export type AnalyticsChartItem = { key: string; label: string; value: number; sort: number };
+
+export interface AnalyticsQueryParams {
+  companyId?: string;
+  startDate?: string;
+  endDate?: string;
+  employeeId?: string;
+}
+
+export interface ScanLogParams extends AnalyticsQueryParams {
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AnalyticsSnapshot {
+  count: number;
+  chart: Record<string, unknown>[];
+  ranking: AnalyticsRankingRow[];
+  logs: AnalyticsScanLogRow[];
 }

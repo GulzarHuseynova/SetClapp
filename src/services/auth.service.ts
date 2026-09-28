@@ -1,7 +1,5 @@
 import { axiosInstance as apiClient, publicAxiosInstance as publicApiClient } from '../api/client';
-import type { ChangePasswordRequest, LoginFormValues } from '../types/auth.type';
-
-type LoginPayload = LoginFormValues | Record<string, unknown>;
+import type { ChangePasswordRequest, LoginPayload } from '../types/auth.type';
 
 export const authService = {
   login: (data: LoginPayload) =>

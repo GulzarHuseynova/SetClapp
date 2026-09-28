@@ -1,10 +1,5 @@
-import { Button, type ButtonProps } from 'antd';
-
-export type AppButtonTone = 'primary' | 'secondary' | 'danger' | 'ghost';
-
-export interface AppButtonProps extends Omit<ButtonProps, 'variant'> {
-  appTone?: AppButtonTone;
-}
+import { Button } from 'antd';
+import type { AppButtonProps, AppButtonTone } from '../../types/ui.type';
 
 const BASE_CLASSES =
   'inline-flex items-center justify-center font-semibold transition-colors duration-150';

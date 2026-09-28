@@ -1,10 +1,6 @@
-import type { ApiCompany } from '../../../types/super.type';
 import { getCompanyInitials, getCompanyLogo, getCompanyName } from '../../../features/super/super-admin';
-
-type CompanyLogoProps = {
-  company: ApiCompany;
-  size?: number;
-};
+import type { CompanyLogoProps } from '../../../types/super.type';
+import { BRAND_COLOR, BRAND_TINT } from '../../../constants/theme';
 
 export function CompanyLogo({ company, size = 46 }: CompanyLogoProps) {
   const displayName = getCompanyName(company);
@@ -35,8 +31,8 @@ export function CompanyLogo({ company, size = 46 }: CompanyLogoProps) {
           width: size,
           height: size,
           borderRadius: Math.round(size * 0.32),
-          background: 'linear-gradient(135deg,#e0e7ff,#f5f3ff)',
-          color: '#4f46e5',
+          background: BRAND_TINT,
+          color: BRAND_COLOR,
           display: logo ? 'none' : 'flex',
           alignItems: 'center',
           justifyContent: 'center',

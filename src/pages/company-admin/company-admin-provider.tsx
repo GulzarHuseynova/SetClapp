@@ -1,5 +1,5 @@
-import {useCallback,useEffect,useRef, useState,type ReactNode,} from "react";
-import { message } from "antd";
+import {useCallback,useEffect,useEffectEvent,useRef, useState,type ReactNode,} from "react";
+import { message } from "../../utils/antd-static";
 import axios from "axios";
 import { analyticsActions } from "../../helpers/analytics.helper";
 import { companyActions } from "../../helpers/company.helper";
@@ -10,7 +10,7 @@ import { mergeNormalizedUsers } from "../../features/company/company-user-identi
 import { useAuthSelector } from "../../store/authStore";
 import { getStoredUser } from "../../storage/auth.storage";
 import { CompanyAdminContext } from "../../hooks/use-company-admin";
-import {DEFAULT_COMPANY,type ActivityLog,type AddUserFormValues,type AnalyticsFilterParams,type AnalyticsRankingRow,type AnalyticsScanLogRow,type AuditLogRow,type CompanyFormValues,type UserData,} from "../../types/company-admin.type";
+import {DEFAULT_COMPANY,type ActivityLog,type AddUserFormValues,type AnalyticsRankingRow,type AnalyticsSnapshot,type AnalyticsScanLogRow,type AuditLogRow,type CompanyFormValues,type ScanLogParams,type UserData,} from "../../types/company-admin.type";
 import { normalizeAssetUrl, normalizeInlineImageData } from "../../utils/asset-url.utils";
 import { pickPublicCardPhoto } from "../../features/public-card/public-card-shared";
 import { savePublicCardProfilesFromUsers } from "../../features/public-card/public-card-profiles";
@@ -76,6 +76,103 @@ const isSuperAdminUser = (user: Partial<UserData>) => {
 
 const filterCompanyUsers = (users: UserData[]) => users.filter((user) => !isSuperAdminUser(user));
 
+const EMPTY_ANALYTICS: AnalyticsSnapshot = { count: 0, chart: [], ranking: [], logs: [] };
+
+// Analitika sorğuları və cavabın normallaşdırılması; state-dən asılı deyil ki, nəticə keşlənə bilsin.
+const loadAnalyticsSnapshot = async (params?: ScanLogParams): Promise<AnalyticsSnapshot> => {
+  const [count, chart, ranking, logs] = await Promise.all([
+    analyticsActions.getScansCount(params).catch(() => 0),
+    analyticsActions.getScansChart(params).catch(() => []),
+    analyticsActions.getEmployeesRanking(params).catch(() => []),
+    analyticsActions.getScansLogs(params).catch(() => []),
+  ]);
+
+  const normalizedChart: Record<string, unknown>[] = Array.isArray(chart)
+    ? (chart as unknown[]).reduce<Record<string, unknown>[]>((rows, item) => {
+        if (
+          typeof item === "object" &&
+          item !== null &&
+          !Array.isArray(item)
+        ) {
+          rows.push(item as Record<string, unknown>);
+        }
+
+        return rows;
+      }, [])
+    : [];
+
+  const normalizedRanking: AnalyticsRankingRow[] = Array.isArray(ranking)
+    ? (ranking as AnalyticsRankingRow[])
+    : [];
+
+  const normalizedLogs: AnalyticsScanLogRow[] = Array.isArray(logs)
+    ? (logs as AnalyticsScanLogRow[])
+    : [];
+
+  const countRow =
+    typeof count === "object" && count !== null
+      ? (count as Record<string, unknown>)
+      : null;
+
+  const countFromApi: number = countRow
+    ? toFiniteNumber(
+        countRow.count ??
+          countRow.total ??
+          countRow.totalScans ??
+          countRow.totalScanCount ??
+          countRow.scanCount ??
+          countRow.scansCount ??
+          countRow.value,
+      )
+    : toFiniteNumber(count);
+
+  const countFromRanking: number = normalizedRanking.reduce<number>(
+    (total, item) => {
+      const row = item as unknown as Record<string, unknown>;
+      const value =
+        row.scanCount ??
+        row.scans ??
+        row.count ??
+        row.total ??
+        0;
+
+      return total + toFiniteNumber(value);
+    },
+    0,
+  );
+
+  const countFromChart: number = normalizedChart.reduce<number>(
+    (total, row) => {
+      const value =
+        row.count ??
+        row.scanCount ??
+        row.scans ??
+        row.total ??
+        row.value ??
+        0;
+
+      return total + toFiniteNumber(value);
+    },
+    0,
+  );
+
+  const resolvedCount: number =
+    countFromApi > 0
+      ? countFromApi
+      : countFromRanking > 0
+        ? countFromRanking
+        : countFromChart > 0
+          ? countFromChart
+          : normalizedLogs.length;
+
+  return {
+    count: resolvedCount,
+    chart: normalizedChart,
+    ranking: normalizedRanking,
+    logs: normalizedLogs,
+  };
+};
+
 export function CompanyAdminProvider({ children }: { children: ReactNode }) {
   const authCompanyId = useAuthSelector((state) => state.companyId);
   const authUserId = useAuthSelector((state) => state.userId);
@@ -93,6 +190,8 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
   const [scanLogs, setScanLogs] = useState<AnalyticsScanLogRow[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLogRow[]>([]);
   const analyticsRequestRef = useRef(0);
+  const analyticsCacheRef = useRef(new Map<string, AnalyticsSnapshot>());
+  const analyticsPendingRef = useRef(new Map<string, Promise<AnalyticsSnapshot>>());
 
   const activeCompanyId = companyId || company.id || authCompanyId || getSavedCompanyId() || "";
   const currentEmployeesCount = filterCompanyUsers(usersList).filter((user) => user.isActive !== false).length;
@@ -165,111 +264,56 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
     [accountInfo, authCompanyId, companyId]
   );
 
-  const fetchAnalytics = useCallback(async (params?: AnalyticsFilterParams) => {
+  const applyAnalyticsSnapshot = useCallback((snapshot: AnalyticsSnapshot) => {
+    setAnalyticsCount(snapshot.count);
+    setAnalyticsChart(snapshot.chart);
+    setAnalyticsRanking(snapshot.ranking);
+    setScanLogs(snapshot.logs);
+  }, []);
+
+  // Eyni dövr üçün gedən sorğu təkrarlanmır; bitən nəticə keşə yazılır.
+  const loadAnalyticsCached = useCallback((params: ScanLogParams | undefined, cacheKey: string) => {
+    const pending = analyticsPendingRef.current.get(cacheKey);
+    if (pending) return pending;
+
+    const request = loadAnalyticsSnapshot(params)
+      .then((snapshot) => {
+        analyticsCacheRef.current.set(cacheKey, snapshot);
+        return snapshot;
+      })
+      .finally(() => analyticsPendingRef.current.delete(cacheKey));
+
+    analyticsPendingRef.current.set(cacheKey, request);
+    return request;
+  }, []);
+
+  // cacheKey verilərsə keşdəki nəticə dərhal göstərilir, sonra fonda yenilənir.
+  const fetchAnalytics = useCallback(async (params?: ScanLogParams, cacheKey?: string) => {
     const requestId = ++analyticsRequestRef.current;
+    const cached = cacheKey ? analyticsCacheRef.current.get(cacheKey) : undefined;
+    if (cached) applyAnalyticsSnapshot(cached);
 
     try {
-      const [count, chart, ranking, logs] = await Promise.all([
-        analyticsActions.getScansCount(params).catch(() => 0),
-        analyticsActions.getScansChart(params).catch(() => []),
-        analyticsActions.getEmployeesRanking(params).catch(() => []),
-        analyticsActions.getScansLogs(params).catch(() => []),
-      ]);
-
-      const normalizedChart: Record<string, unknown>[] = Array.isArray(chart)
-        ? (chart as unknown[]).reduce<Record<string, unknown>[]>((rows, item) => {
-            if (
-              typeof item === "object" &&
-              item !== null &&
-              !Array.isArray(item)
-            ) {
-              rows.push(item as Record<string, unknown>);
-            }
-
-            return rows;
-          }, [])
-        : [];
-
-      const normalizedRanking: AnalyticsRankingRow[] = Array.isArray(ranking)
-        ? (ranking as AnalyticsRankingRow[])
-        : [];
-
-      const normalizedLogs: AnalyticsScanLogRow[] = Array.isArray(logs)
-        ? (logs as AnalyticsScanLogRow[])
-        : [];
-
-      const countRow =
-        typeof count === "object" && count !== null
-          ? (count as Record<string, unknown>)
-          : null;
-
-      const countFromApi: number = countRow
-        ? toFiniteNumber(
-            countRow.count ??
-              countRow.total ??
-              countRow.totalScans ??
-              countRow.totalScanCount ??
-              countRow.scanCount ??
-              countRow.scansCount ??
-              countRow.value,
-          )
-        : toFiniteNumber(count);
-
-      const countFromRanking: number = normalizedRanking.reduce<number>(
-        (total, item) => {
-          const row = item as unknown as Record<string, unknown>;
-          const value =
-            row.scanCount ??
-            row.scans ??
-            row.count ??
-            row.total ??
-            0;
-
-          return total + toFiniteNumber(value);
-        },
-        0,
-      );
-
-      const countFromChart: number = normalizedChart.reduce<number>(
-        (total, row) => {
-          const value =
-            row.count ??
-            row.scanCount ??
-            row.scans ??
-            row.total ??
-            row.value ??
-            0;
-
-          return total + toFiniteNumber(value);
-        },
-        0,
-      );
-
-      const resolvedCount: number =
-        countFromApi > 0
-          ? countFromApi
-          : countFromRanking > 0
-            ? countFromRanking
-            : countFromChart > 0
-              ? countFromChart
-              : normalizedLogs.length;
-
+      const snapshot = cacheKey ? await loadAnalyticsCached(params, cacheKey) : await loadAnalyticsSnapshot(params);
       if (requestId !== analyticsRequestRef.current) return;
-
-      setAnalyticsCount(resolvedCount);
-      setAnalyticsChart(normalizedChart);
-      setAnalyticsRanking(normalizedRanking);
-      setScanLogs(normalizedLogs);
+      applyAnalyticsSnapshot(snapshot);
     } catch (error) {
       console.error("Analitika məlumatları yüklənmədi:", error);
 
-      if (requestId !== analyticsRequestRef.current) return;
-      setAnalyticsCount(0);
-      setAnalyticsChart([]);
-      setAnalyticsRanking([]);
-      setScanLogs([]);
+      if (requestId !== analyticsRequestRef.current || cached) return;
+      applyAnalyticsSnapshot(EMPTY_ANALYTICS);
     }
-  }, []);
+  }, [applyAnalyticsSnapshot, loadAnalyticsCached]);
+
+  const prefetchAnalytics = useCallback(async (params: ScanLogParams, cacheKey: string) => {
+    if (analyticsCacheRef.current.has(cacheKey)) return;
+
+    try {
+      await loadAnalyticsCached(params, cacheKey);
+    } catch {
+      // Əvvəlcədən yükləmə uğursuz olsa, dövr seçiləndə adi qaydada yüklənəcək.
+    }
+  }, [loadAnalyticsCached]);
 
   const fetchAuditLogs = useCallback(async () => {
     try {
@@ -280,17 +324,22 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Analitika səhifəsi öz seçilmiş dövrü ilə sorğu göndərir. Buradan
+  // filtrsiz analitika çağırmaq səhifənin Gün/Həftə/Ay/İl nəticəsini sonradan
+  // üstələyə bilirdi. Provider yalnız şirkət və əməkdaşları ilkin yükləyir.
+  const loadCompanyInfoOnce = useEffectEvent(() => loadCompanyInfo());
+  const fetchUsersOnce = useEffectEvent((id: string) => fetchUsers(id));
+
+  // Yükləmə özü companyId/accountInfo-nu dəyişdirir; effekt onlardan asılı olsaydı
+  // şirkət və işçi sorğuları təkrar-təkrar göndərilirdi. Ona görə yalnız mount zamanı işləyir.
   useEffect(() => {
     const loadAll = async () => {
-      const resolvedCompanyId = await loadCompanyInfo();
-      // Analitika səhifəsi öz seçilmiş dövrü ilə sorğu göndərir. Buradan
-      // filtrsiz analitika çağırmaq səhifənin Gün/Həftə/Ay/İl nəticəsini sonradan
-      // üstələyə bilirdi. Provider yalnız şirkət və əməkdaşları ilkin yükləyir.
-      await fetchUsers(resolvedCompanyId);
+      const resolvedCompanyId = await loadCompanyInfoOnce();
+      await fetchUsersOnce(resolvedCompanyId);
     };
 
     void loadAll();
-  }, [loadCompanyInfo, fetchUsers]);
+  }, []);
 
   useEffect(() => {
     if (usersList.length === 0) return;
@@ -595,6 +644,7 @@ const uploadCompanyLogo = async (file: File) => {
         loadCompanyInfo,
         fetchUsers,
         fetchAnalytics,
+        prefetchAnalytics,
         fetchAuditLogs,
         addUser,
         updateUser,
