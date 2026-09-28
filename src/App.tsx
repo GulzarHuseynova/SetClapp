@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { BrowserRouter } from 'react-router';
 
+import { AntdAppProvider } from './components/antd-app-provider';
+
 import PrivateRoute from './route/PrivateRoute/PrivateRoute';
 import PublicRoute from './route/PublicRoute/PublicRoute';
 import { authSessionStorage } from './storage/auth-session.storage';
@@ -44,13 +46,15 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      {isAuthenticated ? (
-        <PrivateRoute onLogout={handleLogout} />
-      ) : (
-        <PublicRoute onLoginSuccess={handleLoginSuccess} />
-      )}
-    </BrowserRouter>
+    <AntdAppProvider>
+      <BrowserRouter>
+        {isAuthenticated ? (
+          <PrivateRoute onLogout={handleLogout} />
+        ) : (
+          <PublicRoute onLoginSuccess={handleLoginSuccess} />
+        )}
+      </BrowserRouter>
+    </AntdAppProvider>
   );
 }
 

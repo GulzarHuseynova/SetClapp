@@ -4,6 +4,7 @@ import {findLocalEmployeeById,findLocalEmployeeOverride} from '../../storage/loc
 import { findPublicCardProfile } from '../public-card/public-card-profiles';
 import {getEmployeePhotoFromRecord,normalizeEmployeePhotoValue} from '../public-card/public-card-shared';
 import type { HtmlExportEmployee } from '../../types/export-import.type';
+import type { ResolvedHtmlEmployeeAssets } from '../../types/export-import.type';
 
 export const normalizeComparableText = (value: unknown) =>
   String(value ?? '')
@@ -367,11 +368,6 @@ const firstResolvedAsset = async (sources: unknown[]) => {
 
   return '';
 };
-
-export interface ResolvedHtmlEmployeeAssets {
-  photo: string;
-  background: string;
-}
 
 export const resolveHtmlEmployeeAssets = async (
   employee: HtmlExportEmployee,

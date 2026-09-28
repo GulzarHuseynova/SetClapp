@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Empty, Modal, QRCode } from 'antd';
+import { Alert, Empty } from 'antd';
 import { useParams, useSearchParams } from 'react-router';
-import { CommonBusinessCardView, type BusinessCardViewModel } from '../../components/common-business-card-view';
+import { CommonBusinessCardView } from '../../components/common-business-card-view';
+import type { BusinessCardViewModel } from '../../types/business-card-view.type';
+import { CardQrModal } from '../../components/card-qr-modal';
 import {
   downloadPublicCardVcf,
   fetchPublicCardProfile,
@@ -106,27 +108,13 @@ export default function PublicCard() {
         <CommonBusinessCardView card={businessCard} />
       </div>
 
-      <Modal
+      <CardQrModal
         open={qrOpen}
-        onCancel={() => setQrOpen(false)}
-        footer={null}
-        centered
-        width={390}
-        className="employee-qr-modal"
-        title={null}
-      >
-        <div className="employee-qr-modal-content">
-          <div className="employee-qr-heading">
-            <div>
-              <strong>{getFullName(profile)} QR kodu</strong>
-              <span>Vizitkartı açmaq üçün QR kodu skan edin</span>
-            </div>
-          </div>
-          <div className="employee-qr-code-wrap">
-            <QRCode value={getQrPayload(profile)} size={230} bordered={false} errorLevel="M" />
-          </div>
-        </div>
-      </Modal>
+        onClose={() => setQrOpen(false)}
+        title={`${getFullName(profile)} QR kodu`}
+        subtitle="Vizitkartı açmaq üçün QR kodu skan edin"
+        qrValue={getQrPayload(profile)}
+      />
     </div>
   );
 }

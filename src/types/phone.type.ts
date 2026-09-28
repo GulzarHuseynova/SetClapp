@@ -3,3 +3,12 @@ export interface CountryPhoneOption {
   value: string;
   country: string;
 }
+
+export interface PhoneCountryInputProps {
+  id?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  maxLength?: number;
+}

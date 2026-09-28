@@ -1,4 +1,5 @@
 import type { AddUserFormValues, UserData } from '../../types/company-admin.type';
+import type { EmployeeLinkSnapshot } from '../../types/business-card.type';
 
 const readImageFileAsDataUrl = (file: File): Promise<string> => new Promise((resolve, reject) => {
   const reader = new FileReader();
@@ -275,19 +276,7 @@ export const readFileAsDataUrl = (file: File) => {
   });
 };
 
-
 const EMPLOYEE_LINK_SNAPSHOT_KEY = 'setclapp:employee-link-snapshots:v1';
-
-type EmployeeLinkSnapshot = {
-  id: string;
-  email?: string;
-  linkedin?: string;
-  facebook?: string;
-  instagram?: string;
-  whatsapp?: string;
-  googleMapsUrl?: string;
-  socialAccounts?: AddUserFormValues['socialAccounts'];
-};
 
 const normalizeEmployeeSnapshotKey = (value?: string) => String(value || '').trim().toLowerCase();
 

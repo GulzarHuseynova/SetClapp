@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
 import type { AnalyticsRankingRow, AnalyticsScanLogRow, UserData } from '../../../types/company-admin.type';
+import type { AnalyticsChartItem, AnalyticsPeriodKey } from '../../../types/company-admin.type';
 
-type PeriodKey = 'day' | 'week' | 'month' | 'year';
-type ChartItem = { key: string; label: string; value: number; sort: number };
-
-const PERIODS: Array<{ key: PeriodKey; label: string }> = [
+const PERIODS: Array<{ key: AnalyticsPeriodKey; label: string }> = [
   { key: 'day', label: 'Gün' },
   { key: 'week', label: 'Həftə' },
   { key: 'month', label: 'Ay' },
@@ -38,7 +36,7 @@ const rankingName = (row: AnalyticsRankingRow) =>
 const rankingValue = (row: AnalyticsRankingRow) =>
   toNumber(row.scanCount ?? row.scans ?? row.count ?? row.total ?? 0);
 
-const getPeriodRange = (period: PeriodKey) => {
+const getPeriodRange = (period: AnalyticsPeriodKey) => {
   const end = new Date();
   const start = new Date(end);
 
@@ -71,27 +69,27 @@ const parseDate = (value: string) => {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 };
 
-const periodLabel = (date: Date, period: PeriodKey) => {
+const periodLabel = (date: Date, period: AnalyticsPeriodKey) => {
   if (period === 'day') return `${String(date.getHours()).padStart(2, '0')}:00`;
   if (period === 'week') return WEEKDAY_SHORT[date.getDay()];
   if (period === 'month') return String(date.getDate());
   return MONTH_SHORT[date.getMonth()];
 };
 
-const periodKey = (date: Date, period: PeriodKey) => {
+const periodKey = (date: Date, period: AnalyticsPeriodKey) => {
   if (period === 'day') return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}`;
   if (period === 'week' || period === 'month') return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
   return `${date.getFullYear()}-${date.getMonth()}`;
 };
 
-const chartTitle = (period: PeriodKey) => ({
+const chartTitle = (period: AnalyticsPeriodKey) => ({
   day: 'Saatlıq skan',
   week: 'Həftəlik skan',
   month: 'Aylıq skan',
   year: 'İllik skan',
 }[period]);
 
-const rangeCaption = (period: PeriodKey) => {
+const rangeCaption = (period: AnalyticsPeriodKey) => {
   const now = new Date();
   if (period === 'day') return now.toLocaleDateString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric' });
   if (period === 'week') return 'Bu həftə';
@@ -110,8 +108,8 @@ const logDate = (log: AnalyticsScanLogRow) => {
 const userName = (user: UserData) =>
   `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'Əməkdaş';
 
-const buildChartFromLogs = (logs: AnalyticsScanLogRow[], period: PeriodKey) => {
-  const grouped = new Map<string, ChartItem>();
+const buildChartFromLogs = (logs: AnalyticsScanLogRow[], period: AnalyticsPeriodKey) => {
+  const grouped = new Map<string, AnalyticsChartItem>();
 
   logs.forEach((log) => {
     const date = parseDate(logDate(log));
@@ -129,8 +127,8 @@ const buildChartFromLogs = (logs: AnalyticsScanLogRow[], period: PeriodKey) => {
   return Array.from(grouped.values()).sort((a, b) => a.sort - b.sort);
 };
 
-const normalizeChartRows = (rows: unknown[], period: PeriodKey) => {
-  const grouped = new Map<string, ChartItem>();
+const normalizeChartRows = (rows: unknown[], period: AnalyticsPeriodKey) => {
+  const grouped = new Map<string, AnalyticsChartItem>();
 
   rows.forEach((item, index) => {
     const row = toRecord(item);
@@ -184,15 +182,33 @@ export default function CompanyAnalytics() {
     usersList,
     currentEmployeesCount,
     fetchAnalytics,
+    prefetchAnalytics,
   } = useCompanyAdmin();
 
-  const [period, setPeriod] = useState<PeriodKey>('year');
+  const [period, setPeriod] = useState<AnalyticsPeriodKey>('year');
   const [showAllRanking, setShowAllRanking] = useState(false);
   useEffect(() => {
-    void fetchAnalytics(getPeriodRange(period));
+    void fetchAnalytics(getPeriodRange(period), period);
   }, [fetchAnalytics, period]);
 
-  const chartRows = useMemo<ChartItem[]>(() => {
+  // Digər dövrlər fonda, növbə ilə hazırlanır ki, Gün/Həftə/Ay/İl klikləri dərhal cavab versin.
+  useEffect(() => {
+    let cancelled = false;
+
+    const prefetchPeriods = async () => {
+      for (const { key } of PERIODS) {
+        if (cancelled) return;
+        await prefetchAnalytics(getPeriodRange(key), key);
+      }
+    };
+
+    void prefetchPeriods();
+    return () => {
+      cancelled = true;
+    };
+  }, [prefetchAnalytics]);
+
+  const chartRows = useMemo<AnalyticsChartItem[]>(() => {
     const apiRows = normalizeChartRows(analyticsChart, period);
     const source = apiRows.length > 0 ? apiRows : buildChartFromLogs(scanLogs, period);
 
@@ -240,7 +256,6 @@ export default function CompanyAnalytics() {
           </button>
         ))}
       </div>
-
 
       <section className="ca-stat-grid">
         <article className="ca-stat-tile">

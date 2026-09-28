@@ -4,6 +4,7 @@ import {
   resolveHtmlEmployeeAssets,
 } from './photo-export';
 import { stripSocialLinksFromAdditionalInfo } from '../profile/profile-info';
+import type { ExportAssetRow } from '../../types/export-import.type';
 
 const isExcludedImageContainer = (element: Element) => {
   const marker = `${element.id} ${element.className || ''}`.toLowerCase();
@@ -221,7 +222,6 @@ const clearAvatarForEmployeeWithoutPhoto = (
   makeAvatarCircular(htmlTarget);
 };
 
-
 const isExcludedBackgroundContainer = (element: Element) => {
   const marker = `${element.id} ${element.className || ''}`.toLowerCase();
   return /(logo|qr|icon|social|avatar|profile[-_ ]?(photo|image|img)|employee[-_ ]?(photo|image|img)|user[-_ ]?(photo|image|img))/i.test(marker);
@@ -314,12 +314,6 @@ const removeOfflineBlockingPolicies = (document: Document) => {
     const httpEquiv = String(meta.getAttribute('http-equiv') || '').toLowerCase();
     if (httpEquiv === 'content-security-policy') meta.remove();
   });
-};
-
-type ExportAssetRow = {
-  employee: HtmlExportEmployee;
-  photo: string;
-  background: string;
 };
 
 const appendStandaloneAssetRuntime = (document: Document, assetRows: ExportAssetRow[]) => {

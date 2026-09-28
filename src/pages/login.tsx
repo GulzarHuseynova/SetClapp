@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { AutoComplete, Form, Input, message } from "antd";
+import { AutoComplete, Form, Input } from "antd";
+import { message } from "../utils/antd-static";
 import { BankOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { authOperations } from "../helpers/auth.helper";
 import { readLocalCompanyAdminAccounts } from "../storage/local-auth/company-admin-local-auth";
@@ -121,7 +122,7 @@ function Login({ onLoginSuccess }: LoginProps) {
       <div className="login-mobile-shell">
         <div className="login-brand-card">
           <div className="login-brand-mark">
-            <img src="/setclapp-logo-without-text.svg" alt="SetClapp" />
+            <img src="/setclapp-icon.png" alt="SetClapp" />
           </div>
           <div>
             <strong>SetClapp</strong>

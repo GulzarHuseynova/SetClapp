@@ -1,8 +1,5 @@
 import { axiosInstance as apiClient } from '../api/client';
-import type { CreateCompanyAdminPayload, CreateCompanyPayload, SuperAuditLogQuery } from '../types/super.type';
-
-type CompanyWritePayload = CreateCompanyPayload | Record<string, unknown>;
-type CompanyAdminWritePayload = CreateCompanyAdminPayload | Record<string, unknown>;
+import type { CompanyAdminWritePayload, CompanyWritePayload, SuperAuditLogQuery } from '../types/super.type';
 
 export const superAdminService = {
   getCompanies: () =>

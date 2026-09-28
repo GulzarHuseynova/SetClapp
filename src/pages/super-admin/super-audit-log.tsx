@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, Empty, Modal, Space, Table, Tag } from 'antd';
 import {AuditOutlined,ClockCircleOutlined,DatabaseOutlined,EyeOutlined,ReloadOutlined,UserOutlined} from '@ant-design/icons';
 import { superAdminActions, type SuperAuditLogRow } from '../../helpers/super-admin.helper';
+import type { AuditActionKind, AuditChange } from '../../types/super.type';
+import { BRAND_COLOR, BRAND_TINT } from '../../constants/theme';
 
 const ACTION_MAP: Record<string, string> = {
   added: 'Əlavə edildi',
@@ -260,13 +262,6 @@ const flattenObject = (input: Record<string, unknown>, parent = ''): Record<stri
   return result;
 };
 
-interface AuditChange {
-  key: string;
-  label: string;
-  before: string;
-  after: string;
-}
-
 const shouldIgnoreDetailKey = (key: string) => {
   const leafKey = getLeafKey(key);
   const fullKey = normalizeWordKey(key);
@@ -304,8 +299,6 @@ const getComparableFields = (record: SuperAuditLogRow): AuditChange[] => {
     })
     .filter(Boolean) as AuditChange[];
 };
-
-type AuditActionKind = 'create' | 'update' | 'delete' | 'login' | 'logout' | 'scan' | 'other';
 
 const getActionKind = (record: SuperAuditLogRow): AuditActionKind => {
   const action = normalizeWordKey(record.actionType);
@@ -418,7 +411,7 @@ function SuperAuditLog() {
     const todayCount = logs.filter((log) => log.date.slice(0, 10) === today).length;
 
     return [
-      { title: 'Ümumi log', value: totalLogs || logs.length, icon: <AuditOutlined />, color: '#4f46e5' },
+      { title: 'Ümumi log', value: totalLogs || logs.length, icon: <AuditOutlined />, color: BRAND_COLOR },
       { title: 'Bu səhifədə bugünkü hadisə', value: todayCount, icon: <ClockCircleOutlined />, color: '#059669' },
       { title: 'Bu səhifədə istifadəçi', value: users.size, icon: <UserOutlined />, color: '#dc2626' },
       { title: 'Bu səhifədə obyekt tipi', value: entities.size, icon: <DatabaseOutlined />, color: '#9333ea' },
@@ -560,14 +553,14 @@ function SuperAuditLog() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 8 }}>
             <div
               style={{
-                border: '1px solid #bfdbfe',
+                border: '1px solid #c9dbe8',
                 borderRadius: 16,
-                background: '#eff6ff',
+                background: BRAND_TINT,
                 padding: 18,
               }}
             >
-              <div style={{ color: '#1d4ed8', fontSize: 12, fontWeight: 800, marginBottom: 6 }}>NƏ BAŞ VERDİ?</div>
-              <div style={{ color: '#172554', fontSize: 18, fontWeight: 800, lineHeight: 1.55 }}>{getAuditSummary(selectedLog)}</div>
+              <div style={{ color: BRAND_COLOR, fontSize: 12, fontWeight: 800, marginBottom: 6 }}>NƏ BAŞ VERDİ?</div>
+              <div style={{ color: '#0f2f47', fontSize: 18, fontWeight: 800, lineHeight: 1.55 }}>{getAuditSummary(selectedLog)}</div>
             </div>
 
             <div
@@ -650,7 +643,7 @@ function SuperAuditLog() {
             ) : null}
 
             {(['scan', 'login', 'logout'].includes(selectedActionKind) || selectedChanges.length === 0) ? (
-              <div style={{ border: '1px solid #dbeafe', background: '#f8fafc', borderRadius: 16, padding: 18, color: '#475569' }}>
+              <div style={{ border: '1px solid #c9dbe8', background: '#f8fafc', borderRadius: 16, padding: 18, color: '#475569' }}>
                 Bu hadisə üçün əlavə texniki məlumat göstərilmir. Əsas məlumat yuxarıdakı “Nə baş verdi?” bölməsində verilib.
               </div>
             ) : null}

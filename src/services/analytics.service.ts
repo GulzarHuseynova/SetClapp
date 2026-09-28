@@ -1,16 +1,5 @@
 import { axiosInstance as apiClient } from '../api/client';
-
-export interface AnalyticsQueryParams {
-  companyId?: string;
-  startDate?: string;
-  endDate?: string;
-  employeeId?: string;
-}
-
-export interface ScanLogParams extends AnalyticsQueryParams {
-  page?: number;
-  pageSize?: number;
-}
+import type { AnalyticsQueryParams, ScanLogParams } from '../types/company-admin.type';
 
 export const analyticsService = {
   getScansCount: (params?: AnalyticsQueryParams) =>

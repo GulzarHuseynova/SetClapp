@@ -34,8 +34,8 @@
   border-radius: 28px;
   padding: 26px;
   background:
-    radial-gradient(circle at 85% 8%, rgba(90, 168, 232, 0.18), transparent 30%),
-    radial-gradient(circle at 12% 96%, rgba(140, 199, 239, 0.24), transparent 28%),
+    radial-gradient(circle at 85% 8%, rgba(24, 85, 130, 0.08), transparent 30%),
+    radial-gradient(circle at 12% 96%, rgba(24, 85, 130, 0.06), transparent 28%),
     linear-gradient(135deg, #eaf6ff 0%, #f8fcff 52%, #dff1ff 100%);
   border: 1px solid #cfe4f2;
   box-shadow: 0 20px 48px rgba(71, 120, 153, 0.14);
@@ -54,7 +54,7 @@
   top: -90px;
   width: 280px;
   height: 280px;
-  background: rgba(90, 168, 232, 0.12);
+  background: rgba(24, 85, 130, 0.06);
 }
 
 .employee-hero::after {
@@ -62,7 +62,7 @@
   bottom: -125px;
   width: 320px;
   height: 320px;
-  background: rgba(140, 199, 239, 0.16);
+  background: rgba(24, 85, 130, 0.05);
 }
 
 .employee-hero-grid {
@@ -107,7 +107,7 @@
   height: 32px;
   border-radius: 50%;
   border: 3px solid #ffffff;
-  background: #4b9ada;
+  background: #185582;
   color: #ffffff;
   cursor: pointer;
   display: inline-flex;
@@ -129,7 +129,7 @@
 }
 
 .employee-position {
-  color: #3f8fc8;
+  color: #185582;
   font-size: 15px;
   font-weight: 850;
   margin-top: 8px;
@@ -387,7 +387,7 @@
 }
 
 
-/* Employee panel uses the same calm blue palette as CompanyAdmin. */
+/* Employee paneli brend rəngi (#185582) ilə. */
 .employee-layout-theme .app-main {
   background: #eef7ff;
 }
@@ -402,14 +402,14 @@
 }
 
 .employee-layout-theme .ant-btn-primary {
-  background: linear-gradient(135deg, #5aa8e8, #4b9ada);
-  border-color: #4b9ada;
-  box-shadow: 0 8px 18px rgba(75, 154, 218, 0.18);
+  background: #185582;
+  border-color: #185582;
+  box-shadow: 0 8px 18px rgba(24, 85, 130, 0.18);
 }
 
 .employee-layout-theme .ant-btn-primary:hover {
-  background: linear-gradient(135deg, #4f9edc, #3f8fc8) !important;
-  border-color: #3f8fc8 !important;
+  background: #12466c !important;
+  border-color: #12466c !important;
 }
 
 .employee-first-password-modal .ant-modal-content {
@@ -446,15 +446,15 @@
 
 .employee-first-password-modal .ant-input-affix-wrapper:hover,
 .employee-first-password-modal .ant-input-affix-wrapper-focused {
-  border-color: #5aa8e8;
-  box-shadow: 0 0 0 3px rgba(90, 168, 232, 0.12);
+  border-color: #185582;
+  box-shadow: 0 0 0 3px rgba(24, 85, 130, 0.12);
 }
 
 .employee-first-password-modal .ant-btn-primary {
   min-height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #5aa8e8, #4b9ada);
-  border-color: #4b9ada;
+  background: #185582;
+  border-color: #185582;
   font-weight: 900;
 }
 

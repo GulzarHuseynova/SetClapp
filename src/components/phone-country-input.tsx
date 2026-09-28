@@ -1,15 +1,7 @@
 import { useId, useMemo, useState, type ChangeEvent } from 'react';
 import { Input, Select, Space } from 'antd';
 import {COUNTRY_PHONE_OPTIONS,DEFAULT_PHONE_COUNTRY_CODE,joinPhoneWithCountryCode,splitPhoneByCountryCode,} from '../utils/phone.utils';
-
-interface PhoneCountryInputProps {
-  id?: string;
-  value?: string;
-  onChange?: (value: string) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  maxLength?: number;
-}
+import type { PhoneCountryInputProps } from '../types/phone.type';
 
 export function PhoneCountryInput({
   id,

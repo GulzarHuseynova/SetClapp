@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { Button, Form, Input, message, Modal } from "antd";
+import { useEffect, useEffectEvent, useMemo, useState } from "react";
+import { Button, Form, Input, Modal } from "antd";
+import { message } from "../../utils/antd-static";
 import { Navigate, Route, Routes, useLocation } from "react-router";
 import AppLayout from "../../components/Layout";
 import { CompanyAdminProvider } from "./company-admin-provider";
@@ -26,6 +27,7 @@ import {clearRuntimeCompanyAdminProfile,mergeRuntimeCompanyAdminProfile,readRunt
 import type { ChangePasswordRequest } from "../../types/auth.type";
 import type { CompanyAdminProps } from "../../types/company-admin.type";
 import type { EditableProfileValues } from "../../types/layout.type";
+import { confirmLogout } from "../../components/confirm-logout";
 
 const findStringInObject = (source: unknown, keys: string[]) => {
   if (!source || typeof source !== "object") return "";
@@ -187,6 +189,13 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
   const [profileOverride, setProfileOverride] = useState<Partial<EditableProfileValues>>(() => readRuntimeCompanyAdminProfile());
   const [avatarOverride, setAvatarOverride] = useState(() => readRuntimeCompanyAdminAvatar());
 
+  // Şirkət məlumatı sonradan yüklənir; effekt ondan asılı olsaydı profil sorğuları
+  // (account-info və User/{id}) ikinci dəfə göndərilərdi. Ən son dəyər burdan oxunur.
+  const readLatestCompany = useEffectEvent(() => ({
+    id: company.id,
+    voen: companyVoen || company.voen,
+  }));
+
   useEffect(() => {
     let cancelled = false;
 
@@ -245,8 +254,9 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
         mergedProfile.photoUrl = stableAvatar;
       }
 
-      const effectiveCompanyId = company.id || stored?.companyId;
-      const effectiveCompanyVoen = companyVoen || company.voen || stored?.companyVoen;
+      const latestCompany = readLatestCompany();
+      const effectiveCompanyId = latestCompany.id || stored?.companyId;
+      const effectiveCompanyVoen = latestCompany.voen || stored?.companyVoen;
       const savedBackground = await getSavedCompanyCardBackgroundAsync(effectiveCompanyId, effectiveCompanyVoen);
       const backgroundCacheKey = companyAdminBackgroundImageKey(requestedId, profileEmail);
       const backendBackground = getNormalizedImageAsset(
@@ -282,7 +292,7 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
     return () => {
       cancelled = true;
     };
-  }, [company.id, company.voen, companyVoen, userId]);
+  }, [userId]);
 
   useEffect(() => {
     if (location.pathname !== "/company-admin/my-card") return;
@@ -614,19 +624,6 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
     }
   };
 
-  const handleUploadAdminSocialIcon = async (file: File) => {
-    const response = await userActions.uploadSocialIcon(file);
-    const iconUrl = getNormalizedImageAsset(
-      findStringInObject(response, ["iconUrl", "socialIconUrl", "imageUrl", "url", "path"]),
-    );
-
-    if (!iconUrl) {
-      throw new Error("Link ikonu URL-i server cavabında tapılmadı.");
-    }
-
-    return iconUrl;
-  };
-
   const shouldOpenPasswordModal = useMemo(() => {
     if (role !== "company-admin") return false;
     if (passwordChangeCompleted) return false;
@@ -695,22 +692,15 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
   };
 
   const handleLogout = () => {
-    Modal.confirm({
-      title: "Çıxış etmək istəyirsiniz?",
-      content: "Sistemdən çıxış edəcəksiniz.",
-      okText: "Bəli",
-      cancelText: "Xeyr",
-      okButtonProps: { danger: true },
-      onOk: () => {
-        clearRuntimeCompanyAdminProfile();
-        authSessionStorage.clear();
+    confirmLogout(() => {
+      clearRuntimeCompanyAdminProfile();
+      authSessionStorage.clear();
 
-        if (onLogout) {
-          onLogout();
-        } else {
-          window.location.href = "/login";
-        }
-      },
+      if (onLogout) {
+        onLogout();
+      } else {
+        window.location.href = "/login";
+      }
     });
   };
 
@@ -729,7 +719,6 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
         onSaveProfile={handleSaveAdminProfile}
         onUploadProfilePhoto={handleUploadAdminPhoto}
         onUploadCardBackground={handleUploadAdminCardBackground}
-        onUploadSocialIcon={handleUploadAdminSocialIcon}
         companyLogo={getNormalizedImageAsset(company.logo)}
         companyInfoPath="/company-admin/settings"
         companyUsage={{ current: currentEmployeesCount, limit: company.employeeLimit }}

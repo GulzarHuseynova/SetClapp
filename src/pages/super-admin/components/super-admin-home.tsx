@@ -3,13 +3,9 @@ import {BankOutlined,CheckCircleOutlined,EditOutlined,EyeOutlined,LockOutlined,M
 import type { ApiCompany, CompanyAdminFormValues, CompanyCreateFormValues, CompanyEditFormValues } from '../../../types/super.type';
 import {getCompanyBusinessEmail,getCompanyEmail,getCompanyLimit,getCompanyLogo,getCompanyName,getCompanyPhone,} from '../../../features/super/super-admin';
 import { CompanyLogo } from './company-logo';
-import type { SuperAdminController } from '../../../hooks/use-super-admin-controller';
+import type { SuperAdminControllerProps } from '../../../types/super.type';
 
-type SuperAdminHomeProps = {
-  controller: SuperAdminController;
-};
-
-export function SuperAdminHome({ controller }: SuperAdminHomeProps) {
+export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
   const {
     adminForm,
     adminSubmitLoading,
@@ -202,7 +198,6 @@ export function SuperAdminHome({ controller }: SuperAdminHomeProps) {
     </>
   );
 
-
   return (
         <>
           <div
@@ -218,11 +213,11 @@ export function SuperAdminHome({ controller }: SuperAdminHomeProps) {
               boxShadow: '0 18px 42px rgba(71,120,153,0.12)', border: '1px solid #d5e8f4',
             }}
           >
-            <div style={{ position: 'absolute', right: -45, top: -45, width: 190, height: 190, borderRadius: '50%', background: 'rgba(90,168,232,0.16)' }} />
-            <div style={{ position: 'absolute', right: 100, bottom: -60, width: 160, height: 160, borderRadius: '50%', background: 'rgba(90,168,232,0.10)' }} />
+            <div style={{ position: 'absolute', right: -45, top: -45, width: 190, height: 190, borderRadius: '50%', background: 'rgba(24,85,130,0.08)' }} />
+            <div style={{ position: 'absolute', right: 100, bottom: -60, width: 160, height: 160, borderRadius: '50%', background: 'rgba(24,85,130,0.05)' }} />
             <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>
               <div>
-                <Tag color="blue" style={{ borderRadius: 999, marginBottom: 10 }}>Super Admin</Tag>
+                <Tag color="processing" style={{ borderRadius: 999, marginBottom: 10 }}>Super Admin</Tag>
                 <h1 style={{ margin: 0, color: '#263445', fontSize: 30, fontWeight: 900 }}>Şirkət idarəetməsi</h1>
                 <p style={{ margin: '8px 0 0', color: '#607f94', maxWidth: 760 }}>
                   Şirkət yaradılan kimi backend Company Admin hesabını avtomatik yaratmalı və adminEmail/defaultPassword qaytarmalıdır.
@@ -244,7 +239,7 @@ export function SuperAdminHome({ controller }: SuperAdminHomeProps) {
                       Şirkəti seçib məlumatlarına baxın, redaktə edin və aktiv/deaktiv statusunu idarə edin.
                     </p>
                   </div>
-                  <Tag color="blue" style={{ borderRadius: 999, paddingInline: 12, lineHeight: '28px' }}>Silmə bağlıdır · status idarəsi aktivdir</Tag>
+                  <Tag color="processing" style={{ borderRadius: 999, paddingInline: 12, lineHeight: '28px' }}>Silmə bağlıdır · status idarəsi aktivdir</Tag>
                 </Space>
 
                 <Space style={{ width: '100%', justifyContent: 'space-between', margin: companiesTableOpen ? '4px 0 18px' : '4px 0 0' }} wrap>
@@ -309,7 +304,7 @@ export function SuperAdminHome({ controller }: SuperAdminHomeProps) {
                         title: 'Limit',
                         key: 'limit',
                         width: 100,
-                        render: (_value: unknown, company) => <Tag color="blue">{getCompanyLimit(company)}</Tag>,
+                        render: (_value: unknown, company) => <Tag color="processing">{getCompanyLimit(company)}</Tag>,
                       },
                       {
                         title: 'Status',

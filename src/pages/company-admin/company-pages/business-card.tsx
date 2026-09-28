@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Button, Form, Input, Modal, message } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
+import { message } from '../../../utils/antd-static';
 import { exportImportActions } from '../../../helpers/export-import.helper';
 import {downloadVCard,getPublicCardUrl,normalizeUserToPublicProfile,savePublicCardProfilesFromUsers,} from '../../../features/public-card/public-card';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
@@ -17,10 +18,7 @@ import { getEmployeePhotoFromRecord } from '../../../features/public-card/public
 import { normalizeInlineImageData } from '../../../utils/asset-url.utils';
 import { useAuthSelector } from '../../../store/authStore';
 import { getStoredUser } from '../../../storage/auth.storage';
-
-interface BusinessCardProps {
-  detailOnly?: boolean;
-}
+import type { BusinessCardProps } from '../../../types/business-card.type';
 
 export function EmployeeDetailsPage() {
   return <BusinessCard detailOnly />;
@@ -168,7 +166,6 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
     setPhotoFile(null);
     setPhotoPreview('');
   };
-
 
   const normalizeBirthDateForBackend = (value?: string) => {
     const text = String(value || '').trim();
@@ -398,7 +395,6 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
     }
   };
 
-
   const handleViewPublicCard = (user: UserData) => {
     const identity = user.id || user.email;
     if (!identity) {
@@ -415,7 +411,6 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
     setEmployeeStatusTab(value as EmployeeStatusTab);
     setVisibleEmployeeCount(EMPLOYEE_BATCH_SIZE);
   };
-
 
   return (
     <>
@@ -439,7 +434,6 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
           hasMore={hasMoreEmployees}
           onLoadMore={loadMoreEmployees}
           company={company}
-          companyLogo={company.logo}
           companyCardBackground={companyCardBackground}
           protectedAdminKeys={protectedAdminKeys}
           vcfLoadingId={vcfLoadingId}
@@ -477,7 +471,6 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
         onOpenUser={openEditUser}
         companyName={company.name}
       />
-
 
       <Modal
         title={

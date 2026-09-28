@@ -6,14 +6,7 @@ import {extractAccessToken,extractCompanyId,extractCompanyVoen,extractRefreshTok
 import type { LoginFormValues, LoginResponse } from '../../types/auth.type';
 import { PASSWORD_CHANGE_ROLES, ROLES, type Role } from '../../constants/roles';
 import {buildBackendEmployeeFallback,buildCompanyAdminAccountInfo,buildLoginPayload,clearStaleBackendSession,hasEmployeeCompletedPasswordChange,hasEmployeePasswordChangeRequired,isAuthCredentialError,isCompanyAdminPasswordChanged,isNetworkOrTimeoutError,looksLikeEmployeeAccount,mergeEmployeeAccountInfo,readFirstLoginFlag,withCompanyAdminFirstLoginFlags,} from '../../features/auth/auth-login.helpers';
-
-interface PasswordChangeState {
-  role: Role | '';
-  backendFirstLoginFlag?: boolean;
-  employeePasswordChangeCompleted: boolean;
-  employeePasswordChangeRequired: boolean;
-  employeeStoredFirstLogin?: boolean;
-}
+import type { PasswordChangeState } from '../../types/auth.type';
 
 const resolveMustChangePassword = ({
   role,

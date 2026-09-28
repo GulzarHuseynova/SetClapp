@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Form, message, Modal } from 'antd';
+import { Form } from 'antd';
+import { message, modal } from '../utils/antd-static';
 import { superAdminActions } from '../helpers/super-admin.helper';
 import type { ApiCompany, CompanyAdminFormValues, CompanyCreateFormValues, CompanyEditFormValues, CompanyScanRankingRow, SuperAdminProps } from '../types/super.type';
 import { authSessionStorage } from '../storage/auth-session.storage';
-import {fileToLogoDataUrl,getCompanyBusinessEmail,getCompanyContact,getCompanyEmail,getCompanyLimit,getCompanyLogo,getCompanyName,getCompanyPhone,normalizeCompanyForUi,type CreatedAdminInfo,} from '../features/super/super-admin';
+import {fileToLogoDataUrl,getCompanyBusinessEmail,getCompanyContact,getCompanyEmail,getCompanyLimit,getCompanyLogo,getCompanyName,getCompanyPhone,normalizeCompanyForUi,} from '../features/super/super-admin';
+import type { CreatedAdminInfo } from '../types/super.type';
+import { confirmLogout } from '../components/confirm-logout';
 
 export function useSuperAdminController(onLogout?: SuperAdminProps['onLogout']) {
   const [companyForm] = Form.useForm<CompanyCreateFormValues>();
@@ -50,21 +53,14 @@ export function useSuperAdminController(onLogout?: SuperAdminProps['onLogout']) 
   }, []);
 
   const handleLogout = () => {
-    Modal.confirm({
-      title: 'Çıxış etmək istəyirsiniz?',
-      content: 'Sistemdən çıxış edəcəksiniz.',
-      okText: 'Bəli',
-      cancelText: 'Xeyr',
-      okButtonProps: { danger: true },
-      onOk: () => {
-        authSessionStorage.clear();
+    confirmLogout(() => {
+      authSessionStorage.clear();
 
-        if (onLogout) {
-          onLogout();
-        } else {
-          window.location.href = '/login';
-        }
-      },
+      if (onLogout) {
+        onLogout();
+      } else {
+        window.location.href = '/login';
+      }
     });
   };
 
@@ -353,7 +349,7 @@ export function useSuperAdminController(onLogout?: SuperAdminProps['onLogout']) 
       });
 
       if (adminEmail && defaultPassword) {
-        Modal.success({
+        modal.success({
           title: 'Şirkət və Company Admin avtomatik yaradıldı',
           content: (
             <div>

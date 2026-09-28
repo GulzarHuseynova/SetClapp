@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getAuthHeaders } from '../utils/api.utils';
+import { createDedupedAdapter } from './request-dedupe';
 
 const normalizeBaseUrl = (value?: string) => (value || '').trim().replace(/\/+$/, '');
 
@@ -20,6 +21,10 @@ export const axiosInstance = axios.create({
 export const publicAxiosInstance = axios.create({
   baseURL: API_BASE_URL || undefined,
   timeout: API_TIMEOUT_MS,
+});
+
+[axiosInstance, publicAxiosInstance].forEach((instance) => {
+  instance.defaults.adapter = createDedupedAdapter(axios.getAdapter(axios.defaults.adapter));
 });
 
 const isAuthFreeEndpoint = (url = '') => {

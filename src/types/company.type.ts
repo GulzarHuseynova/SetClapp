@@ -128,3 +128,7 @@ export interface NormalizedUser {
   cardBackgroundUrl?: string;
   socialAccounts?: Array<{ platformName?: string; profileUrl?: string; iconUrl?: string }>;
 }
+
+export type EmployeeSocialPayload = Pick<Partial<AddUserPayload & UpdateUserPayload>, 'linkedin' | 'facebook' | 'instagram'>;
+
+export type CustomSocialAccount = { platformName?: string; profileUrl?: string; iconUrl?: string };

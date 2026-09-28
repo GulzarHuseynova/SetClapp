@@ -1,4 +1,6 @@
 export const PERSISTENT_RUNTIME_PREFIXES = [
+  // Login zamanı təyin olunan rol token yaşadıqca qalmalıdır (bax: auth.storage).
+  'authMeta',
   'employee-password-changed:',
   'employee-password-required:',
   'employeeAccounts',

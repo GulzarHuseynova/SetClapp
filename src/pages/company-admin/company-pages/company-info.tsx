@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Form, Input, message, Switch, Upload } from 'antd';
+import { Form, Input, Switch, Upload } from 'antd';
+import { message } from '../../../utils/antd-static';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
 import { useAuthSelector } from '../../../store/authStore';
 import { getStoredUser } from '../../../storage/auth.storage';

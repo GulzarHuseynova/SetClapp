@@ -1,5 +1,6 @@
 import { Card, Col, Row, Space, Tag } from 'antd';
 import {CheckCircleOutlined,InfoCircleOutlined,QrcodeOutlined,SafetyCertificateOutlined,TeamOutlined,ThunderboltOutlined,} from '@ant-design/icons';
+import { BRAND_COLOR, BRAND_TINT } from '../../constants/theme';
 
 const quickCards = [
   {
@@ -30,17 +31,17 @@ export default function SuperInfo() {
       <div
         className="super-info-hero"
         style={{
-          background: 'linear-gradient(135deg,#0f172a 0%,#312e81 58%,#6d28d9 100%)',
+          background: 'linear-gradient(135deg,#0f2f47 0%,#185582 100%)',
           borderRadius: 26,
           padding: '28px 30px',
           color: '#fff',
           position: 'relative',
           overflow: 'hidden',
-          boxShadow: '0 24px 60px rgba(49,46,129,0.24)',
+          boxShadow: '0 24px 60px rgba(24,85,130,0.28)',
         }}
       >
         <div style={{ position: 'absolute', right: -60, top: -60, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
-        <div style={{ position: 'absolute', right: 120, bottom: -70, width: 180, height: 180, borderRadius: '50%', background: 'rgba(129,140,248,0.18)' }} />
+        <div style={{ position: 'absolute', right: 120, bottom: -70, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
 
         <div
           className="super-info-hero-grid"
@@ -54,13 +55,13 @@ export default function SuperInfo() {
           }}
         >
           <div>
-            <Tag color="blue" icon={<InfoCircleOutlined />} style={{ borderRadius: 999, marginBottom: 12 }}>
+            <Tag color="processing" icon={<InfoCircleOutlined />} style={{ borderRadius: 999, marginBottom: 12 }}>
               SetClapp haqqında
             </Tag>
             <h1 className="super-info-title" style={{ margin: 0, color: '#fff', fontSize: 34, fontWeight: 950, letterSpacing: -0.6 }}>
               SetClapp idarəetmə panelinə xoş gəldiniz
             </h1>
-            <p style={{ margin: '12px 0 0', color: '#ddd6fe', fontSize: 15, lineHeight: 1.7, maxWidth: 700 }}>
+            <p style={{ margin: '12px 0 0', color: '#dbe7f1', fontSize: 15, lineHeight: 1.7, maxWidth: 700 }}>
               Bu panel vasitəsilə şirkətləri yaratmaq, admin hesablarını bağlamaq, əməkdaş limitlərini idarə etmək və bütün dəyişiklikləri rahat izləmək mümkündür.
             </p>
 
@@ -89,15 +90,15 @@ export default function SuperInfo() {
               />
             </div>
             <div style={{ display: 'grid', gap: 10 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#eef2ff' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#eef4f9' }}>
                 <CheckCircleOutlined style={{ color: '#86efac' }} />
                 <span>Şirkət və admin məlumatları bir yerdə</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#eef2ff' }}>
-                <CheckCircleOutlined style={{ color: '#93c5fd' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#eef4f9' }}>
+                <CheckCircleOutlined style={{ color: '#ffffff' }} />
                 <span>Limitlər və girişlər rahat idarə olunur</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#eef2ff' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#eef4f9' }}>
                 <CheckCircleOutlined style={{ color: '#c4b5fd' }} />
                 <span>Dəyişikliklər audit bölməsində izlənir</span>
               </div>
@@ -115,8 +116,8 @@ export default function SuperInfo() {
                   width: 50,
                   height: 50,
                   borderRadius: 18,
-                  background: 'linear-gradient(135deg,#eef2ff,#f5f3ff)',
-                  color: '#4f46e5',
+                  background: BRAND_TINT,
+                  color: BRAND_COLOR,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

@@ -1,6 +1,8 @@
 import { isPersistentRuntimeKey, runtimeStorage } from './runtime.storage';
 import {asBoolean,asString,extractCompanyId,extractCompanyVoen,extractUserId,findDeep,findStringDeep,isRecord,normalizeRole,parseJwt,} from '../utils/api.utils';
 import type { AuthState } from '../types/auth-store.type';
+import { ROLES } from '../constants/roles';
+import type { StoredAuthMeta, StoredUserSession } from '../types/auth-store.type';
 
 export const AUTH_TOKEN_KEY = 'token';
 export const AUTH_USER_KEY = 'id';
@@ -59,7 +61,8 @@ const snapshotPersistentRuntimeEntries = () => {
 
   for (let index = 0; index < runtimeStorage.length; index += 1) {
     const key = runtimeStorage.key(index);
-    if (!key || !isPersistentRuntimeKey(key)) continue;
+    // Sessiya meta-məlumatı (rol) logout-dan sonra bərpa olunmamalıdır.
+    if (!key || key === AUTH_META_KEY || !isPersistentRuntimeKey(key)) continue;
 
     const value = runtimeStorage.getItem(key);
     if (value !== null) entries.push([key, value]);
@@ -71,29 +74,6 @@ const snapshotPersistentRuntimeEntries = () => {
 const restorePersistentRuntimeEntries = (entries: Array<[string, string]>) => {
   entries.forEach(([key, value]) => runtimeStorage.setItem(key, value));
 };
-
-export interface StoredUserSession {
-  companyId?: string;
-  email?: string;
-  firstName?: string;
-  fullName?: string;
-  id?: string;
-  isFirstLogin?: boolean;
-  lastName?: string;
-  role?: string;
-  companyVoen?: string;
-  userId?: string;
-  accountInfo?: Record<string, unknown> | null;
-  refreshToken?: string;
-  mustChangePassword?: boolean;
-  firstLogin?: boolean;
-  forcePasswordChange?: boolean;
-}
-
-interface StoredAuthMeta {
-  companyVoen?: string;
-  user?: StoredUserSession | null;
-}
 
 const safeJsonParse = (value: string | null): unknown => {
   if (!value) return null;
@@ -142,7 +122,9 @@ const writeAuthMeta = (meta: StoredAuthMeta) => {
   };
 
   if (cleanMeta.companyVoen || cleanMeta.user) {
-    runtimeStorage.setItem(AUTH_META_KEY, JSON.stringify(cleanMeta));
+    // Meta hər oxunuşda yenidən yazılır; dəyişməyibsə IndexedDB-yə boş yazı göndərilmir.
+    const serialized = JSON.stringify(cleanMeta);
+    if (runtimeStorage.getItem(AUTH_META_KEY) !== serialized) runtimeStorage.setItem(AUTH_META_KEY, serialized);
   } else {
     runtimeStorage.removeItem(AUTH_META_KEY);
   }
@@ -190,6 +172,13 @@ const extractRoleFromSources = (...sources: unknown[]) => {
   }
 
   return '';
+};
+
+// Rol JWT-dən oxunanda login ilə eyni qayda tətbiq olunur: backend employee tokenində də
+// super-admin rolu qaytara bilir, amma şirkətə (VÖEN-ə) bağlı token super-admin ola bilməz.
+const resolveTokenRole = (decoded: unknown) => {
+  const role = normalizeRole(extractRoleFromSources(decoded));
+  return role === ROLES.SUPER_ADMIN && extractCompanyVoen(decoded) ? ROLES.EMPLOYEE : role;
 };
 
 const toStoredUserForLocalStorage = (...sources: unknown[]): StoredUserSession => {
@@ -309,7 +298,7 @@ export const getStoredUser = (): StoredUserSession | null => {
 
   const legacyUser: StoredUserSession = {
     ...(legacyStoredUser || {}),
-    role: asString(legacyStoredUser?.role) || localStorage.getItem('role') || extractRoleFromSources(decoded),
+    role: asString(legacyStoredUser?.role) || localStorage.getItem('role') || resolveTokenRole(decoded),
     companyId: asString(legacyStoredUser?.companyId) || localStorage.getItem('companyId') || localStorage.getItem('CompanyId') || localStorage.getItem('companyID') || extractCompanyId(decoded),
     companyVoen: asString(legacyStoredUser?.companyVoen) || localStorage.getItem('companyVoen') || localStorage.getItem('companyVOEN') || localStorage.getItem('voen') || meta.companyVoen || extractCompanyVoen(decoded),
     id: asString(legacyStoredUser?.id || legacyStoredUser?.userId) || legacyId || (legacyUserIdRaw && !isRecord(legacyUserIdObject) ? legacyUserIdRaw : '') || extractUserId(decoded),
@@ -403,6 +392,7 @@ export const clearStoredAuthSession = () => {
   localStorage.removeItem(AUTH_USER_KEY);
   localStorage.removeItem(LEGACY_AUTH_USER_KEY);
   runtimeStorage.clear();
+  runtimeStorage.removeItem(AUTH_META_KEY);
   restorePersistentRuntimeEntries(persistentRuntimeEntries);
   cleanupLegacyAuthStorage();
 };
@@ -412,7 +402,7 @@ export const readAuthStateFromStorage = (): AuthState => {
   const user = getStoredUser();
   const decoded = token ? parseJwt(token) : {};
 
-  const role = normalizeRole(user?.role || extractRoleFromSources(decoded));
+  const role = normalizeRole(user?.role || resolveTokenRole(decoded));
   const companyId = asString(user?.companyId) || extractCompanyId(decoded);
   const companyVoen = asString(user?.companyVoen) || extractCompanyVoen(decoded);
   const userId = asString(user?.id || user?.userId) || localStorage.getItem(AUTH_USER_KEY) || extractUserId(decoded);
