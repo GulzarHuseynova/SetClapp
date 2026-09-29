@@ -255,3 +255,46 @@ export const getAuthHeaders = (): Record<string, string> => {
   if (!token || token.startsWith('local-')) return {};
   return { Authorization: token.startsWith('Bearer ') ? token : `Bearer ${token}` };
 };
+
+export const toRecord = (value: unknown): Record<string, unknown> =>
+  value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+
+export const cleanObject = (data: Record<string, unknown>) => {
+  return Object.fromEntries(
+    Object.entries(data).filter(([, value]) => value !== undefined && value !== null && value !== '')
+  );
+};
+
+export const isGuidLike = (value?: string) =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test((value || '').trim());
+
+// findStringDeep-dən fərqli olaraq açar tam uyğun gəlməlidir (endsWith yox) və yalnız string/number qaytarılır.
+export const findStringInObject = (source: unknown, keys: string[]) => {
+  if (!source || typeof source !== 'object') return '';
+
+  const wanted = keys.map(normalizeKey);
+  const queue: unknown[] = [source];
+  const seen = new Set<unknown>();
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+
+    if (!current || typeof current !== 'object' || seen.has(current)) continue;
+    seen.add(current);
+
+    if (Array.isArray(current)) {
+      queue.push(...current);
+      continue;
+    }
+
+    for (const [key, value] of Object.entries(current)) {
+      if (wanted.includes(normalizeKey(key)) && (typeof value === 'string' || typeof value === 'number')) {
+        return String(value).trim();
+      }
+
+      if (value && typeof value === 'object') queue.push(value);
+    }
+  }
+
+  return '';
+};

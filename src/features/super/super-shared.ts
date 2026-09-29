@@ -1,15 +1,8 @@
 import { runtimeStorage } from '../../storage/runtime.storage';
 import axios from 'axios';
-import { API_BASE_URL } from '../../api/client';
-import { asBoolean, asNumber, asString, extractCompanyId, findDeep, findStringDeep, type AnyRecord } from '../../utils/api.utils';
+import { asBoolean, asNumber, asString, extractCompanyId, findDeep, findStringDeep, type AnyRecord, cleanObject } from '../../utils/api.utils';
 import type { ApiCompany, CreateCompanyAdminPayload, CreateCompanyPayload } from '../../types/super.type';
-export const cleanObject = (data: Record<string, unknown>) => {
-  return Object.fromEntries(
-    Object.entries(data).filter(([, value]) => value !== undefined && value !== null && value !== '')
-  );
-};
-
-export const stripCompanyLogoFields = <T,>(value: T): T => value;
+import { toPublicAssetUrl, companyLimitStorageKeys } from '../../storage/company.storage';
 
 export const readAppStorage = (key: string) => runtimeStorage.getItem(key) || localStorage.getItem(key);
 export const writeAppStorage = (key: string, value: string) => {
@@ -41,40 +34,11 @@ export const getErrorMessage = (error: unknown) => {
   return error instanceof Error ? error.message : 'Naməlum xəta';
 };
 
-
-export const isAbsoluteAsset = (value: string) => {
-  const lower = value.toLowerCase();
-  return lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:') || lower.startsWith('blob:');
-};
-
-export const looksLikeImageAsset = (value: string) => {
-  const raw = value.trim();
-  if (!raw) return false;
-  if (isAbsoluteAsset(raw) || raw.startsWith('//')) return true;
-
-  const lower = raw.toLowerCase();
-  const hasImageExtension = /\.(png|jpe?g|webp|gif|svg|bmp|ico)(\?.*)?$/.test(lower);
-  const looksLikeUploadPath = lower.includes('/uploads/') || lower.includes('uploads/') || lower.includes('/files/') || lower.includes('files/') || lower.includes('/images/') || lower.includes('images/') || lower.includes('/logos/') || lower.includes('logos/');
-
-  return raw.startsWith('/') || hasImageExtension || looksLikeUploadPath;
-};
-
-export const toPublicAssetUrl = (value: unknown) => {
-  const raw = asString(value);
-  if (!raw || !looksLikeImageAsset(raw)) return '';
-  if (isAbsoluteAsset(raw)) return raw;
-  if (raw.startsWith('//')) return `${window.location.protocol}${raw}`;
-
-  const base = API_BASE_URL.replace(/\/+$/, '');
-  return `${base}/${raw.replace(/^\/+/, '')}`;
-};
-
-
 const COMPANY_LOGO_STORAGE_PREFIXES = ['companyLogo', 'companyLogo:', 'companyLogoVoen:'];
-export const isCompanyLogoStorageKey = (key: string) =>
+const isCompanyLogoStorageKey = (key: string) =>
   COMPANY_LOGO_STORAGE_PREFIXES.some((prefix) => key === prefix || key.startsWith(prefix));
 
-export const cleanupLegacyGlobalLogo = () => {
+const cleanupLegacyGlobalLogo = () => {
   const clean = (storage: Storage) => {
     for (let index = storage.length - 1; index >= 0; index -= 1) {
       const key = storage.key(index);
@@ -90,8 +54,7 @@ export const cleanupLegacyGlobalLogo = () => {
   }
 };
 
-
-export const getCompanyIdCandidates = (raw: unknown) => {
+const getCompanyIdCandidates = (raw: unknown) => {
   const item = (raw || {}) as AnyRecord;
   const companyObject = (item.company && typeof item.company === 'object' ? item.company : {}) as AnyRecord;
 
@@ -137,12 +100,6 @@ export const getCompanyWriteIds = (company: ApiCompany | string) => {
   ]);
 };
 
-
-export const companyLimitStorageKeys = (companyId?: string, voen?: string) => [
-  companyId ? `companyLimit:${companyId}` : '',
-  voen ? `companyLimitVoen:${voen}` : '',
-].filter(Boolean);
-
 export const getSavedCompanyLimit = (companyId?: string, voen?: string) => {
   for (const key of companyLimitStorageKeys(companyId, voen)) {
     try {
@@ -168,7 +125,6 @@ export const saveCompanyLimitToStorage = (companyId: string, voen: string, limit
     }
   });
 };
-
 
 export const normalizeCompany = (raw: unknown): ApiCompany => {
   const item = (raw || {}) as AnyRecord;
@@ -283,7 +239,6 @@ export const normalizeCompany = (raw: unknown): ApiCompany => {
   };
 };
 
-
 export const buildCreateCompanyPayloads = (payload: CreateCompanyPayload): Record<string, unknown>[] => {
   const companyName = (payload.companyName || payload.name || '').trim();
   const voen = (payload.voen || '').trim();
@@ -332,7 +287,7 @@ export const buildUpdateCompanyPayload = (payload: CreateCompanyPayload): Record
   });
 };
 
-export const splitFullName = (fullName: string) => {
+const splitFullName = (fullName: string) => {
   const parts = fullName.split(' ').filter(Boolean);
   return {
     firstName: parts[0] || fullName,

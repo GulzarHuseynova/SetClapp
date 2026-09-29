@@ -1,8 +1,8 @@
 import { normalizeAssetUrl } from '../../utils/asset-url.utils';
-import { runtimeStorage } from '../../storage/runtime.storage';
+import { runtimeStorage, canUseIndexedDb } from '../../storage/runtime.storage';
 
-export const COMPANY_CARD_BACKGROUND_PREFIX = 'companyCardBackground:';
-export const COMPANY_CARD_BACKGROUND_VOEN_PREFIX = 'companyCardBackgroundVoen:';
+const COMPANY_CARD_BACKGROUND_PREFIX = 'companyCardBackground:';
+const COMPANY_CARD_BACKGROUND_VOEN_PREFIX = 'companyCardBackgroundVoen:';
 
 const BACKGROUND_DB_NAME = 'setclapp-company-card-theme';
 const BACKGROUND_DB_STORE = 'backgrounds';
@@ -12,8 +12,6 @@ const backgroundKeys = (companyId?: string, companyVoen?: string) => [
   companyId ? `${COMPANY_CARD_BACKGROUND_PREFIX}${companyId.trim()}` : '',
   companyVoen ? `${COMPANY_CARD_BACKGROUND_VOEN_PREFIX}${companyVoen.trim()}` : '',
 ].filter(Boolean);
-
-const canUseIndexedDb = () => typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
 
 const openBackgroundDb = (): Promise<IDBDatabase | null> => {
   if (!canUseIndexedDb()) return Promise.resolve(null);

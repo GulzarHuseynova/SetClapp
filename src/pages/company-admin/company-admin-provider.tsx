@@ -6,7 +6,7 @@ import { companyActions } from "../../helpers/company.helper";
 import type { AddUserPayload, NormalizedCompanyInfo } from "../../types/company.type";
 import { mapCompanyInfo, normalizeUser } from "../../mappers/company.mapper";
 import { getSavedCompanyId, mapCompanyLogoResponse, resolveCompanyId, saveCompanyIdFromUnknown } from "../../storage/company.storage";
-import { mergeNormalizedUsers } from "../../features/company/company-user-identity";
+import { mergeNormalizedUsers, filterCompanyUsers } from "../../features/company/company-user-identity";
 import { useAuthSelector } from "../../store/authStore";
 import { getStoredUser } from "../../storage/auth.storage";
 import { CompanyAdminContext } from "../../hooks/use-company-admin";
@@ -54,27 +54,6 @@ const toFiniteNumber = (value: unknown): number => {
   const numericValue = typeof value === "number" ? value : Number(value);
   return Number.isFinite(numericValue) ? numericValue : 0;
 };
-
-const isSuperAdminUser = (user: Partial<UserData>) => {
-  const role = normalizeText(user.role);
-  const email = normalizeText(user.email);
-  const jobTitle = normalizeText(user.jobTitle);
-  const fullName = [user.firstName, user.lastName, user.middleName]
-    .map(normalizeText)
-    .filter(Boolean)
-    .join(' ');
-
-  return (
-    role === 'super-admin' ||
-    role === 'superadmin' ||
-    role === '2' ||
-    email === 'admin@setclapp.com' ||
-    (fullName.includes('super') && fullName.includes('admin')) ||
-    (jobTitle.includes('system') && jobTitle.includes('admin'))
-  );
-};
-
-const filterCompanyUsers = (users: UserData[]) => users.filter((user) => !isSuperAdminUser(user));
 
 const EMPTY_ANALYTICS: AnalyticsSnapshot = { count: 0, chart: [], ranking: [], logs: [] };
 
@@ -324,14 +303,8 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Analitika səhifəsi öz seçilmiş dövrü ilə sorğu göndərir. Buradan
-  // filtrsiz analitika çağırmaq səhifənin Gün/Həftə/Ay/İl nəticəsini sonradan
-  // üstələyə bilirdi. Provider yalnız şirkət və əməkdaşları ilkin yükləyir.
   const loadCompanyInfoOnce = useEffectEvent(() => loadCompanyInfo());
   const fetchUsersOnce = useEffectEvent((id: string) => fetchUsers(id));
-
-  // Yükləmə özü companyId/accountInfo-nu dəyişdirir; effekt onlardan asılı olsaydı
-  // şirkət və işçi sorğuları təkrar-təkrar göndərilirdi. Ona görə yalnız mount zamanı işləyir.
   useEffect(() => {
     const loadAll = async () => {
       const resolvedCompanyId = await loadCompanyInfoOnce();

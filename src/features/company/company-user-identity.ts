@@ -4,17 +4,17 @@ import type { NormalizedUser } from '../../types/company.type';
 
 export const uniq = (values: string[]) => Array.from(new Set(values.filter(Boolean)));
 
-export const uselessIdentityValues = new Set(['', '-', '--', 'null', 'undefined', 'n/a', 'na', 'yoxdur', 'yox']);
+const uselessIdentityValues = new Set(['', '-', '--', 'null', 'undefined', 'n/a', 'na', 'yoxdur', 'yox']);
 
-export const isUsefulIdentity = (value?: string | number | null) => {
+const isUsefulIdentity = (value?: string | number | null) => {
   const normalized = String(value ?? '').trim().toLowerCase();
   return Boolean(normalized && !uselessIdentityValues.has(normalized));
 };
 
 export const normalizeIdentityPart = (value?: string | number | null) => String(value ?? '').trim().toLowerCase();
 export const normalizeEmailIdentity = (value?: string | number | null) => normalizeIdentityPart(value);
-export const normalizePhoneIdentity = (value?: string | number | null) => normalizeIdentityPart(value).replace(/\D/g, '');
-export const isEmailIdentity = (value?: string | number | null) => /@/.test(String(value ?? ''));
+const normalizePhoneIdentity = (value?: string | number | null) => normalizeIdentityPart(value).replace(/\D/g, '');
+const isEmailIdentity = (value?: string | number | null) => /@/.test(String(value ?? ''));
 
 export const isSuperAdminUser = (user: Partial<NormalizedUser>) => {
   const role = normalizeRole(user.role);
@@ -35,32 +35,32 @@ export const isSuperAdminUser = (user: Partial<NormalizedUser>) => {
 
 export const filterCompanyUsers = (users: NormalizedUser[]) => users.filter((user) => !isSuperAdminUser(user));
 
-export const getFullNameIdentity = (user: Partial<NormalizedUser>) => {
+const getFullNameIdentity = (user: Partial<NormalizedUser>) => {
   return [user.firstName, user.lastName, user.middleName]
     .map(normalizeIdentityPart)
     .filter((part) => part && !uselessIdentityValues.has(part))
     .join('|');
 };
 
-export const hasSameEmail = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
+const hasSameEmail = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
   const leftEmail = normalizeEmailIdentity(left.email);
   const rightEmail = normalizeEmailIdentity(right.email);
   return Boolean(leftEmail && rightEmail && leftEmail === rightEmail && isEmailIdentity(leftEmail));
 };
 
-export const hasDifferentUsefulEmails = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
+const hasDifferentUsefulEmails = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
   const leftEmail = normalizeEmailIdentity(left.email);
   const rightEmail = normalizeEmailIdentity(right.email);
   return Boolean(leftEmail && rightEmail && isEmailIdentity(leftEmail) && isEmailIdentity(rightEmail) && leftEmail !== rightEmail);
 };
 
-export const hasSameUsefulId = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
+const hasSameUsefulId = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
   const leftId = normalizeIdentityPart(left.id);
   const rightId = normalizeIdentityPart(right.id);
   return Boolean(leftId && rightId && leftId === rightId && !isEmailIdentity(leftId));
 };
 
-export const hasSameQr = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
+const hasSameQr = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
   const leftQr = normalizeIdentityPart(left.qrUid || left.cardUid);
   const rightQr = normalizeIdentityPart(right.qrUid || right.cardUid);
   return Boolean(leftQr && rightQr && leftQr === rightQr && !isEmailIdentity(leftQr));
@@ -78,13 +78,13 @@ export const hasSameName = (left: Partial<NormalizedUser>, right: Partial<Normal
   return Boolean(leftName && rightName && leftName === rightName);
 };
 
-export const hasSameJob = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
+const hasSameJob = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
   const leftJob = normalizeIdentityPart(left.jobTitle);
   const rightJob = normalizeIdentityPart(right.jobTitle);
   return Boolean(leftJob && rightJob && leftJob === rightJob && !uselessIdentityValues.has(leftJob));
 };
 
-export const isSameUser = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
+const isSameUser = (left: Partial<NormalizedUser>, right: Partial<NormalizedUser>) => {
   if (hasSameEmail(left, right)) return true;
   if (hasDifferentUsefulEmails(left, right)) return false;
 
@@ -99,7 +99,7 @@ export const isSameUser = (left: Partial<NormalizedUser>, right: Partial<Normali
   return false;
 };
 
-export const pickUsefulString = (current?: string, next?: string) => {
+const pickUsefulString = (current?: string, next?: string) => {
   const currentText = String(current ?? '').trim();
   const nextText = String(next ?? '').trim();
   const currentUseful = isUsefulIdentity(currentText);
@@ -110,7 +110,7 @@ export const pickUsefulString = (current?: string, next?: string) => {
   return nextText || currentText;
 };
 
-export const pickEmail = (current?: string, next?: string) => {
+const pickEmail = (current?: string, next?: string) => {
   const currentEmail = normalizeEmailIdentity(current);
   const nextEmail = normalizeEmailIdentity(next);
 
@@ -119,7 +119,7 @@ export const pickEmail = (current?: string, next?: string) => {
   return pickUsefulString(current, next);
 };
 
-export const pickUsefulAsset = (current?: string, next?: string) => {
+const pickUsefulAsset = (current?: string, next?: string) => {
   const nextAsset = normalizeAssetUrl(next);
   if (nextAsset) return nextAsset;
 
@@ -129,7 +129,7 @@ export const pickUsefulAsset = (current?: string, next?: string) => {
   return '';
 };
 
-export const pickId = (current?: string, next?: string, email?: string) => {
+const pickId = (current?: string, next?: string, email?: string) => {
   const currentId = normalizeIdentityPart(current);
   const nextId = normalizeIdentityPart(next);
 
@@ -177,7 +177,7 @@ const mergeSocialAccounts = (
   return merged;
 };
 
-export const mergeUserRecords = (current: NormalizedUser, next: NormalizedUser): NormalizedUser => {
+const mergeUserRecords = (current: NormalizedUser, next: NormalizedUser): NormalizedUser => {
   const email = pickEmail(current.email, next.email);
   const photoData = normalizeInlineImageData(next.photoData || next.photo || next.photoUrl)
     || normalizeInlineImageData(current.photoData || current.photo || current.photoUrl);

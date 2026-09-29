@@ -4,8 +4,7 @@ import { getEmployeePhotoFromRecord } from '../features/public-card/public-card-
 import { applyLocalEmployeeOverrideToRecord } from '../storage/local-auth/employee-local-auth';
 import type { NormalizedCompanyInfo, NormalizedUser } from '../types/company.type';
 import {DEFAULT_COMPANY_LOGO,cleanupCompanyLogoStorage,getSavedCompanyLimit,getSavedCompanyLogo,mapCompanyLogoResponse, pickCompanyObject,} from '../storage/company.storage';
-
-const isEmailLike = (value: string) => /@/.test(value);
+import { stableQrUid, isEmailLike } from '../utils/qr.utils';
 
 const unusableValues = new Set(['', '-', '--', 'string', 'null', 'undefined', 'n/a', 'na', 'yoxdur', 'yox']);
 
@@ -22,7 +21,6 @@ const pickText = (item: AnyRecord, keys: string[]) => {
 
   return cleanText(findStringDeep(item, keys));
 };
-
 
 const pickDirectId = (item: AnyRecord, companyId: string) => {
   const id = cleanText(item.id || item.userId || item.employeeId || item.cardId || item.businessCardId || item.profileId);
@@ -120,23 +118,6 @@ const pickSocialUrl = (accounts: Array<{ platform: string; url: string }>, wante
     const url = account.url.toLowerCase();
     return platform.includes(key) || url.includes(key);
   })?.url || '';
-};
-
-const stableQrUid = (seed: string) => {
-  const source = seed || crypto.randomUUID();
-  let hash = 0x811c9dc5;
-
-  for (let index = 0; index < source.length; index += 1) {
-    hash ^= source.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193) >>> 0;
-  }
-
-  const hex = (hash.toString(16).padStart(8, '0') + source.split('').map((char) => char.charCodeAt(0).toString(16).padStart(2, '0')).join(''))
-    .replace(/[^a-f0-9]/gi, '')
-    .padEnd(32, '0')
-    .slice(0, 32);
-
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
 };
 
 const pickQrUid = (item: AnyRecord, id: string, email: string) => {

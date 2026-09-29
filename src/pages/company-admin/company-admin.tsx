@@ -28,44 +28,7 @@ import type { ChangePasswordRequest } from "../../types/auth.type";
 import type { CompanyAdminProps } from "../../types/company-admin.type";
 import type { EditableProfileValues } from "../../types/layout.type";
 import { confirmLogout } from "../../components/confirm-logout";
-
-const findStringInObject = (source: unknown, keys: string[]) => {
-  if (!source || typeof source !== "object") return "";
-
-  const wanted = keys.map((key) => key.toLowerCase());
-  const queue: unknown[] = [source];
-  const seen = new Set<unknown>();
-
-  while (queue.length > 0) {
-    const current = queue.shift();
-
-    if (!current || typeof current !== "object" || seen.has(current)) continue;
-
-    seen.add(current);
-
-    if (Array.isArray(current)) {
-      queue.push(...current);
-      continue;
-    }
-
-    for (const [key, value] of Object.entries(current)) {
-      const normalizedKey = key.toLowerCase().replace(/[\s_.-]/g, "");
-      const isWanted = wanted.some(
-        (wantedKey) => normalizedKey === wantedKey.toLowerCase().replace(/[\s_.-]/g, ""),
-      );
-
-      if (isWanted && (typeof value === "string" || typeof value === "number")) {
-        return String(value).trim();
-      }
-
-      if (value && typeof value === "object") {
-        queue.push(value);
-      }
-    }
-  }
-
-  return "";
-};
+import { findStringInObject } from "../../utils/api.utils";
 
 const findArrayInObject = (source: unknown, keys: string[]) => {
   if (!source || typeof source !== "object") return [] as Record<string, unknown>[];

@@ -291,7 +291,6 @@ export default function CompanyAdminProfileView({
     email: details.email,
     voen: details.voen,
   });
-  // Kartda şirkət adı ünvan kimi göstərilir, amma vCard-a ev ünvanı kimi yazılmamalıdır.
   const contactProfile: PublicCardProfile = { ...cardProfile, address: "" };
   const shareQrPayload = getQrPayload(contactProfile);
 

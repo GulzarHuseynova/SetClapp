@@ -1,6 +1,5 @@
 import { findLocalEmployeeById, saveLocalEmployeeAccount, updateLocalEmployeeById } from '../../storage/local-auth/employee-local-auth';
-import { asString, isRecord } from '../../utils/api.utils';
-import { cleanObject } from './api-fallback';
+import { asString, isRecord, cleanObject } from '../../utils/api.utils';
 import { normalizeAssetUrl } from '../../utils/asset-url.utils';
 import {getCompanyObjectFromAccountInfo,getSavedCompanyId,getSavedCompanyName,getSavedCompanySnapshot,getSavedCompanyVoen,saveCompanyInfoToStorage,} from '../../storage/company.storage';
 import type { AddUserPayload, CompanyInfo, NormalizedUser } from '../../types/company.type';

@@ -42,7 +42,7 @@ const enqueuePersistentOperation = (key: string, operation: () => Promise<void>)
   });
 };
 
-const canUseIndexedDb = () =>
+export const canUseIndexedDb = () =>
   typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
 
 const openRuntimeDb = (): Promise<IDBDatabase | null> => {
@@ -278,8 +278,6 @@ export const hydratePersistentRuntimeStorage = async (): Promise<void> => {
     if (runtimeStorage.getItem(key) === null) runtimeStorage.setItem(key, value);
   });
 
-  // Köhnə versiyadan localStorage-də qalan tətbiq məlumatlarını IndexedDB-yə
-  // bir dəfə köçürürük. Local Storage-də yalnız token və id saxlanılır.
   try {
     const legacyEntries: Array<[string, string]> = [];
 

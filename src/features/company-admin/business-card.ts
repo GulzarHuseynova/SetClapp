@@ -87,18 +87,6 @@ export const buildSwaggerExportCsv = (employees: UserData[], companyName: string
   return `\ufeff${swaggerExportHeaders.map(csvEscape).join(',')}\n${rows.join('\n')}`;
 };
 
-export const downloadTextFile = (content: string, fileName: string, mime = 'text/csv;charset=utf-8') => {
-  const url = window.URL.createObjectURL(new Blob([content], { type: mime }));
-  const anchor = document.createElement('a');
-
-  anchor.href = url;
-  anchor.download = fileName;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  window.URL.revokeObjectURL(url);
-};
-
 export const buildTemplateCsv = () => {
   const example = {
     firstName: 'Nümunə',
@@ -265,15 +253,6 @@ export const userIdentity = (record: UserData) => String(record.id || record.ema
 
 export const getEmployeeFullName = (record: Partial<UserData>) => {
   return `${record.firstName || ''} ${record.lastName || ''}`.trim() || record.email || 'Əməkdaş';
-};
-
-export const readFileAsDataUrl = (file: File) => {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ''));
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
 };
 
 const EMPLOYEE_LINK_SNAPSHOT_KEY = 'setclapp:employee-link-snapshots:v1';

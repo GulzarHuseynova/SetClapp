@@ -1,5 +1,3 @@
-import type { SuperAdminController } from '../hooks/use-super-admin-controller';
-
 export interface ApiCompany {
   id: string;
   name: string;
@@ -152,10 +150,6 @@ export type CreatedAdminInfo = {
 export type CompanyLogoProps = {
   company: ApiCompany;
   size?: number;
-};
-
-export type SuperAdminControllerProps = {
-  controller: SuperAdminController;
 };
 
 export interface AuditChange {

@@ -1,11 +1,9 @@
+import { canUseIndexedDb } from './runtime.storage';
 const DB_NAME = 'setclapp-persistent-images';
 const DB_STORE = 'images';
 const DB_VERSION = 1;
 
 const memoryCache = new Map<string, string>();
-
-const canUseIndexedDb = () =>
-  typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
 
 const normalizeKey = (value: unknown) => String(value ?? '').trim();
 const normalizeDataUrl = (value: unknown) => {

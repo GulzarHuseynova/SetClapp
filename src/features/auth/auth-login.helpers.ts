@@ -7,8 +7,8 @@ import type { LocalCompanyAdminAccount } from '../../storage/local-auth/company-
 import { readLocalEmployeeAccounts, type LocalEmployeeAccount } from '../../storage/local-auth/employee-local-auth';
 import {asBoolean,asNumber,asString,findDeep,findStringDeep,isRecord,normalizeArray,normalizeRole,} from '../../utils/api.utils';
 
-export const EMPLOYEE_PASSWORD_CHANGED_PREFIX = 'employee-password-changed:';
-export const EMPLOYEE_PASSWORD_REQUIRED_PREFIX = 'employee-password-required:';
+const EMPLOYEE_PASSWORD_CHANGED_PREFIX = 'employee-password-changed:';
+const EMPLOYEE_PASSWORD_REQUIRED_PREFIX = 'employee-password-required:';
 
 const getEmployeePasswordStateKeys = (prefix: string, email: string, voen: string, userId = '') => {
   const normalizedEmail = email.trim().toLowerCase();
@@ -22,12 +22,6 @@ const getEmployeePasswordStateKeys = (prefix: string, email: string, voen: strin
   if (normalizedUserId) keys.add(`${prefix}user:${normalizedUserId}`);
 
   return Array.from(keys);
-};
-
-export const getEmployeePasswordChangedKey = (email: string, voen: string, userId = '') => {
-  const identity = (email || userId).trim().toLowerCase();
-  const company = voen.trim();
-  return identity ? `${EMPLOYEE_PASSWORD_CHANGED_PREFIX}${company || 'no-voen'}:${identity}` : '';
 };
 
 const readEmployeePasswordState = (key: string) => {
@@ -96,7 +90,7 @@ export const isAuthCredentialError = (error: unknown) => {
   return status === 400 || status === 401 || status === 403 || status === 404;
 };
 
-export const cleanPayload = (payload: Record<string, unknown>) => {
+const cleanPayload = (payload: Record<string, unknown>) => {
   return Object.fromEntries(Object.entries(payload).filter(([, value]) => value !== undefined && value !== ''));
 };
 
@@ -180,7 +174,7 @@ export const withCompanyAdminFirstLoginFlags = (
 });
 
 
-export const getCompanyNameFromSources = (...sources: unknown[]) => {
+const getCompanyNameFromSources = (...sources: unknown[]) => {
   for (const source of sources) {
     const name = findStringDeep(source, ['companyName', 'name', 'title']);
     if (name) return name;
@@ -188,7 +182,7 @@ export const getCompanyNameFromSources = (...sources: unknown[]) => {
   return 'Şirkət';
 };
 
-export const preferEmployeeText = (...values: unknown[]) => {
+const preferEmployeeText = (...values: unknown[]) => {
   for (const value of values) {
     const text = String(value ?? '').trim();
     if (text && !['-', '--', 'null', 'undefined', 'n/a', 'na', 'yoxdur', 'yox'].includes(text.toLowerCase())) return text;
@@ -202,7 +196,7 @@ const preferEmployeePhoto = (...values: unknown[]) => {
   return photos.find((value) => value.startsWith('data:image/')) || photos[0] || '';
 };
 
-export const pickSocialUrlFromRow = (row: Record<string, unknown>, wanted: string) => {
+const pickSocialUrlFromRow = (row: Record<string, unknown>, wanted: string) => {
   const key = wanted.toLowerCase();
   const source = row.socialAccounts || row.socials || row.socialLinks || findDeep(row, ['socialAccounts', 'socials', 'socialLinks']);
   const account = normalizeArray<Record<string, unknown>>(source).find((item) => {
@@ -214,7 +208,7 @@ export const pickSocialUrlFromRow = (row: Record<string, unknown>, wanted: strin
   return account ? findStringDeep(account, ['url', 'link', 'value', 'href', 'profileUrl', 'accountUrl', 'socialUrl']) : '';
 };
 
-export const hasBackendItems = (value: unknown) => normalizeArray(value).length > 0;
+const hasBackendItems = (value: unknown) => normalizeArray(value).length > 0;
 
 export const mergeEmployeeAccountInfo = (
   localInfo: Record<string, unknown>,
@@ -276,7 +270,7 @@ export const mergeEmployeeAccountInfo = (
   };
 };
 
-export const findExistingLocalEmployee = (email: string, id: string, voen: string, companyId: string) => {
+const findExistingLocalEmployee = (email: string, id: string, voen: string, companyId: string) => {
   const cleanEmail = email.trim().toLowerCase();
   const cleanVoen = voen.trim();
 
@@ -292,7 +286,7 @@ export const findExistingLocalEmployee = (email: string, id: string, voen: strin
   }) || null;
 };
 
-export const rowToLocalEmployeeAccount = (
+const rowToLocalEmployeeAccount = (
   row: Record<string, unknown>,
   fallbackCompanyId: string,
   fallbackVoen: string,
@@ -411,7 +405,7 @@ export const buildLoginPayload = (values: LoginFormValues): Record<string, unkno
 };
 
 
-export const readRawRole = (...sources: unknown[]) => {
+const readRawRole = (...sources: unknown[]) => {
   for (const source of sources) {
     const value = findDeep(source, [
       'role',
