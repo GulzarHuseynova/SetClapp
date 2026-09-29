@@ -5,9 +5,9 @@ import { normalizeUser, normalizeUserWithLocalOverride } from '../../mappers/com
 import type { NormalizedUser } from '../../types/company.type';
 import {filterCompanyUsers,normalizeEmailIdentity,normalizeIdentityPart,hasSameName,hasSamePhone,uniq,} from './company-user-identity';
 
-export const COMPANY_USERS_CACHE_PREFIX = 'companyUsersCache:';
+const COMPANY_USERS_CACHE_PREFIX = 'companyUsersCache:';
 
-export const getCompanyUsersCacheKey = (companyId?: string, companyVoen?: string) => {
+const getCompanyUsersCacheKey = (companyId?: string, companyVoen?: string) => {
   const key = companyId || companyVoen || 'unknown-company';
   return `${COMPANY_USERS_CACHE_PREFIX}${key}`;
 };
@@ -33,7 +33,7 @@ export const saveCompanyUsersCache = (companyId: string, companyVoen: string, us
   }
 };
 
-export const isSameCacheUser = (user: NormalizedUser, target: Partial<NormalizedUser>) => {
+const isSameCacheUser = (user: NormalizedUser, target: Partial<NormalizedUser>) => {
   const userId = normalizeIdentityPart(user.id);
   const targetId = normalizeIdentityPart(target.id);
   const userEmail = normalizeEmailIdentity(user.email);

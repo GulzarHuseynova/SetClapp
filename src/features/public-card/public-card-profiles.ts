@@ -10,7 +10,6 @@ import type { NormalizedCompanyInfo, NormalizedUser } from '../../types/company.
 import type { PublicCardProfile, PublicContactExtra, PublicContactPhone, PublicContactSocial, ScanSource } from '../../types/public-card.type';
 import {PUBLIC_CARD_STORAGE_KEY,getCompanyLogoFromSources,getPublicCardUrl,getSavedCompanyLogoForProfile,normalizeEmail,normalizeText,pickPublicEmail,readStoredArray,resolveQrUid,saveStoredArray,getEmployeePhotoFromRecord,pickPublicCardPhoto,} from './public-card-shared';
 
-
 const getCardBackgroundFromRecord = (record: AnyRecord) => normalizeAssetUrl(
   record.cardBackgroundUrl ||
     record.cardBackgroundURL ||
@@ -62,7 +61,7 @@ const toPublicCardRecord = (payload: unknown, fallbackId: string): AnyRecord => 
   };
 };
 
-export const employeeToPublicProfile = (employee: LocalEmployeeAccount): PublicCardProfile => {
+const employeeToPublicProfile = (employee: LocalEmployeeAccount): PublicCardProfile => {
   const cardUrl = getPublicCardUrl(employee.id, 'QR');
   const customSocials = (employee.socialAccounts || [])
     .map((item) => ({
@@ -377,7 +376,7 @@ export const normalizeUserToPublicProfile = (
   };
 };
 
-export const readPublicCardProfiles = () => readStoredArray<PublicCardProfile>(PUBLIC_CARD_STORAGE_KEY);
+const readPublicCardProfiles = () => readStoredArray<PublicCardProfile>(PUBLIC_CARD_STORAGE_KEY);
 
 const publicProfileMatches = (row: PublicCardProfile, profile: PublicCardProfile) => {
   const cleanId = normalizeText(profile.id);
@@ -464,8 +463,7 @@ export const savePublicCardProfilesFromUsers = (
   saveStoredArray(PUBLIC_CARD_STORAGE_KEY, rows);
 };
 
-
-export const readStoredArrayFrom = <T,>(storage: Storage, key: string): T[] => {
+const readStoredArrayFrom = <T,>(storage: Storage, key: string): T[] => {
   try {
     const raw = storage.getItem(key);
     if (!raw) return [];
@@ -475,7 +473,7 @@ export const readStoredArrayFrom = <T,>(storage: Storage, key: string): T[] => {
   }
 };
 
-export const readStoredArrayByPrefix = <T,>(prefix: string): T[] => {
+const readStoredArrayByPrefix = <T,>(prefix: string): T[] => {
   const rows: T[] = [];
   const read = (storage: Storage) => {
     for (let index = 0; index < storage.length; index += 1) {
@@ -495,7 +493,7 @@ export const readStoredArrayByPrefix = <T,>(prefix: string): T[] => {
   return rows;
 };
 
-export const profileIdentityValues = (record: AnyRecord) => [
+const profileIdentityValues = (record: AnyRecord) => [
   record.id,
   record.userId,
   record.employeeId,
@@ -519,7 +517,7 @@ export const profileIdentityValues = (record: AnyRecord) => [
   record.emailAddress,
 ].map((value) => normalizeText(value)).filter(Boolean);
 
-export const isSamePublicIdentity = (record: AnyRecord, lookupId: string) => {
+const isSamePublicIdentity = (record: AnyRecord, lookupId: string) => {
   const cleanLookup = normalizeText(lookupId);
   const lookupEmail = normalizeEmail(cleanLookup);
   if (!cleanLookup) return false;
@@ -529,7 +527,7 @@ export const isSamePublicIdentity = (record: AnyRecord, lookupId: string) => {
   });
 };
 
-export const readKnownPublicUserRecords = (lookupId: string): AnyRecord[] => {
+const readKnownPublicUserRecords = (lookupId: string): AnyRecord[] => {
   const cleanLookup = normalizeText(lookupId);
   const records: AnyRecord[] = [];
 
@@ -550,7 +548,7 @@ export const readKnownPublicUserRecords = (lookupId: string): AnyRecord[] => {
   return records;
 };
 
-export const mergePublicProfileData = (profile: PublicCardProfile, fallback: PublicCardProfile): PublicCardProfile => {
+const mergePublicProfileData = (profile: PublicCardProfile, fallback: PublicCardProfile): PublicCardProfile => {
   const companyId = profile.companyId || fallback.companyId || '';
   const companyVoen = profile.companyVoen || fallback.companyVoen || '';
   const canonicalCompanyBackground = getSavedCompanyCardBackground(companyId, companyVoen);
@@ -575,7 +573,7 @@ export const mergePublicProfileData = (profile: PublicCardProfile, fallback: Pub
   };
 };
 
-export const hydratePublicProfileFromKnownSources = (profile: PublicCardProfile, ...lookupIds: string[]) => {
+const hydratePublicProfileFromKnownSources = (profile: PublicCardProfile, ...lookupIds: string[]) => {
   const seen = new Set<string>();
   let hydrated = profile;
 
@@ -594,7 +592,7 @@ export const hydratePublicProfileFromKnownSources = (profile: PublicCardProfile,
   return hydrated;
 };
 
-export const findStoredPublicCardProfile = (id: string): PublicCardProfile | null => {
+const findStoredPublicCardProfile = (id: string): PublicCardProfile | null => {
   const cleanId = decodeURIComponent(id || '').trim();
   const cleanEmail = normalizeEmail(cleanId);
   if (!cleanId) return null;

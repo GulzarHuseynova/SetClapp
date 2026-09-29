@@ -4,7 +4,7 @@ import type { PublicCardProfile, PublicScanLog, ScanSource } from '../../types/p
 import { PUBLIC_SCAN_LOGS_KEY, getDeviceOS, getFullName, normalizeText, readStoredArray, saveStoredArray } from './public-card-shared';
 import { savePublicCardProfile } from './public-card-profiles';
 
-export const readPublicScanLogs = (companyId?: string, companyVoen?: string) => {
+const readPublicScanLogs = (companyId?: string, companyVoen?: string) => {
   const cleanCompanyId = normalizeText(companyId);
   const cleanVoen = normalizeText(companyVoen);
   const logs = readStoredArray<PublicScanLog>(PUBLIC_SCAN_LOGS_KEY);

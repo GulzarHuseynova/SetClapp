@@ -7,7 +7,8 @@ import {
   ReloadOutlined,
   TrophyOutlined,
 } from '@ant-design/icons';
-import type { CompanyScanRankingRow, SuperAdminControllerProps } from '../../types/super.type';
+import type { CompanyScanRankingRow } from '../../types/super.type';
+import type { SuperAdminControllerProps } from '../../types/super-admin-controller.type';
 
 const statIcons = [
   <ApartmentOutlined key="companies" />,

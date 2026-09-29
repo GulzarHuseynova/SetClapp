@@ -11,15 +11,9 @@ import {
 import { AppButton } from '../../../components/ui/app-button';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
 import { exportImportActions } from '../../../helpers/export-import.helper';
-import {
-  buildSwaggerExportCsv,
-  buildTemplateCsv,
-  downloadTextFile,
-  isSuperAdminRow,
-  parseEmployeesCsv,
-  validateImportedEmployee,
-} from '../../../features/company-admin/business-card';
+import { buildSwaggerExportCsv, buildTemplateCsv, isSuperAdminRow, parseEmployeesCsv, validateImportedEmployee } from '../../../features/company-admin/business-card';
 import type { ExportImportLoadingAction } from '../../../types/export-import.type';
+import { downloadTextFile } from '../../../utils/download.utils';
 
 const { Dragger } = Upload;
 

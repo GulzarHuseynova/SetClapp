@@ -11,7 +11,6 @@ function AntdAppRegistration() {
   return null;
 }
 
-// message/modal çağırışları bu App-in kontekstində (theme daxil) render olunur.
 export function AntdAppProvider({ theme, children }: AntdAppProviderProps) {
   const app = (
     <App className="antd-app-root">

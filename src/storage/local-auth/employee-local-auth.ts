@@ -2,15 +2,13 @@ import { runtimeStorage } from '../runtime.storage';
 import { asBoolean, asNumber, asString, findDeep, findStringDeep, normalizeArray, type AnyRecord } from '../../utils/api.utils';
 import { getStoredUser } from '../auth.storage';
 import type { LocalAuditLog, LocalEmployeeAccount, LocalEmployeeOverride } from '../../types/local-auth.type';
+import { normalizeEmail, normalizeVoen } from './local-auth.utils';
 
 export type { LocalAuditLog, LocalEmployeeAccount, LocalEmployeeOverride } from '../../types/local-auth.type';
 
 const EMPLOYEE_STORAGE_KEY = 'employeeAccounts';
 const EMPLOYEE_OVERRIDE_STORAGE_KEY = 'employeeAccountOverrides';
 const AUDIT_STORAGE_KEY = 'localAuditLogs';
-
-const normalizeEmail = (value: string) => value.trim().toLowerCase();
-const normalizeVoen = (value: string) => value.trim();
 
 const pickSocialUrlFromRecord = (record: AnyRecord, wanted: string) => {
   const key = wanted.toLowerCase();

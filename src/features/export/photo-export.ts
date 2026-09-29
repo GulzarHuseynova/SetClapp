@@ -426,33 +426,3 @@ export const resolveHtmlEmployeeAssets = async (
 
   return { photo, background };
 };
-
-// Bir anda çox sayda işçi üçün yüzlərlə sorğu göndərməmək üçün paralel iş sayı məhdudlaşdırılır.
-const HTML_EXPORT_CONCURRENCY = 4;
-
-const mapWithConcurrency = async <T, R>(items: T[], limit: number, mapper: (item: T) => Promise<R>) => {
-  const results = new Array<R>(items.length);
-  let nextIndex = 0;
-
-  const worker = async () => {
-    while (nextIndex < items.length) {
-      const index = nextIndex;
-      nextIndex += 1;
-      results[index] = await mapper(items[index]);
-    }
-  };
-
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
-  return results;
-};
-
-export const prepareHtmlExportEmployees = async <T extends HtmlExportEmployee>(employees: T[]) =>
-  mapWithConcurrency(employees, HTML_EXPORT_CONCURRENCY, async (employee) => {
-    const { photo, background } = await resolveHtmlEmployeeAssets(employee);
-
-    return {
-      ...employee,
-      ...(photo ? { photo, photoUrl: photo, photoData: photo } : {}),
-      ...(background ? { cardBackgroundUrl: background } : {}),
-    };
-  });

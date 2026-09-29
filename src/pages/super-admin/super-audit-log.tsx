@@ -4,6 +4,7 @@ import {AuditOutlined,ClockCircleOutlined,DatabaseOutlined,EyeOutlined,ReloadOut
 import { superAdminActions, type SuperAuditLogRow } from '../../helpers/super-admin.helper';
 import type { AuditActionKind, AuditChange } from '../../types/super.type';
 import { BRAND_COLOR, BRAND_TINT } from '../../constants/theme';
+import { isGuidLike } from '../../utils/api.utils';
 
 const ACTION_MAP: Record<string, string> = {
   added: 'Əlavə edildi',
@@ -167,8 +168,6 @@ const formatDate = (value: string) => {
 
 const normalizeWordKey = (value?: string) => (value || '').replace(/[^a-z0-9]/gi, '').toLowerCase();
 const getLeafKey = (value: string) => normalizeWordKey(value.split('.').pop() || value);
-const isGuidLike = (value?: string) =>
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test((value || '').trim());
 
 const displayActor = (record: SuperAuditLogRow) => {
   const userName = (record.userName || '').trim();

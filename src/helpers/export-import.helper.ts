@@ -3,6 +3,7 @@ import type { HtmlExportEmployee } from '../types/export-import.type';
 import type { QrDownloadFormat } from '../types/public-card.type';
 import { getSavedCompanyId } from '../storage/company.storage';
 import { patchExportedHtml } from '../features/export/html-export';
+import { downloadBlob } from '../utils/download.utils';
 
 const resolveCompanyId = (companyId?: string) => companyId || getSavedCompanyId();
 
@@ -11,28 +12,6 @@ const getFileName = (header: unknown, fallback: string) => {
   const match = value.match(/filename\*?=(?:UTF-8''|")?([^";]+)/i);
 
   return match ? decodeURIComponent(match[1].replace(/"/g, '').trim()) : fallback;
-};
-
-export const downloadBlob = (blob: Blob, fileName: string) => {
-  const url = window.URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-
-  anchor.href = url;
-  anchor.download = fileName;
-  anchor.rel = 'noopener';
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-
-  window.setTimeout(() => window.URL.revokeObjectURL(url), 3000);
-};
-
-export const downloadTextFile = (
-  content: string,
-  fileName: string,
-  mime = 'text/csv;charset=utf-8',
-) => {
-  downloadBlob(new Blob([content], { type: mime }), fileName);
 };
 
 const getBlob = async (
@@ -352,5 +331,3 @@ export const exportImportActions = {
     }
   },
 };
-
-export { prepareHtmlExportEmployees } from '../features/export/photo-export';

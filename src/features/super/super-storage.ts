@@ -1,6 +1,6 @@
 import { readLocalCompanyAdminAccounts, saveLocalCompanyAdminAccount } from '../../storage/local-auth/company-admin-local-auth';
 import type { ApiCompany, CreateCompanyPayload } from '../../types/super.type';
-import { normalizeCompany, readAppStorage, stripCompanyLogoFields, writeAppStorage } from './super-shared';
+import { normalizeCompany, readAppStorage, writeAppStorage } from './super-shared';
 const SUPER_COMPANIES_CACHE_KEY = 'superAdminCompaniesCache';
 
 export const readCompaniesCache = (): ApiCompany[] => {
@@ -11,11 +11,11 @@ export const readCompaniesCache = (): ApiCompany[] => {
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
 
-    const normalized = stripCompanyLogoFields(parsed)
+    const normalized = parsed
       .filter((item): item is ApiCompany => Boolean(item && typeof item === 'object'))
       .map((item) => normalizeCompany(item));
 
-    writeAppStorage(SUPER_COMPANIES_CACHE_KEY, JSON.stringify(stripCompanyLogoFields(normalized)));
+    writeAppStorage(SUPER_COMPANIES_CACHE_KEY, JSON.stringify(normalized));
     return normalized;
   } catch {
     return [];
@@ -24,7 +24,7 @@ export const readCompaniesCache = (): ApiCompany[] => {
 
 export const saveCompaniesCache = (companies: ApiCompany[]) => {
   try {
-    writeAppStorage(SUPER_COMPANIES_CACHE_KEY, JSON.stringify(stripCompanyLogoFields(companies)));
+    writeAppStorage(SUPER_COMPANIES_CACHE_KEY, JSON.stringify(companies));
   } catch {
     // Cache is optional. If storage is full/unavailable, API data still works.
   }
@@ -112,20 +112,6 @@ export const updateCompanyInCache = (company: ApiCompany | string, updates: ApiC
   );
 
   saveCompaniesCache(next);
-};
-
-export const removeCompanyFromCache = (company: ApiCompany | string) => {
-  const id = typeof company === 'string' ? company : company.id;
-  const voen = typeof company === 'string' ? '' : company.voen;
-
-  saveCompaniesCache(
-    readCompaniesCache().filter((item) => {
-      return !(
-        (id && (item.id === id || item.apiId === id || item.idCandidates?.includes(id))) ||
-        (voen && item.voen === voen)
-      );
-    })
-  );
 };
 
 

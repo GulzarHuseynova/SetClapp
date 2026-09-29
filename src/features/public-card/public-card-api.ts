@@ -1,7 +1,8 @@
 import { publicAxiosInstance } from '../../api/client';
 import type { PublicCardProfile, ScanSource } from '../../types/public-card.type';
-import { downloadBlob, getFullName } from './public-card-shared';
+import { getFullName } from './public-card-shared';
 import { downloadVCard } from './public-card-vcard';
+import { downloadBlob } from '../../utils/download.utils';
 
 const clean = (value?: string) => String(value || '').trim();
 

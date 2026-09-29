@@ -1,7 +1,5 @@
 import axios, { type AxiosAdapter, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 
-// Açar tam URL (baseURL + params), cavab tipi və token-dən ibarətdir:
-// fərqli istifadəçilərin və ya fərqli formatların sorğuları birləşdirilmir.
 const buildRequestKey = (config: InternalAxiosRequestConfig) => [
   axios.getUri(config),
   config.responseType || 'json',

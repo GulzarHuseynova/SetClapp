@@ -3,7 +3,7 @@ import {BankOutlined,CheckCircleOutlined,EditOutlined,EyeOutlined,LockOutlined,M
 import type { ApiCompany, CompanyAdminFormValues, CompanyCreateFormValues, CompanyEditFormValues } from '../../../types/super.type';
 import {getCompanyBusinessEmail,getCompanyEmail,getCompanyLimit,getCompanyLogo,getCompanyName,getCompanyPhone,} from '../../../features/super/super-admin';
 import { CompanyLogo } from './company-logo';
-import type { SuperAdminControllerProps } from '../../../types/super.type';
+import type { SuperAdminControllerProps } from '../../../types/super-admin-controller.type';
 
 export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
   const {

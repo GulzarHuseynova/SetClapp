@@ -1,6 +1,7 @@
 import type { CardData } from "../../types/employee.type";
 import { findDeep, findObjectDeep, isRecord, unwrapData } from "../../utils/api.utils";
 import { normalizeAssetUrl } from "../../utils/asset-url.utils";
+import { stableQrUid, isEmailLike } from "../../utils/qr.utils";
 
 export const uuid = () => crypto.randomUUID?.() ??
   "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
@@ -65,25 +66,6 @@ const toEmployeeRecord = (data: unknown): Record<string, unknown> => {
     ...nested,
     company: nested.company || unwrapped.company,
   };
-};
-
-const isEmailLike = (value: string) => /@/.test(value);
-
-const stableQrUid = (seed: string) => {
-  const source = seed || uuid();
-  let hash = 0x811c9dc5;
-
-  for (let index = 0; index < source.length; index += 1) {
-    hash ^= source.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193) >>> 0;
-  }
-
-  const hex = (hash.toString(16).padStart(8, "0") + source.split("").map((char) => char.charCodeAt(0).toString(16).padStart(2, "0")).join(""))
-    .replace(/[^a-f0-9]/gi, "")
-    .padEnd(32, "0")
-    .slice(0, 32);
-
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
 };
 
 const pickQrUid = (user: Record<string, unknown>, fallback: CardData) => {

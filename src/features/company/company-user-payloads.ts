@@ -1,10 +1,9 @@
 import { axiosInstance } from '../../api/client';
-import { cleanObject } from './api-fallback';
 import { normalizeAssetUrl } from '../../utils/asset-url.utils';
-import { findStringDeep, isRecord } from '../../utils/api.utils';
+import { findStringDeep, isRecord, cleanObject } from '../../utils/api.utils';
 import { stripSocialLinksFromAdditionalInfo } from '../profile/profile-info';
 import type { AddUserPayload, UpdateUserPayload } from '../../types/company.type';
-import type { CustomSocialAccount, EmployeeSocialPayload } from '../../types/company.type';
+import type { CustomSocialAccount } from '../../types/company.type';
 
 const primarySocialKeys = ['linkedin', 'facebook', 'instagram'];
 
@@ -27,7 +26,7 @@ const normalizeCustomSocialAccounts = (value: unknown): CustomSocialAccount[] | 
     });
 };
 
-export const backendPhotoUrlValue = (value: unknown) => {
+const backendPhotoUrlValue = (value: unknown) => {
   const text = String(value ?? '').trim();
   // JSON profil payload-ına yalnız backend URL göndərilir. Yeni şəkil ayrıca
   // /api/CompanyAdmin/users/{id}/photo endpointinə multipart/form-data ilə yüklənir.
@@ -39,35 +38,9 @@ const backendCardBackgroundValue = (value: unknown) => {
   return /^(https?:\/\/|\/api\/uploads\/|data:image\/)/i.test(text) ? text : '';
 };
 
-export const socialValue = (value?: string) => String(value ?? '').trim();
+const getPayloadString = (payload: Record<string, unknown>, key: string) => String(payload[key] ?? '').trim();
 
-export const buildEmployeeSocialAccounts = (payload: EmployeeSocialPayload) => {
-  return [
-    { platform: 'LinkedIn', url: socialValue(payload.linkedin) },
-    { platform: 'Facebook', url: socialValue(payload.facebook) },
-    { platform: 'Instagram', url: socialValue(payload.instagram) },
-  ]
-    .filter((account) => account.url)
-    .map((account) => ({
-      platform: account.platform,
-      platformName: account.platform,
-      socialPlatform: account.platform,
-      socialMediaName: account.platform,
-      name: account.platform,
-      type: account.platform,
-      url: account.url,
-      link: account.url,
-      value: account.url,
-      href: account.url,
-      profileUrl: account.url,
-      accountUrl: account.url,
-      socialUrl: account.url,
-    }));
-};
-
-export const getPayloadString = (payload: Record<string, unknown>, key: string) => String(payload[key] ?? '').trim();
-
-export const getSwaggerSocialValues = (payload: Record<string, unknown>) => ({
+const getSwaggerSocialValues = (payload: Record<string, unknown>) => ({
   linkedinUrl: getPayloadString(payload, 'linkedinUrl') || getPayloadString(payload, 'linkedInUrl') || getPayloadString(payload, 'linkedin'),
   facebookUrl: getPayloadString(payload, 'facebookUrl') || getPayloadString(payload, 'facebook'),
   instagramUrl: getPayloadString(payload, 'instagramUrl') || getPayloadString(payload, 'instagram'),
@@ -96,7 +69,7 @@ const normalizeRoleValue = (value: unknown) => {
   return Number.isInteger(role) && role >= 0 && role <= 2 ? role : 0;
 };
 
-export const buildSwaggerCreateUserPayload = (
+const buildSwaggerCreateUserPayload = (
   payload: Record<string, unknown>,
 ) => {
   const socials = getSwaggerSocialValues(payload);
@@ -245,7 +218,7 @@ export const buildUpdateUserPayload = (payload: UpdateUserPayload) => {
   });
 };
 
-export const photoResponseKeys = [
+const photoResponseKeys = [
   'photoUrl',
   'photoURL',
   'profilePhotoUrl',
@@ -373,7 +346,7 @@ const convertPhotoToJpeg = async (file: File) => {
   }
 };
 
-export const normalizeEmployeePhotoUploadFile = async (file: File): Promise<File> => {
+const normalizeEmployeePhotoUploadFile = async (file: File): Promise<File> => {
   const mimeType = String(file.type || '').toLowerCase();
   const extension = file.name.split('.').pop()?.toLowerCase() || '';
   const inferredMimeType = photoMimeByExtension[extension];

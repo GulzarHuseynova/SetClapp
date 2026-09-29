@@ -5,6 +5,9 @@ import {
 } from './photo-export';
 import { stripSocialLinksFromAdditionalInfo } from '../profile/profile-info';
 import type { ExportAssetRow } from '../../types/export-import.type';
+import { mapWithConcurrency } from '../../utils/async.utils';
+
+const HTML_EXPORT_CONCURRENCY = 4;
 
 const isExcludedImageContainer = (element: Element) => {
   const marker = `${element.id} ${element.className || ''}`.toLowerCase();
@@ -602,63 +605,13 @@ const sanitizeStandaloneHtmlFrames = (document: Document) => {
   });
 };
 
+// "Əlavə məlumat"-dakı sosial linklər export zamanı statik təmizlənir
+// (removeDuplicateSocialAdditionalInfo). Bu runtime yalnız səhifənin öz JS-i sonradan
+// əlavə edə biləcəyi iframe-ləri təhlükəsizləşdirir; mətnə toxunmur.
 const appendStandaloneHtmlCleanupRuntime = (document: Document) => {
   const script = document.createElement('script');
   script.setAttribute('data-setclapp-export-cleanup', 'true');
   script.textContent = `(() => {
-    const normalize = (value) => String(value || '')
-      .normalize('NFD')
-      .replace(/[\\u0300-\\u036f]/g, '')
-      .toLocaleLowerCase('az')
-      .replace(/[ə]/g, 'e')
-      .replace(/[ı]/g, 'i')
-      .replace(/[ş]/g, 's')
-      .replace(/[ç]/g, 'c')
-      .replace(/[ö]/g, 'o')
-      .replace(/[ü]/g, 'u')
-      .replace(/[ğ]/g, 'g')
-      .replace(/\\s+/g, ' ')
-      .trim();
-    const social = /(linkedin|facebook|instagram|youtube|tiktok|twitter|x\\.com|telegram|(?:https?:\\/\\/)?(?:www\\.)?(?:linkedin|facebook|instagram|youtube|tiktok|twitter|x)\\.com\\/)/i;
-    const isHeading = (element) => {
-      if (!element) return false;
-      const text = normalize(element.textContent);
-      return text === 'elave melumat' || text === 'additional info' || text === 'additional information';
-    };
-    const cleanSegments = (value) => String(value || '')
-      .split(/[;\\r\\n]+/)
-      .map((part) => part.trim())
-      .filter(Boolean)
-      .filter((part) => !social.test(part))
-      .join('; ');
-    const cleanAdditionalInfo = () => {
-      const headings = Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,h6,strong,b,p,span,div')).filter(isHeading);
-      headings.forEach((heading) => {
-        let container = heading.parentElement;
-        for (let depth = 0; container && container !== document.body && depth < 7; depth += 1) {
-          if (social.test(container.textContent || '')) break;
-          container = container.parentElement;
-        }
-        if (!container || container === document.body || !social.test(container.textContent || '')) return;
-
-        const leaves = Array.from(container.querySelectorAll('*')).filter((element) => (
-          element !== heading && !element.contains(heading) && element.children.length === 0
-        ));
-        leaves.forEach((element) => {
-          const original = String(element.textContent || '').trim();
-          if (!original || !social.test(original)) return;
-          const cleaned = cleanSegments(original);
-          if (cleaned) element.textContent = cleaned;
-          else element.remove();
-        });
-
-        const remaining = normalize(container.textContent)
-          .replace(normalize(heading.textContent), '')
-          .replace(/^[;,:|\\-\\s]+|[;,:|\\-\\s]+$/g, '')
-          .trim();
-        if (!remaining || social.test(remaining)) container.remove();
-      });
-    };
     const sanitizeFrames = () => document.querySelectorAll('iframe').forEach((frame) => {
       const source = String(frame.getAttribute('src') || '').trim();
       if (!source || source === '#' || source === '.' || source === './') frame.setAttribute('src', 'about:blank');
@@ -670,10 +623,7 @@ const appendStandaloneHtmlCleanupRuntime = (document: Document) => {
     let cleanupTimer = 0;
     const run = () => {
       window.clearTimeout(cleanupTimer);
-      cleanupTimer = window.setTimeout(() => {
-        sanitizeFrames();
-        cleanAdditionalInfo();
-      }, 0);
+      cleanupTimer = window.setTimeout(sanitizeFrames, 0);
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
     else run();
@@ -700,10 +650,11 @@ export const patchExportedHtml = async (blob: Blob, employees: HtmlExportEmploye
   removeDuplicateSocialAdditionalInfo(document, employees);
   sanitizeStandaloneHtmlFrames(document);
 
-  const assetRows: ExportAssetRow[] = await Promise.all(cleanEmployees.map(async (employee) => ({
+  // Hər işçi üçün bir neçə sorğu gedir; yüzlərlə işçi olanda backend-i boğmamaq üçün paralel iş sayı məhdudlaşdırılır.
+  const assetRows: ExportAssetRow[] = await mapWithConcurrency(cleanEmployees, HTML_EXPORT_CONCURRENCY, async (employee) => ({
     employee,
     ...await resolveHtmlEmployeeAssets(employee),
-  })));
+  }));
 
   const usedPhotoTargets = new Set<Element>();
   const usedBackgroundTargets = new Set<Element>();

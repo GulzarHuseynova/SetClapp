@@ -3,7 +3,7 @@ import { userService } from '../services/user.service';
 import {addLocalAuditLog,applyLocalEmployeeOverrideToRecord,employeeToRecord,findLocalEmployeeById,findLocalEmployeeOverride,saveLocalEmployeeOverride,updateLocalEmployeeById,type LocalEmployeeAccount,} from '../storage/local-auth/employee-local-auth';
 import { getStoredUser, patchStoredUser } from '../storage/auth.storage';
 import { getSavedCompanyId, getSavedCompanyVoen } from '../storage/company.storage';
-import { asBoolean, findDeep, findObjectDeep, findStringDeep, isRecord, unwrapData } from '../utils/api.utils';
+import { asBoolean, findDeep, findObjectDeep, findStringDeep, isRecord, unwrapData, toRecord } from '../utils/api.utils';
 import { normalizeAssetUrl } from '../utils/asset-url.utils';
 import { getEmployeePhotoFromRecord, pickPublicCardPhoto } from '../features/public-card/public-card-shared';
 
@@ -193,10 +193,6 @@ const normalizeProfileUrl = (value: unknown) => {
 };
 
 const hasItems = (value: unknown) => Array.isArray(value) && value.length > 0;
-
-const toRecord = (value: unknown): Record<string, unknown> => (
-  value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
-);
 
 const extractEmployeeRecord = (payload: unknown): Record<string, unknown> => {
   const root = unwrapData(payload);

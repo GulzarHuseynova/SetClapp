@@ -1,6 +1,7 @@
 import { API_TARGET_URL } from '../../api/client';
 import type { PublicCardProfile } from '../../types/public-card.type';
-import { downloadBlob, getFullName } from './public-card-shared';
+import { getFullName } from './public-card-shared';
+import { downloadBlob } from '../../utils/download.utils';
 
 const escapeVCard = (value: string) => value
   .replace(/\\/g, '\\\\')
@@ -166,7 +167,7 @@ const resolveEmbeddedPhoto = async (photo: string) => {
   }
 };
 
-export const buildVCard = (profile: PublicCardProfile) => {
+const buildVCard = (profile: PublicCardProfile) => {
   const fullName = getFullName(profile);
   const birthDate = normalizeBirthDate(profile.dateOfBirth);
   const homeAddress = String(profile.address || '').trim();

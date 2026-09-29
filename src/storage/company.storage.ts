@@ -1,6 +1,6 @@
 import { runtimeStorage } from './runtime.storage';
 import { API_BASE_URL, axiosInstance } from '../api/client';
-import {asNumber,asString,extractCompanyId,extractCompanyVoen,findDeep,findObjectDeep,isRecord,normalizeArray,unwrapData,type AnyRecord,} from '../utils/api.utils';
+import {asNumber,asString,cleanObject,extractCompanyId,extractCompanyVoen,findDeep,findObjectDeep,isRecord,normalizeArray,unwrapData,type AnyRecord,} from '../utils/api.utils';
 import { updateLocalCompanyAdminCompany } from './local-auth/company-admin-local-auth';
 import { getStoredUser, patchStoredUser } from './auth.storage';
 import type { CompanyInfo } from '../types/company.type';
@@ -8,12 +8,12 @@ import type { CompanyInfo } from '../types/company.type';
 export const DEFAULT_COMPANY_LOGO = (name: string) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff&size=80&bold=true`;
 
-const isAbsoluteAsset = (value: string) => {
+export const isAbsoluteAsset = (value: string) => {
   const lower = value.toLowerCase();
   return lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:') || lower.startsWith('blob:');
 };
 
-const looksLikeImageAsset = (value: string) => {
+export const looksLikeImageAsset = (value: string) => {
   const raw = value.trim();
 
   if (!raw) return false;
@@ -34,7 +34,7 @@ const looksLikeImageAsset = (value: string) => {
   return raw.startsWith('/') || hasImageExtension || looksLikeUploadPath;
 };
 
-const toPublicAssetUrl = (value: unknown) => {
+export const toPublicAssetUrl = (value: unknown) => {
   const raw = asString(value);
 
   if (!raw || !looksLikeImageAsset(raw)) return '';
@@ -59,7 +59,6 @@ export const cleanupCompanyLogoStorage = () => {
   }
 };
 
-const stripCompanyLogoFields = <T,>(value: T): T => value;
 
 const readAppStorage = (key: string) => {
   const runtimeValue = runtimeStorage.getItem(key);
@@ -103,7 +102,7 @@ export const saveCompanyLogoToStorage = (logoValue: unknown, companyId?: string,
   return logo;
 };
 
-const companyLimitStorageKeys = (companyId?: string, voen?: string) => [
+export const companyLimitStorageKeys = (companyId?: string, voen?: string) => [
   companyId ? `companyLimit:${companyId}` : '',
   voen ? `companyLimitVoen:${voen}` : '',
 ].filter(Boolean);
@@ -235,9 +234,7 @@ export const saveCompanyInfoToStorage = (
   const parsedAccountInfo = storedUser?.accountInfo || null;
 
   const storedCompany = getSavedCompanySnapshot(companyId, voen) || (isRecord(parsedAccountInfo) ? pickCompanyObject(parsedAccountInfo) : {});
-  const cleanUpdates = stripCompanyLogoFields(Object.fromEntries(
-    Object.entries(updates).filter(([, value]) => value !== undefined && value !== null && value !== ''),
-  ) as AnyRecord);
+  const cleanUpdates = cleanObject(updates as AnyRecord);
 
   const nextCompany: AnyRecord = {
     ...(isRecord(storedCompany) ? storedCompany : {}),

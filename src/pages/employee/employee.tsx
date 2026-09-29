@@ -20,39 +20,7 @@ import { AntdAppProvider } from "../../components/antd-app-provider";
 import { message } from "../../utils/antd-static";
 import "./employee.css";
 import { confirmLogout } from "../../components/confirm-logout";
-
-const normalizeObjectKey = (value: string) => value.toLowerCase().replace(/[\s_.-]/g, "");
-
-const findStringInObject = (source: unknown, keys: string[]) => {
-  if (!source || typeof source !== "object") return "";
-
-  const wanted = keys.map(normalizeObjectKey);
-  const queue: unknown[] = [source];
-  const seen = new Set<unknown>();
-
-  while (queue.length > 0) {
-    const current = queue.shift();
-
-    if (!current || typeof current !== "object" || seen.has(current)) continue;
-    seen.add(current);
-
-    if (Array.isArray(current)) {
-      queue.push(...current);
-      continue;
-    }
-
-    for (const [key, value] of Object.entries(current)) {
-      const normalizedKey = normalizeObjectKey(key);
-      if (wanted.includes(normalizedKey) && (typeof value === "string" || typeof value === "number")) {
-        return String(value).trim();
-      }
-
-      if (value && typeof value === "object") queue.push(value);
-    }
-  }
-
-  return "";
-};
+import { findStringInObject } from "../../utils/api.utils";
 
 function EmployeePages() {
   return (

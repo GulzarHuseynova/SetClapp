@@ -8,32 +8,10 @@ export type {
   ScanSource,
 } from '../../types/public-card.type';
 
-export {
-  getDeviceOS,
-  getFullName,
-  getPublicCardOrigin,
-  getPublicCardQrScanUrl,
-  getPublicCardUrl,
-  getQrImageUrl,
-} from './public-card-shared';
-export {
-  fetchPublicCardProfile,
-  findPublicCardProfile,
-  normalizeUserToPublicProfile,
-  readPublicCardProfiles,
-  savePublicCardProfile,
-  savePublicCardProfilesFromUsers,
-} from './public-card-profiles';
-export { buildVCard, buildOfflineQrVCard, downloadVCard } from './public-card-vcard';
-export { getPublicScanAnalytics, readPublicScanLogs, recordPublicScan } from './public-card-scans';
-export {
-  buildQrDownloadBlob,
-  downloadFilesAsZip,
-  downloadQrByFormat,
-  downloadQrImage,
-  getSafeQrDownloadFileName,
-  getQrPayload,
-  openQrPdfPrintPage,
-} from './public-card-qr';
+export { getDeviceOS, getFullName, getPublicCardUrl } from './public-card-shared';
+export { fetchPublicCardProfile, findPublicCardProfile, normalizeUserToPublicProfile, savePublicCardProfile, savePublicCardProfilesFromUsers } from './public-card-profiles';
+export { buildOfflineQrVCard, downloadVCard } from './public-card-vcard';
+export { getPublicScanAnalytics, recordPublicScan } from './public-card-scans';
+export { downloadQrByFormat, getQrPayload } from './public-card-qr';
 
 export { downloadPublicCardVcf } from './public-card-api';

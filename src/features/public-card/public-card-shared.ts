@@ -3,6 +3,7 @@ import { asString, findStringDeep, normalizeArray, type AnyRecord } from '../../
 import { getSavedCompanyLogo, getSavedCompanySnapshot, mapCompanyLogoResponse } from '../../storage/company.storage';
 import { normalizeAssetUrl } from '../../utils/asset-url.utils';
 import type { PublicCardProfile, ScanSource } from '../../types/public-card.type';
+import { stableQrUid, isEmailLike } from '../../utils/qr.utils';
 
 export const PUBLIC_CARD_STORAGE_KEY = 'publicCardProfiles';
 export const PUBLIC_SCAN_LOGS_KEY = 'publicScanLogs';
@@ -121,7 +122,6 @@ export const getEmployeePhotoFromRecord = (record: AnyRecord) => {
   return pickPublicCardPhoto(...directValues, deepValue);
 };
 
-
 export const getCompanyLogoFromSources = (...sources: unknown[]) => {
   for (const source of sources) {
     const logo = mapCompanyLogoResponse(source);
@@ -134,25 +134,6 @@ export const getCompanyLogoFromSources = (...sources: unknown[]) => {
 export const getSavedCompanyLogoForProfile = (companyId?: string, companyVoen?: string) => {
   const snapshot = getSavedCompanySnapshot(companyId, companyVoen);
   return getCompanyLogoFromSources(snapshot) || getSavedCompanyLogo(companyId, companyVoen);
-};
-
-export const isEmailLike = (value: string) => /@/.test(value);
-
-export const stableQrUid = (seed: string) => {
-  const source = seed || crypto.randomUUID();
-  let hash = 0x811c9dc5;
-
-  for (let index = 0; index < source.length; index += 1) {
-    hash ^= source.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193) >>> 0;
-  }
-
-  const hex = (hash.toString(16).padStart(8, '0') + source.split('').map((char) => char.charCodeAt(0).toString(16).padStart(2, '0')).join(''))
-    .replace(/[^a-f0-9]/gi, '')
-    .padEnd(32, '0')
-    .slice(0, 32);
-
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
 };
 
 export const resolveQrUid = (...values: unknown[]) => {
@@ -205,21 +186,7 @@ export const saveStoredArray = <T>(key: string, rows: T[]) => {
   localStorage.removeItem(key);
 };
 
-export const downloadBlob = (blob: Blob, fileName: string) => {
-  const url = window.URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-
-  anchor.href = url;
-  anchor.download = fileName;
-  anchor.rel = 'noopener';
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-
-  window.setTimeout(() => window.URL.revokeObjectURL(url), 3000);
-};
-
-export const getPublicCardOrigin = () => {
+const getPublicCardOrigin = () => {
   if (typeof window === 'undefined') return '';
   return window.location.origin;
 };
@@ -233,22 +200,6 @@ export const getPublicCardUrl = (employeeId: string, source: ScanSource = 'QR') 
   // sorğusunu source=Direct ilə backend-ə göndərir.
   if (source === 'Direct') return `${origin}/card/${cleanId}`;
   return `${origin}/card/${cleanId}?source=${source}`;
-};
-
-/**
- * QR şəklinin daxilində istifadə olunan URL.
- * Ekranda göstərilən adi public linkdən fərqli olaraq bu parametr yalnız
- * QR skanından açılan səhifədə VCF-in avtomatik yüklənməsini aktivləşdirir.
- */
-export const getPublicCardQrScanUrl = (employeeId: string) => {
-  const cleanId = encodeURIComponent(employeeId || 'card');
-  const origin = getPublicCardOrigin();
-  return `${origin}/card/${cleanId}?source=QR&downloadVcf=1`;
-};
-
-export const getQrImageUrl = (payload: string, size = 260, format: 'png' | 'svg' = 'png') => {
-  const formatParam = format === 'svg' ? '&format=svg' : '';
-  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=14${formatParam}&data=${encodeURIComponent(payload)}`;
 };
 
 export const getDeviceOS = (userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : '') => {

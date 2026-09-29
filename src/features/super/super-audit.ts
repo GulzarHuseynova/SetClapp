@@ -1,5 +1,5 @@
 import { superAdminService } from '../../services/super.service';
-import { asNumber, asString, findDeep, isRecord, normalizeArray } from '../../utils/api.utils';
+import { asNumber, asString, findDeep, isRecord, normalizeArray, isGuidLike } from '../../utils/api.utils';
 import type { ApiCompany, SuperAuditLogResult, SuperAuditLogRow } from '../../types/super.type';
 import { getLimitUpdateCandidates } from './super-shared';
 const SENSITIVE_AUDIT_KEYS = new Set([
@@ -13,9 +13,9 @@ const SENSITIVE_AUDIT_KEYS = new Set([
   'accesstoken',
 ]);
 
-export const normalizeAuditKey = (value: string) => value.replace(/[^a-z0-9]/gi, '').toLowerCase();
+const normalizeAuditKey = (value: string) => value.replace(/[^a-z0-9]/gi, '').toLowerCase();
 
-export const sanitizeAuditValue = (value: unknown): unknown => {
+const sanitizeAuditValue = (value: unknown): unknown => {
   if (Array.isArray(value)) return value.map(sanitizeAuditValue);
   if (!value || typeof value !== 'object') return value;
 
@@ -29,9 +29,7 @@ export const sanitizeAuditValue = (value: unknown): unknown => {
   }, {});
 };
 
-export const isGuidLike = (value?: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test((value || '').trim());
-
-export const stringifyChangeValue = (value: unknown): string => {
+const stringifyChangeValue = (value: unknown): string => {
   if (value === undefined || value === null || value === '') return '';
   if (typeof value === 'string') {
     const trimmed = value.trim();
@@ -152,7 +150,7 @@ export const normalizeSuperAuditLog = (raw: unknown): SuperAuditLogRow => {
   };
 };
 
-export const getAuditTotalFromResponse = (data: unknown, fallback: number) => {
+const getAuditTotalFromResponse = (data: unknown, fallback: number) => {
   const total = asNumber(
     findDeep(data, [
       'totalCount',
@@ -208,7 +206,6 @@ export const fetchAuditLogPage = async (page: number, pageSize: number): Promise
     total,
   };
 };
-
 
 export const putLimit = async (company: ApiCompany | string, limit: number) => {
   const ids = getLimitUpdateCandidates(company);

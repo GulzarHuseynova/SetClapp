@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
 import type { AnalyticsRankingRow, AnalyticsScanLogRow, UserData } from '../../../types/company-admin.type';
 import type { AnalyticsChartItem, AnalyticsPeriodKey } from '../../../types/company-admin.type';
+import { toRecord } from '../../../utils/api.utils';
 
 const PERIODS: Array<{ key: AnalyticsPeriodKey; label: string }> = [
   { key: 'day', label: 'Gün' },
@@ -17,9 +18,6 @@ const toNumber = (value: unknown) => {
   const parsed = typeof value === 'number' ? value : Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 };
-
-const toRecord = (value: unknown): Record<string, unknown> =>
-  value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 
 const readText = (row: Record<string, unknown>, keys: string[]) => {
   for (const key of keys) {

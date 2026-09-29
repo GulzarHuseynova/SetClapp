@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { CalendarOutlined, ContactsOutlined, CreditCardOutlined, EnvironmentOutlined, FacebookOutlined, GlobalOutlined, InstagramOutlined, LinkOutlined, LinkedinOutlined, MailOutlined, MessageOutlined, PhoneOutlined, SendOutlined, TikTokOutlined, WhatsAppOutlined, XOutlined, YoutubeOutlined } from '@ant-design/icons';
 
-// Backend bəzən boş sahələri "string" placeholder-i ilə qaytarır.
 export const cleanText = (value?: string | null) => {
   const text = String(value ?? '').trim();
   return text && text.toLowerCase() !== 'string' ? text : '';
