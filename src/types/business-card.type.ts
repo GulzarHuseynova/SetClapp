@@ -111,6 +111,7 @@ export interface EmployeesTableProps {
   onToggleUserCanEdit: (id: string, currentCanEdit: boolean) => void | Promise<void>;
   onDownloadVcf: (user: UserData) => void | Promise<void>;
   onViewPublicCard: (user: UserData) => void;
+  onCopyPublicCardLink: (user: UserData) => void | Promise<void>;
   onOpenResetPassword: (user: UserData) => void;
 }
 

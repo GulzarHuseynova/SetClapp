@@ -91,7 +91,7 @@ function CardSection({ title, className, children }: { title?: string; className
 }
 
 function CardActionButton(props: AppButtonProps) {
-  return <AppButton className="ca-white-action-button force-navy-action" {...props} />;
+  return <AppButton appTone="muted" className="ca-white-action-button force-navy-action" {...props} />;
 }
 
 export function CommonBusinessCardView({ card }: CommonBusinessCardViewProps) {

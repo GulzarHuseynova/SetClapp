@@ -1,74 +1,21 @@
 import type { HtmlExportEmployee } from '../../types/export-import.type';
-import {
-  normalizeComparableText,
-  resolveHtmlEmployeeAssets,
-} from './photo-export';
 import { stripSocialLinksFromAdditionalInfo } from '../profile/profile-info';
-import type { ExportAssetRow } from '../../types/export-import.type';
-import { mapWithConcurrency } from '../../utils/async.utils';
 
-const HTML_EXPORT_CONCURRENCY = 4;
-
-const isExcludedImageContainer = (element: Element) => {
-  const marker = `${element.id} ${element.className || ''}`.toLowerCase();
-  return /(logo|qr|icon|social|company|background|cover|banner|hero)/i.test(marker);
-};
-
-const promoteInitialCandidate = (element: Element, root: Element) => {
-  let current: Element | null = element;
-  let fallback: Element = element;
-
-  for (let level = 0; current && level < 4; level += 1) {
-    if (isExcludedImageContainer(current)) break;
-
-    const marker = `${current.id} ${current.className || ''} ${current.getAttribute('style') || ''}`.toLowerCase();
-    if (/(avatar|profile[-_ ]?(photo|image|img)|employee[-_ ]?(photo|image|img)|user[-_ ]?(photo|image|img)|photo[-_ ]?circle|image[-_ ]?circle|rounded|border-radius)/i.test(marker)) {
-      return current;
-    }
-
-    fallback = current;
-    if (current === root) break;
-    current = current.parentElement;
-  }
-
-  return fallback === root ? element : fallback;
-};
-
-const getAvatarCandidate = (root: Element, initial: string) => {
-  const selectors = [
-    '[class*="avatar" i]:not(img)',
-    '[id*="avatar" i]:not(img)',
-    '[class*="profile-photo" i]:not(img)',
-    '[class*="profile-image" i]:not(img)',
-    '[class*="profile-img" i]:not(img)',
-    '[class*="employee-photo" i]:not(img)',
-    '[class*="employee-image" i]:not(img)',
-    '[class*="employee-img" i]:not(img)',
-    '[class*="user-photo" i]:not(img)',
-    '[class*="user-image" i]:not(img)',
-    '[class*="user-img" i]:not(img)',
-    '[class*="photo-circle" i]:not(img)',
-    '[class*="image-circle" i]:not(img)',
-    'img[class*="avatar" i]',
-    'img[class*="photo" i]',
-    'img[class*="profile" i]',
-    'img[class*="image" i]',
-    'img[id*="avatar" i]',
-    'img[id*="photo" i]',
-  ];
-
-  for (const selector of selectors) {
-    const candidate = Array.from(root.querySelectorAll(selector)).find((element) => !isExcludedImageContainer(element));
-    if (candidate) return candidate;
-  }
-
-  const initialElement = Array.from(root.querySelectorAll('div, span, p, strong, b')).find((element) => {
-    if (isExcludedImageContainer(element) || element.children.length > 0) return false;
-    return normalizeComparableText(element.textContent) === normalizeComparableText(initial);
-  });
-
-  return initialElement ? promoteInitialCandidate(initialElement, root) : undefined;
-};
+// Azərbaycan hərflərini və aksentləri atıb mətni müqayisə üçün hazırlayır.
+const normalizeComparableText = (value: unknown) =>
+  String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('az')
+    .replace(/[ə]/g, 'e')
+    .replace(/[ı]/g, 'i')
+    .replace(/[ş]/g, 's')
+    .replace(/[ç]/g, 'c')
+    .replace(/[ö]/g, 'o')
+    .replace(/[ü]/g, 'u')
+    .replace(/[ğ]/g, 'g')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 const findEmployeeNameElement = (document: Document, employee: HtmlExportEmployee) => {
   const fullName = normalizeComparableText(`${employee.firstName || ''} ${employee.lastName || ''}`);
@@ -98,218 +45,7 @@ const findEmployeeRoot = (document: Document, employee: HtmlExportEmployee) => {
   );
   if (preferred) return preferred;
 
-  let current: Element | null = nameElement.parentElement;
-  let avatarRoot: Element | null = null;
-
-  for (let level = 0; current && level < 10; level += 1, current = current.parentElement) {
-    const hasAvatar = Boolean(getAvatarCandidate(
-      current,
-      employee.firstName?.[0] || employee.email?.[0] || 'E',
-    ));
-
-    if (hasAvatar) {
-      avatarRoot = current;
-      const hasBackground = Boolean(current.querySelector(
-        '[class*="card-background" i], [id*="card-background" i], [class*="background" i], [id*="background" i], [class*="cover" i], [id*="cover" i], [class*="banner" i], [id*="banner" i], [class*="hero" i], [style*="background-image" i]',
-      ));
-      if (hasBackground) return current;
-    }
-  }
-
-  return avatarRoot || nameElement.closest('main, section') || nameElement.parentElement;
-};
-
-const makeAvatarCircular = (target: HTMLElement) => {
-  target.style.setProperty('border-radius', '50%', 'important');
-  target.style.setProperty('overflow', 'hidden', 'important');
-  target.style.setProperty('clip-path', 'circle(50% at 50% 50%)', 'important');
-  target.style.setProperty('aspect-ratio', '1 / 1', 'important');
-  target.style.setProperty('visibility', 'visible', 'important');
-  target.style.setProperty('opacity', '1', 'important');
-};
-
-const applyPhotoToAvatar = (document: Document, target: Element, photo: string, fullName: string) => {
-  target.setAttribute('data-setclapp-employee-photo', 'true');
-
-  if (target.tagName.toLowerCase() === 'img') {
-    const imageTarget = target as HTMLImageElement;
-    imageTarget.removeAttribute('srcset');
-    imageTarget.removeAttribute('sizes');
-    imageTarget.removeAttribute('onerror');
-    imageTarget.loading = 'eager';
-    imageTarget.src = photo;
-    imageTarget.alt = fullName;
-    imageTarget.style.setProperty('object-fit', 'cover', 'important');
-    imageTarget.style.setProperty('object-position', 'center', 'important');
-    imageTarget.style.setProperty('display', 'block', 'important');
-    imageTarget.style.setProperty('width', '100%', 'important');
-    imageTarget.style.setProperty('height', '100%', 'important');
-    makeAvatarCircular(imageTarget);
-
-    const parent = imageTarget.parentElement;
-    if (parent && !isExcludedImageContainer(parent)) makeAvatarCircular(parent);
-    return;
-  }
-
-  target.textContent = '';
-  const htmlTarget = target as HTMLElement;
-  htmlTarget.style.backgroundImage = 'none';
-  htmlTarget.style.position = htmlTarget.style.position || 'relative';
-  makeAvatarCircular(htmlTarget);
-
-  const image = document.createElement('img');
-  image.removeAttribute('srcset');
-  image.removeAttribute('sizes');
-  image.removeAttribute('onerror');
-  image.loading = 'eager';
-  image.src = photo;
-  image.alt = fullName;
-  image.setAttribute('data-setclapp-exported-photo', 'true');
-  image.setAttribute(
-    'style',
-    'width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;display:block!important;visibility:visible!important;opacity:1!important;object-fit:cover!important;object-position:center!important;border-radius:50%!important;clip-path:circle(50% at 50% 50%)!important;position:absolute!important;inset:0!important;z-index:10!important;',
-  );
-  target.appendChild(image);
-};
-
-const clearAvatarForEmployeeWithoutPhoto = (
-  document: Document,
-  target: Element,
-  employee: HtmlExportEmployee,
-) => {
-  const initial = (employee.firstName?.[0] || employee.email?.[0] || 'Ə').toUpperCase();
-  const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim() || employee.email || 'Əməkdaş';
-
-  if (target.tagName.toLowerCase() === 'img') {
-    const image = target as HTMLImageElement;
-    const parent = image.parentElement;
-
-    if (parent && !isExcludedImageContainer(parent)) {
-      image.remove();
-      parent.querySelectorAll('img').forEach((nestedImage) => nestedImage.remove());
-      parent.textContent = initial;
-      parent.setAttribute('aria-label', fullName);
-      parent.style.setProperty('display', 'grid', 'important');
-      parent.style.setProperty('place-items', 'center', 'important');
-      parent.style.setProperty('color', '#1e67ce', 'important');
-      parent.style.setProperty('font-weight', '800', 'important');
-      parent.style.setProperty('font-size', '2.2rem', 'important');
-      makeAvatarCircular(parent);
-      return;
-    }
-
-    const fallback = document.createElement('div');
-    fallback.className = image.className || 'avatar';
-    fallback.textContent = initial;
-    fallback.setAttribute('aria-label', fullName);
-    fallback.setAttribute('style', image.getAttribute('style') || '');
-    fallback.style.setProperty('display', 'grid', 'important');
-    fallback.style.setProperty('place-items', 'center', 'important');
-    fallback.style.setProperty('color', '#1e67ce', 'important');
-    fallback.style.setProperty('font-weight', '800', 'important');
-    makeAvatarCircular(fallback);
-    image.replaceWith(fallback);
-    return;
-  }
-
-  target.querySelectorAll('img').forEach((image) => image.remove());
-  target.textContent = initial;
-  target.setAttribute('aria-label', fullName);
-  const htmlTarget = target as HTMLElement;
-  htmlTarget.style.setProperty('display', 'grid', 'important');
-  htmlTarget.style.setProperty('place-items', 'center', 'important');
-  htmlTarget.style.setProperty('color', '#1e67ce', 'important');
-  htmlTarget.style.setProperty('font-weight', '800', 'important');
-  htmlTarget.style.setProperty('font-size', '2.2rem', 'important');
-  htmlTarget.style.setProperty('background-image', 'none', 'important');
-  makeAvatarCircular(htmlTarget);
-};
-
-const isExcludedBackgroundContainer = (element: Element) => {
-  const marker = `${element.id} ${element.className || ''}`.toLowerCase();
-  return /(logo|qr|icon|social|avatar|profile[-_ ]?(photo|image|img)|employee[-_ ]?(photo|image|img)|user[-_ ]?(photo|image|img))/i.test(marker);
-};
-
-const getBackgroundCandidate = (root: Element) => {
-  const selectors = [
-    '[data-setclapp-card-background]',
-    '[class*="card-background" i]',
-    '[id*="card-background" i]',
-    '[class*="background" i]',
-    '[id*="background" i]',
-    '[class*="cover" i]',
-    '[id*="cover" i]',
-    '[class*="banner" i]',
-    '[id*="banner" i]',
-    '[class*="hero" i]',
-    '[class*="card-header" i]',
-    '[class*="profile-header" i]',
-    '[class*="top-section" i]',
-    '[style*="background-image" i]',
-  ];
-
-  for (const selector of selectors) {
-    const candidate = Array.from(root.querySelectorAll(selector)).find((element) => (
-      !isExcludedBackgroundContainer(element) &&
-      !element.hasAttribute('data-setclapp-employee-photo') &&
-      !element.hasAttribute('data-setclapp-exported-photo')
-    ));
-    if (candidate) return candidate;
-  }
-
-  const directChildren = Array.from(root.children).filter((element) => !isExcludedBackgroundContainer(element));
-  return directChildren.find((element) => {
-    const marker = `${element.id} ${element.className || ''} ${element.getAttribute('style') || ''}`.toLowerCase();
-    return /(height\s*:\s*(1[2-9]\d|[2-9]\d\d)px|min-height|linear-gradient|radial-gradient)/i.test(marker);
-  });
-};
-
-const makeBackgroundVisible = (target: HTMLElement, background: string) => {
-  target.setAttribute('data-setclapp-card-background', 'true');
-  target.style.setProperty('visibility', 'visible', 'important');
-  target.style.setProperty('opacity', '1', 'important');
-  target.style.setProperty('background-image', `url("${background.replace(/"/g, '\\"')}")`, 'important');
-  target.style.setProperty('background-size', 'cover', 'important');
-  target.style.setProperty('background-position', 'center', 'important');
-  target.style.setProperty('background-repeat', 'no-repeat', 'important');
-};
-
-const applyBackgroundToCard = (target: Element, background: string, fullName: string) => {
-  if (target.tagName.toLowerCase() === 'img') {
-    const image = target as HTMLImageElement;
-    image.removeAttribute('srcset');
-    image.removeAttribute('sizes');
-    image.removeAttribute('onerror');
-    image.loading = 'eager';
-    image.src = background;
-    image.alt = `${fullName} kart fonu`;
-    image.setAttribute('data-setclapp-card-background', 'true');
-    image.style.setProperty('display', 'block', 'important');
-    image.style.setProperty('width', '100%', 'important');
-    image.style.setProperty('height', '100%', 'important');
-    image.style.setProperty('object-fit', 'cover', 'important');
-    image.style.setProperty('object-position', 'center', 'important');
-    image.style.setProperty('visibility', 'visible', 'important');
-    image.style.setProperty('opacity', '1', 'important');
-    return;
-  }
-
-  makeBackgroundVisible(target as HTMLElement, background);
-};
-
-const clearBrokenBackground = (target: Element) => {
-  if (target.tagName.toLowerCase() === 'img') {
-    const image = target as HTMLImageElement;
-    const source = String(image.getAttribute('src') || '').trim();
-    if (!source || source === '#' || /^(null|undefined)$/i.test(source)) image.removeAttribute('src');
-    return;
-  }
-
-  const htmlTarget = target as HTMLElement;
-  const backgroundImage = htmlTarget.style.backgroundImage.trim();
-  if (/url\(["']?(?:null|undefined|)["']?\)/i.test(backgroundImage)) {
-    htmlTarget.style.removeProperty('background-image');
-  }
+  return nameElement.closest('main, section') || nameElement.parentElement;
 };
 
 const removeOfflineBlockingPolicies = (document: Document) => {
@@ -317,127 +53,6 @@ const removeOfflineBlockingPolicies = (document: Document) => {
     const httpEquiv = String(meta.getAttribute('http-equiv') || '').toLowerCase();
     if (httpEquiv === 'content-security-policy') meta.remove();
   });
-};
-
-const appendStandaloneAssetRuntime = (document: Document, assetRows: ExportAssetRow[]) => {
-  const rows = assetRows
-    .filter((row) => Boolean(row.photo || row.background))
-    .map(({ employee, photo, background }) => ({
-      id: employee.id || '',
-      firstName: employee.firstName || '',
-      lastName: employee.lastName || '',
-      email: employee.email || '',
-      photo,
-      background,
-    }));
-
-  if (rows.length === 0) return;
-
-  const serializedRows = JSON.stringify(rows).replace(/</g, '\\u003c');
-  const script = document.createElement('script');
-  script.setAttribute('data-setclapp-export-assets', 'true');
-  script.textContent = `(() => {
-    const rows = ${serializedRows};
-    const normalize = (value) => String(value || '')
-      .normalize('NFD')
-      .replace(/[\\u0300-\\u036f]/g, '')
-      .toLocaleLowerCase('az')
-      .replace(/[ə]/g, 'e')
-      .replace(/[ı]/g, 'i')
-      .replace(/[ş]/g, 's')
-      .replace(/[ç]/g, 'c')
-      .replace(/[ö]/g, 'o')
-      .replace(/[ü]/g, 'u')
-      .replace(/[ğ]/g, 'g')
-      .replace(/\\s+/g, ' ')
-      .trim();
-    const excludedPhoto = (element) => /(logo|qr|icon|social|company|background|cover|banner|hero)/i.test(String((element && element.id) || '') + ' ' + String((element && element.className) || ''));
-    const excludedBackground = (element) => /(logo|qr|icon|social|avatar|profile[-_ ]?(photo|image|img)|employee[-_ ]?(photo|image|img)|user[-_ ]?(photo|image|img))/i.test(String((element && element.id) || '') + ' ' + String((element && element.className) || ''));
-    const findName = (row) => {
-      const fullName = normalize(row.firstName + ' ' + row.lastName);
-      const reversed = normalize(row.lastName + ' ' + row.firstName);
-      const email = normalize(row.email);
-      return Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,[class*="name" i],[id*="name" i],strong,b,p,span,div')).find((element) => {
-        if (element.children.length > 4) return false;
-        const text = normalize(element.textContent);
-        return Boolean((fullName && (text === fullName || text.includes(fullName))) || (reversed && (text === reversed || text.includes(reversed))) || (email && text === email));
-      }) || null;
-    };
-    const findRoot = (row) => {
-      const name = findName(row);
-      if (!name) return document.querySelector('[data-user-id="' + CSS.escape(row.id) + '"],[data-employee-id="' + CSS.escape(row.id) + '"]');
-      const preferred = name.closest('[data-user-id],[data-employee-id],[class*="business-card" i],[class*="public-card" i],[class*="profile-card" i],[class*="employee-card" i],[class~="card" i],article');
-      if (preferred) return preferred;
-      let current = name.parentElement;
-      let avatarRoot = null;
-      for (let depth = 0; current && depth < 10; depth += 1, current = current.parentElement) {
-        const hasAvatar = current.querySelector('[class*="avatar" i],[id*="avatar" i],[class*="profile-photo" i],[class*="profile-image" i],[class*="employee-photo" i],[class*="employee-image" i],img[class*="photo" i]');
-        if (!hasAvatar) continue;
-        avatarRoot = current;
-        const hasBackground = current.querySelector('[class*="card-background" i],[id*="card-background" i],[class*="background" i],[id*="background" i],[class*="cover" i],[id*="cover" i],[class*="banner" i],[id*="banner" i],[class*="hero" i],[style*="background-image" i]');
-        if (hasBackground) return current;
-      }
-      return avatarRoot || name.closest('main,section') || name.parentElement;
-    };
-    const findAvatar = (root, row) => {
-      const selectors = ['[class*="avatar" i]:not(img)','[id*="avatar" i]:not(img)','[class*="profile-photo" i]:not(img)','[class*="profile-image" i]:not(img)','[class*="profile-img" i]:not(img)','[class*="employee-photo" i]:not(img)','[class*="employee-image" i]:not(img)','[class*="employee-img" i]:not(img)','[class*="user-photo" i]:not(img)','[class*="user-image" i]:not(img)','[class*="photo-circle" i]:not(img)','[class*="image-circle" i]:not(img)','img[class*="avatar" i]','img[class*="photo" i]','img[class*="profile" i]','img[id*="avatar" i]','img[id*="photo" i]'];
-      for (const selector of selectors) {
-        const candidate = Array.from(root.querySelectorAll(selector)).find((element) => !excludedPhoto(element));
-        if (candidate) return candidate;
-      }
-      const initial = normalize((row.firstName || row.email || 'Ə').slice(0, 1));
-      return Array.from(root.querySelectorAll('div,span,p,strong,b')).find((element) => element.children.length === 0 && !excludedPhoto(element) && normalize(element.textContent) === initial) || null;
-    };
-    const findBackground = (root) => {
-      const selectors = ['[data-setclapp-card-background]','[class*="card-background" i]','[id*="card-background" i]','[class*="background" i]','[id*="background" i]','[class*="cover" i]','[id*="cover" i]','[class*="banner" i]','[id*="banner" i]','[class*="hero" i]','[class*="card-header" i]','[class*="profile-header" i]','[class*="top-section" i]','[style*="background-image" i]'];
-      for (const selector of selectors) {
-        const candidate = Array.from(root.querySelectorAll(selector)).find((element) => !excludedBackground(element));
-        if (candidate) return candidate;
-      }
-      return Array.from(root.children).find((element) => !excludedBackground(element) && /(height\\s*:\\s*(1[2-9]\\d|[2-9]\\d\\d)px|min-height|linear-gradient|radial-gradient)/i.test(String(element.getAttribute('style') || '') + ' ' + String(element.className || ''))) || null;
-    };
-    const circular = (target) => {
-      target.style.setProperty('border-radius', '50%', 'important');
-      target.style.setProperty('overflow', 'hidden', 'important');
-      target.style.setProperty('aspect-ratio', '1 / 1', 'important');
-      target.style.setProperty('visibility', 'visible', 'important');
-      target.style.setProperty('opacity', '1', 'important');
-    };
-    const applyPhoto = (target, row) => {
-      if (!target || !row.photo) return;
-      const fullName = (row.firstName + ' ' + row.lastName).trim() || row.email || 'Əməkdaş';
-      if (target.tagName.toLowerCase() === 'img') {
-        target.removeAttribute('srcset'); target.removeAttribute('sizes'); target.removeAttribute('onerror');
-        target.loading = 'eager'; target.src = row.photo; target.alt = fullName;
-        target.style.setProperty('display', 'block', 'important'); target.style.setProperty('width', '100%', 'important'); target.style.setProperty('height', '100%', 'important'); target.style.setProperty('object-fit', 'cover', 'important'); target.style.setProperty('object-position', 'center', 'important');
-        circular(target); if (target.parentElement && !excludedPhoto(target.parentElement)) circular(target.parentElement);
-        return;
-      }
-      target.textContent = ''; target.style.setProperty('position', target.style.position || 'relative', 'important'); circular(target);
-      let image = target.querySelector('img[data-setclapp-exported-photo]');
-      if (!image) { image = document.createElement('img'); image.setAttribute('data-setclapp-exported-photo', 'true'); target.appendChild(image); }
-      image.removeAttribute('srcset'); image.removeAttribute('sizes'); image.removeAttribute('onerror'); image.loading = 'eager'; image.src = row.photo; image.alt = fullName;
-      image.setAttribute('style', 'width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;display:block!important;visibility:visible!important;opacity:1!important;object-fit:cover!important;object-position:center!important;border-radius:50%!important;position:absolute!important;inset:0!important;z-index:10!important;');
-    };
-    const applyBackground = (target, row) => {
-      if (!target || !row.background) return;
-      const fullName = (row.firstName + ' ' + row.lastName).trim() || row.email || 'Əməkdaş';
-      target.setAttribute('data-setclapp-card-background', 'true');
-      if (target.tagName.toLowerCase() === 'img') {
-        target.removeAttribute('srcset'); target.removeAttribute('sizes'); target.removeAttribute('onerror'); target.loading = 'eager'; target.src = row.background; target.alt = fullName + ' kart fonu';
-        target.style.setProperty('display', 'block', 'important'); target.style.setProperty('width', '100%', 'important'); target.style.setProperty('height', '100%', 'important'); target.style.setProperty('object-fit', 'cover', 'important'); target.style.setProperty('object-position', 'center', 'important'); target.style.setProperty('visibility', 'visible', 'important'); target.style.setProperty('opacity', '1', 'important');
-        return;
-      }
-      target.style.setProperty('background-image', 'url("' + row.background.replace(/"/g, '\\\\"') + '")', 'important'); target.style.setProperty('background-size', 'cover', 'important'); target.style.setProperty('background-position', 'center', 'important'); target.style.setProperty('background-repeat', 'no-repeat', 'important'); target.style.setProperty('visibility', 'visible', 'important'); target.style.setProperty('opacity', '1', 'important');
-    };
-    const run = () => rows.forEach((row) => { const root = findRoot(row); if (!root) return; applyPhoto(findAvatar(root, row), row); applyBackground(findBackground(root), row); });
-    let timer = 0;
-    const schedule = () => { window.clearTimeout(timer); timer = window.setTimeout(run, 0); };
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule, { once: true }); else schedule();
-    [50,150,400,900,1600,2500].forEach((delay) => window.setTimeout(run, delay));
-    const observer = new MutationObserver(schedule); observer.observe(document.documentElement, { childList: true, subtree: true }); window.setTimeout(() => observer.disconnect(), 3500);
-  })();`;
-  document.body.appendChild(script);
 };
 
 const additionalInfoHeadingValues = new Set([
@@ -636,10 +251,9 @@ const appendStandaloneHtmlCleanupRuntime = (document: Document) => {
   document.body.appendChild(script);
 };
 
+// Backend şablonu işçi şəklini və kart fonunu özü yazır (ZIP ixracı ilə eyni). Burada yalnız
+// oflayn açılışa mane olan siyasətlər, təkrarlanan sosial linklər və təhlükəli iframe-lər təmizlənir.
 export const patchExportedHtml = async (blob: Blob, employees: HtmlExportEmployee[]) => {
-  const cleanEmployees = employees.filter((employee) => Boolean(
-    employee.id || employee.photoUrl || employee.photo || employee.photoData || employee.cardBackgroundUrl
-  ));
   if (typeof DOMParser === 'undefined') return blob;
 
   const html = await blob.text();
@@ -649,43 +263,9 @@ export const patchExportedHtml = async (blob: Blob, employees: HtmlExportEmploye
   removeOfflineBlockingPolicies(document);
   removeDuplicateSocialAdditionalInfo(document, employees);
   sanitizeStandaloneHtmlFrames(document);
-
-  // Hər işçi üçün bir neçə sorğu gedir; yüzlərlə işçi olanda backend-i boğmamaq üçün paralel iş sayı məhdudlaşdırılır.
-  const assetRows: ExportAssetRow[] = await mapWithConcurrency(cleanEmployees, HTML_EXPORT_CONCURRENCY, async (employee) => ({
-    employee,
-    ...await resolveHtmlEmployeeAssets(employee),
-  }));
-
-  const usedPhotoTargets = new Set<Element>();
-  const usedBackgroundTargets = new Set<Element>();
-
-  assetRows.forEach(({ employee, photo, background }) => {
-    const initial = employee.firstName?.[0] || employee.email?.[0] || 'E';
-    const root = findEmployeeRoot(document, employee);
-    if (!root) return;
-
-    const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim() || employee.email || 'Əməkdaş';
-    const avatarTarget = getAvatarCandidate(root, initial);
-
-    if (avatarTarget && !usedPhotoTargets.has(avatarTarget)) {
-      usedPhotoTargets.add(avatarTarget);
-
-      if (photo) applyPhotoToAvatar(document, avatarTarget, photo, fullName);
-      else clearAvatarForEmployeeWithoutPhoto(document, avatarTarget, employee);
-    }
-
-    const backgroundTarget = getBackgroundCandidate(root);
-    if (backgroundTarget && !usedBackgroundTargets.has(backgroundTarget)) {
-      usedBackgroundTargets.add(backgroundTarget);
-
-      if (background) applyBackgroundToCard(backgroundTarget, background, fullName);
-      else clearBrokenBackground(backgroundTarget);
-    }
-  });
-
-  appendStandaloneAssetRuntime(document, assetRows);
   appendStandaloneHtmlCleanupRuntime(document);
 
-  const output = `<!doctype html>\n${document.documentElement.outerHTML}`;
+  const output = `<!doctype html>
+${document.documentElement.outerHTML}`;
   return new Blob([output], { type: 'text/html;charset=utf-8' });
 };

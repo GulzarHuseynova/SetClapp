@@ -376,7 +376,9 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
 
       setUsersList((previous) => filterCompanyUsers(mergeNormalizedUsers(previous, [createdNormalized])));
 
-      if (values.photoFile && !normalizeAssetUrl(createdNormalized.photoUrl || createdNormalized.photo)) {
+      if (createdUser?.photoUploadFailed) {
+        message.warning("İşçi əlavə edildi, amma şəkil serverə yüklənmədi. Şəkil yalnız bu brauzerdə görünəcək; redaktə edib yenidən yükləyin.");
+      } else if (values.photoFile && !normalizeAssetUrl(createdNormalized.photoUrl || createdNormalized.photo)) {
         message.warning("İşçi əlavə edildi, amma backend foto URL qaytarmadı. Şəkil backenddən gəlmədiyi üçün görünməyəcək.");
       } else {
         message.success("Yeni işçi uğurla əlavə edildi.");
@@ -448,7 +450,9 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
           : user
       )))));
 
-      if (values.photoFile && !normalizeAssetUrl(normalizedUpdated.photoUrl || normalizedUpdated.photo)) {
+      if (updatedRecord.photoUploadFailed === true) {
+        message.warning({ key: "employee-edit-save", content: "Məlumat yeniləndi, amma şəkil serverə yüklənmədi. Yenidən yükləyin." });
+      } else if (values.photoFile && !normalizeAssetUrl(normalizedUpdated.photoUrl || normalizedUpdated.photo)) {
         message.warning({ key: "employee-edit-save", content: "Məlumat yeniləndi, amma backend foto URL qaytarmadı." });
       } else {
         message.success({ key: "employee-edit-save", content: "İşçi məlumatları yeniləndi." });

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
-import { Avatar, Segmented, Space, Switch, Tooltip } from 'antd';
+import { Avatar, Dropdown, Segmented, Space, Switch, Tooltip } from 'antd';
 import { message } from '../../../../utils/antd-static';
-import { ArrowLeftOutlined, ContactsOutlined, DownloadOutlined, EyeOutlined, GlobalOutlined, QrcodeOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ContactsOutlined, DownloadOutlined, EyeOutlined, GlobalOutlined, LinkOutlined, MoreOutlined, QrcodeOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import type { UserData } from '../../../../types/company-admin.type';
 import { stripSocialLinksFromAdditionalInfo } from '../../../../features/profile/profile-info';
 import { getEmployeePhotoFromRecord } from '../../../../features/public-card/public-card-shared';
@@ -74,6 +74,7 @@ export function EmployeesTable({
   onToggleUserCanEdit,
   onDownloadVcf,
   onViewPublicCard,
+  onCopyPublicCardLink,
   onOpenResetPassword,
 }: EmployeesTableProps) {
   const { employeeId = '' } = useParams<{ employeeId?: string }>();
@@ -284,19 +285,31 @@ export function EmployeesTable({
                           </Tooltip>
                         )}
 
-                        <Tooltip title="Public card-a bax">
+                        <Dropdown
+                          trigger={['click']}
+                          placement="bottomRight"
+                          rootClassName="employee-card-menu"
+                          menu={{
+                            items: [
+                              { key: 'view', icon: <EyeOutlined />, label: 'Public card-a bax' },
+                              { key: 'copy', icon: <LinkOutlined />, label: 'Linki kopyala' },
+                            ],
+                            onClick: ({ key, domEvent }) => {
+                              domEvent.stopPropagation();
+                              if (key === 'view') onViewPublicCard(record);
+                              else void onCopyPublicCardLink(record);
+                            },
+                          }}
+                        >
                           <AppButton
                             type="text"
                             shape="circle"
                             className="employee-public-view-button"
-                            icon={<EyeOutlined />}
-                            aria-label={`${employeeName(record)} public card-a bax`}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              onViewPublicCard(record);
-                            }}
+                            icon={<MoreOutlined style={{ fontSize: 18 }} />}
+                            aria-label={`${employeeName(record)} public card əməliyyatları`}
+                            onClick={(event) => event.stopPropagation()}
                           />
-                        </Tooltip>
+                        </Dropdown>
                       </span>
                     </div>
                   </div>
