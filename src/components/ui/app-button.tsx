@@ -9,6 +9,9 @@ const TONE_CLASSES: Record<AppButtonTone, string> = {
     '!border-[#185582] !bg-[#185582] !text-white hover:!border-[#12466c] hover:!bg-[#12466c] focus:!border-[#185582] focus:!bg-[#185582]',
   secondary:
     '!border-[#185582] !bg-white !text-[#185582] hover:!border-[#12466c] hover:!text-[#12466c]',
+  // Vizitkartdakı əməliyyat düymələri: secondary kimi, amma mətn kartın digər yazıları ilə eyni tondadır.
+  muted:
+    '!border-[#185582] !bg-white !text-[#456b82] hover:!border-[#12466c] hover:!text-[#35566a]',
   danger:
     '!border-[#dc2626] !bg-white !text-[#dc2626] hover:!border-[#b91c1c] hover:!bg-[#fff5f5] hover:!text-[#b91c1c]',
   ghost:

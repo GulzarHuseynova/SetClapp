@@ -253,7 +253,9 @@ export const companyActions = {
         companyVoen,
       });
 
-      return created;
+      return isRecord(createdUser) && createdUser.photoUploadFailed === true
+        ? { ...created, photoUploadFailed: true }
+        : created;
     };
 
     const createdUser = await postUserWithOptionalPhoto(basePayload, payload.photoFile, payload.cardBackgroundFile);
@@ -348,7 +350,11 @@ export const companyActions = {
     const responseData = await putUserWithOptionalPhoto(userId, apiPayload, photoFile, cardBackgroundFile);
     const backendPhotoUrl = getUploadedPhotoUrl(responseData);
 
-    return updateLocal(backendPhotoUrl ? { ...(isRecord(responseData) ? responseData : {}), photoUrl: backendPhotoUrl, photo: backendPhotoUrl } : responseData);
+    const updated = updateLocal(backendPhotoUrl ? { ...(isRecord(responseData) ? responseData : {}), photoUrl: backendPhotoUrl, photo: backendPhotoUrl } : responseData);
+
+    return isRecord(responseData) && responseData.photoUploadFailed === true
+      ? { ...updated, photoUploadFailed: true }
+      : updated;
   },
 
   updateUserStatus: async (userId: string, isActive: boolean, userSnapshot?: Partial<NormalizedUser>) => {

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
-import { message } from '../../../utils/antd-static';
+import { message, modal } from '../../../utils/antd-static';
 import { exportImportActions } from '../../../helpers/export-import.helper';
 import {downloadVCard,getPublicCardUrl,normalizeUserToPublicProfile,savePublicCardProfilesFromUsers,} from '../../../features/public-card/public-card';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
@@ -19,6 +19,7 @@ import { normalizeInlineImageData } from '../../../utils/asset-url.utils';
 import { useAuthSelector } from '../../../store/authStore';
 import { getStoredUser } from '../../../storage/auth.storage';
 import type { BusinessCardProps } from '../../../types/business-card.type';
+import { copyText } from '../../../utils/clipboard.utils';
 
 export function EmployeeDetailsPage() {
   return <BusinessCard detailOnly />;
@@ -395,16 +396,52 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
     }
   };
 
-  const handleViewPublicCard = (user: UserData) => {
+  const getPublicCardLink = (user: UserData) => {
     const identity = user.id || user.email;
     if (!identity) {
       message.warning('İşçinin public card ID-si tapılmadı.');
+      return '';
+    }
+
+    return getPublicCardUrl(identity, 'Direct');
+  };
+
+  const handleViewPublicCard = (user: UserData) => {
+    const publicUrl = getPublicCardLink(user);
+    if (!publicUrl) return;
+
+    savePublicCardProfilesFromUsers([user], company);
+    window.open(publicUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleCopyPublicCardLink = async (user: UserData) => {
+    const publicUrl = getPublicCardLink(user);
+    if (!publicUrl) return;
+
+    if (await copyText(publicUrl)) {
+      message.success('Link kopyalandı.');
       return;
     }
 
-    savePublicCardProfilesFromUsers([user], company);
-    const publicUrl = getPublicCardUrl(identity, 'Direct');
-    window.open(publicUrl, '_blank', 'noopener,noreferrer');
+    // Brauzer avtomatik kopyalamağa icazə vermədikdə link göstərilir ki, əl ilə kopyalana bilsin.
+    modal.info({
+      title: 'Linki kopyalayın',
+      icon: null,
+      centered: true,
+      okText: 'Bağla',
+      content: (
+        <div className="public-link-fallback">
+          <p>Brauzer avtomatik kopyalamağa icazə vermədi. Linki seçib kopyalayın:</p>
+          <Input
+            readOnly
+            value={publicUrl}
+            aria-label="Public card linki"
+            onFocus={(event) => event.target.select()}
+            onClick={(event) => event.currentTarget.select()}
+          />
+        </div>
+      ),
+    });
   };
 
   const handleStatusTabChange = (value: string | number) => {
@@ -443,6 +480,7 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
           onToggleUserCanEdit={toggleUserCanEdit}
           onDownloadVcf={handleDownloadVcf}
           onViewPublicCard={handleViewPublicCard}
+          onCopyPublicCardLink={handleCopyPublicCardLink}
           onOpenResetPassword={openResetPasswordModal}
         />
       </div>

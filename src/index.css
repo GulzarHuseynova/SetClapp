@@ -3,21 +3,137 @@
 
 @config "../tailwind.config.js";
 
-/* Çıxış modalındakı "Xeyr" düyməsi. Selektor company-admin.css-dəki ümumi modal
-   düymə qaydasından (0,7,1) güclü olmalıdır ki, hər üç paneldə eyni görünsün. */
-.ant-modal-root .ant-modal-wrap .ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled) {
+/* ===== Çıxış təsdiqi modalı (confirm-logout.ts) — üç paneldə eyni görünür ===== */
+.logout-confirm-modal.ant-modal-confirm .ant-modal-container {
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(15, 47, 71, 0.22);
+  font-family: Poppins, system-ui, sans-serif;
+}
+
+.logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+/* Sarı xəbərdarlıq nişanı əvəzinə açıq qırmızı dairədə çıxış ikonu. */
+.logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-body > .anticon {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fef2f2;
+  color: #dc2626;
+  font-size: 20px;
+}
+
+.logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-paragraph {
+  max-width: none;
+  row-gap: 4px;
+}
+
+.logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-title {
+  color: #0f2f47;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-content {
+  color: #5b6b7a;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns {
+  margin-top: 22px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Düymə selektorları company-admin.css-dəki ümumi modal düymə qaydasından (0,7,1)
+   güclü olmalıdır, əks halda Company Admin panelində açıq mavi rəng qalib gəlir. */
+.ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled),
+.ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-confirm-button:not(:disabled) {
+  min-width: 104px;
+  height: 40px !important;
+  margin: 0 !important;
+  padding-inline: 18px !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  font-family: Poppins, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled) {
   border-color: #185582 !important;
   background: #185582 !important;
-  color: #ffffff !important;
-  font-weight: 600;
   box-shadow: 0 6px 14px rgba(24, 85, 130, 0.18) !important;
 }
 
-.ant-modal-root .ant-modal-wrap .ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled):hover,
-.ant-modal-root .ant-modal-wrap .ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled):focus-visible {
+.ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled):hover {
   border-color: #12466c !important;
   background: #12466c !important;
-  color: #ffffff !important;
+}
+
+.ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-confirm-button:not(:disabled) {
+  border-color: #dc2626 !important;
+  background: #dc2626 !important;
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.18) !important;
+}
+
+.ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-confirm-button:not(:disabled):hover {
+  border-color: #b91c1c !important;
+  background: #b91c1c !important;
+}
+
+/* Klaviatura fokusunda düymənin öz rəngində nazik halqa (standart mavi halqa əvəzinə). */
+.logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:focus-visible {
+  outline: 2px solid rgba(24, 85, 130, 0.35);
+  outline-offset: 2px;
+}
+
+.logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-confirm-button:focus-visible {
+  outline: 2px solid rgba(220, 38, 38, 0.35);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .logout-confirm-modal.ant-modal-confirm .ant-modal-container {
+    padding: 20px;
+  }
+
+  .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn {
+    flex: 1 1 0;
+  }
+}
+
+/* Əməkdaş kartındakı üç nöqtə menyusu (Public card-a bax / Linki kopyala). */
+.employee-card-menu .ant-dropdown-menu {
+  padding: 6px;
+  border-radius: 12px;
+  font-family: Poppins, system-ui, sans-serif;
+}
+
+.employee-card-menu .ant-dropdown-menu .ant-dropdown-menu-item {
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #456b82;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.public-link-fallback p {
+  margin: 0 0 10px;
+  color: #5b6b7a;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 /* antd <App> yalnız message/modal kontekstini vermək üçündür: öz div-i layout-a və

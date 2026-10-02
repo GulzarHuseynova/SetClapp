@@ -95,6 +95,8 @@ export interface NormalizedCompanyInfo {
 
 export interface NormalizedUser {
   id: string;
+  // Yalnız addUser/updateUserProfile nəticəsində: işçi saxlanıldı, amma şəkil serverə yüklənmədi.
+  photoUploadFailed?: boolean;
   firstName: string;
   lastName: string;
   middleName: string;
