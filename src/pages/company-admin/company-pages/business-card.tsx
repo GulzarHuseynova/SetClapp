@@ -520,6 +520,8 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
         open={Boolean(resetPasswordUser)}
         onCancel={closeResetPasswordModal}
         footer={null}
+        className="employee-code-modal"
+        centered
         destroyOnHidden
         forceRender
       >
@@ -535,9 +537,9 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
             <Input.Password autoComplete="new-password" />
           </Form.Item>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
-            <Button onClick={closeResetPasswordModal}>Ləğv et</Button>
-            <Button type="primary" htmlType="submit" loading={resetPasswordLoading}>
+          <div className="code-modal-actions">
+            <Button className="code-modal-cancel" onClick={closeResetPasswordModal}>Ləğv et</Button>
+            <Button className="code-modal-submit" type="primary" htmlType="submit" loading={resetPasswordLoading}>
               Kodu dəyiş
             </Button>
           </div>

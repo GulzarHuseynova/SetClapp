@@ -874,6 +874,19 @@ body #root .ca-vcard-link-row{grid-template-columns:minmax(0,1fr) 38px !importan
   border:0 !important;
   box-shadow:none !important;
 }
+/* Ayarlar səhifəsi: showCount/prefix olan inputda çərçivə yalnız xarici qutuda qalır
+   (içindəki <input> ayrıca çərçivə almır, əks halda iki çərçivə iç-içə görünür). */
+.ca-settings-company-card .ant-input-affix-wrapper > input.ant-input,
+.ca-settings-company-card .ant-input-affix-wrapper > input.ant-input:hover,
+.ca-settings-company-card .ant-input-affix-wrapper > input.ant-input:focus{
+  min-height:0 !important;
+  height:auto !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
 .employee-edit-profile-modal .ca-vcard-fields .ca-vcard-phone-field{
   grid-column:1 / -1 !important;
 }

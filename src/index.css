@@ -129,6 +129,52 @@
   font-weight: 500;
 }
 
+/* ===== "Kodu dəyiş" modalı (business-card.tsx) — düymələr əsas rəngdə (#185582) =====
+   Selektorlar company-admin.css-dəki ümumi modal düymə qaydasından (0,7,1) güclü olmalıdır,
+   əks halda Company Admin panelində açıq mavi rəng qalib gəlir. */
+.employee-code-modal .code-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-cancel:not(:disabled),
+.ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-submit:not(:disabled) {
+  min-width: 104px;
+  height: 40px !important;
+  padding-inline: 18px !important;
+  border-radius: 10px !important;
+  font-family: Poppins, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-cancel:not(:disabled) {
+  border-color: #185582 !important;
+  background: #ffffff !important;
+  color: #185582 !important;
+  box-shadow: none !important;
+}
+
+.ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-cancel:not(:disabled):hover {
+  border-color: #12466c !important;
+  background: #e7f0f8 !important;
+  color: #12466c !important;
+}
+
+.ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-submit:not(:disabled) {
+  border-color: #185582 !important;
+  background: #185582 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 14px rgba(24, 85, 130, 0.18) !important;
+}
+
+.ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-submit:not(:disabled):hover {
+  border-color: #12466c !important;
+  background: #12466c !important;
+  color: #ffffff !important;
+}
+
 .public-link-fallback p {
   margin: 0 0 10px;
   color: #5b6b7a;
