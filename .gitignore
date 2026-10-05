@@ -1,0 +1,38 @@
+# Asılılıqlar (npm install ilə yenidən yüklənir)
+node_modules
+
+# Build nəticəsi (npm run build ilə yenidən yaranır)
+dist
+dist-ssr
+
+# Mühit dəyişənləri: API ünvanı, açarlar və s. repoya düşməməlidir.
+# Nümunə fayl (.env.example) isə saxlanılır ki, lazım olan dəyişənlər bilinsin.
+.env
+.env.*
+!.env.example
+*.local
+
+# Log faylları
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# TypeScript və test keşləri
+*.tsbuildinfo
+coverage
+
+# Redaktor ayarları: yalnız layihə üçün ortaq olan settings.json saxlanılır
+.vscode/*
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Əməliyyat sistemi faylları
+.DS_Store
+Thumbs.db
