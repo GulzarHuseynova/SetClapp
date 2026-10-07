@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useEmployee } from "../../hooks/use-employee";
 import {AddBtn,CompanyInfoLine,CopyBtn,DynRow,EmptyLine,FieldLabel,InfoRow,PhoneTypeSelect,Section,SocialSelect,} from "./employee-shared";
 import { iconBox, inputStyle, shortText, uuid } from "../../features/employee/employee-card";
-import { BRAND_COLOR, BRAND_TINT } from "../../constants/theme";
+import { BRAND_COLOR } from "../../constants/theme";
 
 const SOCIAL_COLOR = BRAND_COLOR;
 
@@ -36,7 +36,7 @@ export function EmployeePageState({ children }: { children: ReactNode }) {
     return (
       <div className="employee-loading-card">
         <Spin />
-        <div style={{ marginTop: 12, color: "#64748b" }}>Vizitkart məlumatları yüklənir...</div>
+        <div style={{ marginTop: 12, color: "var(--fg-64748b)" }}>Vizitkart məlumatları yüklənir...</div>
       </div>
     );
   }
@@ -91,17 +91,17 @@ export function EmployeeHero() {
         <div
           className="employee-profile-card"
           style={effectiveBackground ? {
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.84), rgba(255,255,255,0.90)), url("${effectiveBackground.replace(/"/g, "%22")}")`,
+            backgroundImage: `linear-gradient(var(--bg-rgba-255-255-255-p84), var(--bg-rgba-255-255-255-p9)), url("${effectiveBackground.replace(/"/g, "%22")}")`,
             backgroundSize: usesCompanyLogo ? "42% auto" : "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            backgroundColor: "#eef7ff",
+            backgroundColor: "var(--bg-eef7ff)",
           } : undefined}
         >
           <div>
             <div className="employee-profile-top">
               <div className="employee-avatar-wrap">
-                <Avatar src={d.photo || undefined} size={90} style={{ background: BRAND_COLOR, fontSize: 32, fontWeight: 900, border: `4px solid ${BRAND_TINT}` }}>
+                <Avatar src={d.photo || undefined} size={90} style={{ background: 'var(--bg-185582)', fontSize: 32, fontWeight: 900, border: "4px solid var(--bd-e7f0f8)" }}>
                   {!d.photo && (d.firstName?.[0] || "E")}
                 </Avatar>
                 {editing && (
@@ -125,7 +125,7 @@ export function EmployeeHero() {
                   {d.cardBackground ? "Kart fonunu dəyiş" : "Şirkət loqosu fonunu dəyiş"}
                 </Button>
                 {usesCompanyLogo && (
-                  <span style={{ color: "#527086", fontSize: 12, fontWeight: 700 }}>
+                  <span style={{ color: "var(--fg-527086)", fontSize: 12, fontWeight: 700 }}>
                     Hazırda şirkət loqosu avtomatik fon kimi göstərilir.
                   </span>
                 )}
@@ -301,8 +301,8 @@ export function ExtraInfoSection() {
           {d.extras.length === 0 && <EmptyLine />}
           {d.extras.map((extra, index) => (
             <div key={`${extra.label}-${index}`} className="employee-extra-card">
-              <div style={{ color: "#92400e", fontSize: 11, fontWeight: 900, textTransform: "uppercase", letterSpacing: 0.4 }}>{extra.label}</div>
-              <div style={{ color: "#0f172a", fontSize: 14, fontWeight: 800, marginTop: 3 }}>{extra.value}</div>
+              <div style={{ color: "var(--fg-92400e)", fontSize: 11, fontWeight: 900, textTransform: "uppercase", letterSpacing: 0.4 }}>{extra.label}</div>
+              <div style={{ color: "var(--fg-0f172a)", fontSize: 14, fontWeight: 800, marginTop: 3 }}>{extra.value}</div>
             </div>
           ))}
         </div>
@@ -319,7 +319,7 @@ export function IdentifiersSection() {
       <div className="employee-stack" style={{ gap: 10 }}>
         {[
           { label: "NFC Etiket URL", icon: <WifiOutlined />, value: d.nfcUrl, field: "nfcUrl" as const, color: "#7c3aed" },
-          { label: "QR UID", icon: <QrcodeOutlined />, value: d.qrUid, field: "qrUid" as const, color: "#059669" },
+          { label: "QR UID", icon: <QrcodeOutlined />, value: d.qrUid, field: "qrUid" as const, color: "var(--fg-059669)" },
         ].map(row => (
           <div key={row.field} className="employee-info-row">
             <div style={iconBox(`${row.color}18`, row.color, 38)}>{row.icon}</div>

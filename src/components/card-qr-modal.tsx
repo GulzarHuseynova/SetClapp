@@ -23,7 +23,7 @@ export function CardQrModal({ open, onClose, title, subtitle, qrValue, icon, chi
         </div>
 
         <div className="employee-qr-code-wrap">
-          <QRCode value={qrValue} size={230} bordered={false} errorLevel="M" />
+          <QRCode type="svg" color="#000000e0" bgColor="#ffffff" value={qrValue} size={230} bordered={false} errorLevel="M" />
         </div>
 
         {children}

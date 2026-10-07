@@ -1,6 +1,5 @@
 import { Card, Col, Row, Space, Tag } from 'antd';
 import {CheckCircleOutlined,InfoCircleOutlined,QrcodeOutlined,SafetyCertificateOutlined,TeamOutlined,ThunderboltOutlined,} from '@ant-design/icons';
-import { BRAND_COLOR, BRAND_TINT } from '../../constants/theme';
 
 const quickCards = [
   {
@@ -31,7 +30,7 @@ export default function SuperInfo() {
       <div
         className="super-info-hero"
         style={{
-          background: 'linear-gradient(135deg,#0f2f47 0%,#185582 100%)',
+          background: 'linear-gradient(135deg,var(--bg-0f2f47) 0%,var(--bg-185582) 100%)',
           borderRadius: 26,
           padding: '28px 30px',
           color: '#fff',
@@ -40,8 +39,8 @@ export default function SuperInfo() {
           boxShadow: '0 24px 60px rgba(24,85,130,0.28)',
         }}
       >
-        <div style={{ position: 'absolute', right: -60, top: -60, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
-        <div style={{ position: 'absolute', right: 120, bottom: -70, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
+        <div style={{ position: 'absolute', right: -60, top: -60, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255, 255, 255, 0.08)' }} />
+        <div style={{ position: 'absolute', right: 120, bottom: -70, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255, 255, 255, 0.06)' }} />
 
         <div
           className="super-info-hero-grid"
@@ -75,8 +74,8 @@ export default function SuperInfo() {
           <div
             className="super-info-logo-panel"
             style={{
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.16)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
               borderRadius: 24,
               padding: 24,
               backdropFilter: 'blur(10px)',
@@ -110,14 +109,14 @@ export default function SuperInfo() {
       <Row gutter={[18, 18]}>
         {quickCards.map((item) => (
           <Col xs={24} sm={12} xl={6} key={item.title}>
-            <Card style={{ borderRadius: 22, border: '1px solid #e2e8f0', boxShadow: '0 12px 30px rgba(15,23,42,0.05)', height: '100%' }}>
+            <Card style={{ borderRadius: 22, border: '1px solid var(--bd-e2e8f0)', boxShadow: '0 12px 30px rgba(15,23,42,0.05)', height: '100%' }}>
               <div
                 style={{
                   width: 50,
                   height: 50,
                   borderRadius: 18,
-                  background: BRAND_TINT,
-                  color: BRAND_COLOR,
+                  background: 'var(--bg-e7f0f8)',
+                  color: 'var(--fg-185582)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -127,8 +126,8 @@ export default function SuperInfo() {
               >
                 {item.icon}
               </div>
-              <h3 style={{ margin: 0, color: '#0f172a', fontSize: 18, fontWeight: 900 }}>{item.title}</h3>
-              <p style={{ margin: '10px 0 0', color: '#64748b', lineHeight: 1.7 }}>{item.text}</p>
+              <h3 style={{ margin: 0, color: 'var(--fg-0f172a)', fontSize: 18, fontWeight: 900 }}>{item.title}</h3>
+              <p style={{ margin: '10px 0 0', color: 'var(--fg-64748b)', lineHeight: 1.7 }}>{item.text}</p>
             </Card>
           </Col>
         ))}

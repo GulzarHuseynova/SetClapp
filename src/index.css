@@ -1,5 +1,7 @@
 @import "tailwindcss";
+@import "./styles/theme-colors.css";
 @import "./styles/company-admin.css";
+@import "./styles/theme-dark.css";
 
 @config "../tailwind.config.js";
 
@@ -26,7 +28,7 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #fef2f2;
+  background: var(--bg-fef2f2);
   color: #dc2626;
   font-size: 20px;
 }
@@ -37,14 +39,14 @@
 }
 
 .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-title {
-  color: #0f2f47;
+  color: var(--fg-0f2f47);
   font-size: 17px;
   font-weight: 600;
   line-height: 1.35;
 }
 
 .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-content {
-  color: #5b6b7a;
+  color: var(--fg-5b6b7a);
   font-size: 14px;
   line-height: 1.55;
 }
@@ -72,14 +74,14 @@
 }
 
 .ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled) {
-  border-color: #185582 !important;
-  background: #185582 !important;
+  border-color: var(--bd-185582) !important;
+  background: var(--bg-185582) !important;
   box-shadow: 0 6px 14px rgba(24, 85, 130, 0.18) !important;
 }
 
 .ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled):hover {
-  border-color: #12466c !important;
-  background: #12466c !important;
+  border-color: var(--bd-12466c) !important;
+  background: var(--bg-12466c) !important;
 }
 
 .ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-confirm-button:not(:disabled) {
@@ -89,13 +91,13 @@
 }
 
 .ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-confirm-button:not(:disabled):hover {
-  border-color: #b91c1c !important;
+  border-color: var(--bd-b91c1c) !important;
   background: #b91c1c !important;
 }
 
 /* Klaviatura fokusunda düymənin öz rəngində nazik halqa (standart mavi halqa əvəzinə). */
 .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:focus-visible {
-  outline: 2px solid rgba(24, 85, 130, 0.35);
+  outline: 2px solid var(--bd-rgba-24-85-130-p35);
   outline-offset: 2px;
 }
 
@@ -124,7 +126,7 @@
 .employee-card-menu .ant-dropdown-menu .ant-dropdown-menu-item {
   padding: 8px 12px;
   border-radius: 8px;
-  color: #456b82;
+  color: var(--fg-456b82);
   font-size: 13px;
   font-weight: 500;
 }
@@ -150,34 +152,52 @@
 }
 
 .ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-cancel:not(:disabled) {
-  border-color: #185582 !important;
-  background: #ffffff !important;
-  color: #185582 !important;
+  border-color: var(--bd-185582) !important;
+  background: var(--bg-ffffff) !important;
+  color: var(--fg-185582) !important;
   box-shadow: none !important;
 }
 
 .ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-cancel:not(:disabled):hover {
-  border-color: #12466c !important;
-  background: #e7f0f8 !important;
-  color: #12466c !important;
+  border-color: var(--bd-12466c) !important;
+  background: var(--bg-e7f0f8) !important;
+  color: var(--fg-12466c) !important;
 }
 
 .ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-submit:not(:disabled) {
-  border-color: #185582 !important;
-  background: #185582 !important;
+  border-color: var(--bd-185582) !important;
+  background: var(--bg-185582) !important;
   color: #ffffff !important;
   box-shadow: 0 6px 14px rgba(24, 85, 130, 0.18) !important;
 }
 
 .ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-submit:not(:disabled):hover {
-  border-color: #12466c !important;
-  background: #12466c !important;
+  border-color: var(--bd-12466c) !important;
+  background: var(--bg-12466c) !important;
   color: #ffffff !important;
+}
+
+/* "Yeni işçi əlavə et" modalındakı Aktiv/Deaktiv switch-i: klaviatura fokus halqası da əsas rəngdə. */
+.employee-status-field .ant-switch:focus-visible {
+  outline: 2px solid var(--bd-rgba-24-85-130-p35);
+  outline-offset: 2px;
+}
+
+.phone-country-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.phone-country-option-code {
+  color: var(--fg-6e7671);
+  font-variant-numeric: tabular-nums;
 }
 
 .public-link-fallback p {
   margin: 0 0 10px;
-  color: #5b6b7a;
+  color: var(--fg-5b6b7a);
   font-size: 13px;
   line-height: 1.5;
 }

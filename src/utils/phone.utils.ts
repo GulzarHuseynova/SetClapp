@@ -1,25 +1,10 @@
 import type { CountryPhoneOption } from '../types/phone.type';
+import { buildCountryPhoneOptions } from './country-calling-codes';
 
 export const DEFAULT_PHONE_COUNTRY_CODE = '+994';
 
-export const COUNTRY_PHONE_OPTIONS: CountryPhoneOption[] = [
-  { country: 'AZ', value: '+994', label: '🇦🇿 +994' },
-  { country: 'TR', value: '+90', label: '🇹🇷 +90' },
-  { country: 'GE', value: '+995', label: '🇬🇪 +995' },
-  { country: 'RU', value: '+7', label: '🇷🇺 +7' },
-  { country: 'US', value: '+1', label: '🇺🇸 +1' },
-  { country: 'GB', value: '+44', label: '🇬🇧 +44' },
-  { country: 'DE', value: '+49', label: '🇩🇪 +49' },
-  { country: 'FR', value: '+33', label: '🇫🇷 +33' },
-  { country: 'IT', value: '+39', label: '🇮🇹 +39' },
-  { country: 'ES', value: '+34', label: '🇪🇸 +34' },
-  { country: 'UA', value: '+380', label: '🇺🇦 +380' },
-  { country: 'KZ', value: '+7', label: '🇰🇿 +7' },
-  { country: 'AE', value: '+971', label: '🇦🇪 +971' },
-  { country: 'SA', value: '+966', label: '🇸🇦 +966' },
-  { country: 'CN', value: '+86', label: '🇨🇳 +86' },
-  { country: 'IN', value: '+91', label: '🇮🇳 +91' },
-];
+// Bütün ölkələrin zəng kodları (ölkə adları və bayraqlar ISO koddan yaradılır).
+export const COUNTRY_PHONE_OPTIONS: CountryPhoneOption[] = buildCountryPhoneOptions();
 
 const cleanPhoneDigits = (value?: string | null) => String(value || '').replace(/\D/g, '');
 
@@ -82,3 +67,12 @@ export const normalizePhoneForInput = (value?: string | null, fallbackCode = DEF
 };
 
 export const normalizePhoneForBackend = (value?: string | null) => normalizePhoneForInput(value) || '';
+
+// Saxlanmış əlaqə linkindən ("tel:+994..." və ya "https://wa.me/994...") nömrəni çıxarır; nömrə sahəsi üçündür.
+export const phoneFromContactLink = (value?: string | null) => {
+  const text = String(value || '').trim();
+  if (!text) return '';
+
+  const whatsappDigits = /wa\.me\/\+?(\d+)/i.exec(text)?.[1];
+  return normalizePhoneForInput(whatsappDigits ? `+${whatsappDigits}` : text.replace(/^tel:/i, ''));
+};

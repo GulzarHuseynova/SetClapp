@@ -2,6 +2,7 @@ import { isPersistentRuntimeKey, runtimeStorage } from './runtime.storage';
 import {asBoolean,asString,extractCompanyId,extractCompanyVoen,extractUserId,findDeep,findStringDeep,isRecord,normalizeRole,parseJwt,} from '../utils/api.utils';
 import type { AuthState } from '../types/auth-store.type';
 import { ROLES } from '../constants/roles';
+import { THEME_STORAGE_KEY } from '../store/themeStore';
 import type { StoredAuthMeta, StoredUserSession } from '../types/auth-store.type';
 
 export const AUTH_TOKEN_KEY = 'token';
@@ -247,7 +248,7 @@ export const cleanupLegacyAuthStorage = () => {
   // markerləri və şirkət loqoları varsa Session Storage-ə köçürülür.
   for (let index = localStorage.length - 1; index >= 0; index -= 1) {
     const key = localStorage.key(index);
-    if (!key || key === AUTH_TOKEN_KEY || key === AUTH_USER_KEY) continue;
+    if (!key || key === AUTH_TOKEN_KEY || key === AUTH_USER_KEY || key === THEME_STORAGE_KEY) continue;
 
     const value = localStorage.getItem(key);
     if (value !== null && isPersistentRuntimeKey(key)) {

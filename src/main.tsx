@@ -5,6 +5,9 @@ import ReactDOM from 'react-dom/client';
 
 import App from './App';
 import { hydratePersistentRuntimeStorage } from './storage/runtime.storage';
+import { themeStore } from './store/themeStore';
+
+themeStore.init();
 
 const rootElement = document.getElementById('root');
 

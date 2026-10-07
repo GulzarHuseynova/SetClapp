@@ -1,6 +1,5 @@
 import { getCompanyInitials, getCompanyLogo, getCompanyName } from '../../../features/super/super-admin';
 import type { CompanyLogoProps } from '../../../types/super.type';
-import { BRAND_COLOR, BRAND_TINT } from '../../../constants/theme';
 
 export function CompanyLogo({ company, size = 46 }: CompanyLogoProps) {
   const displayName = getCompanyName(company);
@@ -22,7 +21,7 @@ export function CompanyLogo({ company, size = 46 }: CompanyLogoProps) {
             height: size,
             borderRadius: Math.round(size * 0.32),
             objectFit: 'cover',
-            border: '1px solid #e2e8f0',
+            border: '1px solid var(--bd-e2e8f0)',
           }}
         />
       )}
@@ -31,14 +30,14 @@ export function CompanyLogo({ company, size = 46 }: CompanyLogoProps) {
           width: size,
           height: size,
           borderRadius: Math.round(size * 0.32),
-          background: BRAND_TINT,
-          color: BRAND_COLOR,
+          background: 'var(--bg-e7f0f8)',
+          color: 'var(--fg-185582)',
           display: logo ? 'none' : 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           fontWeight: 900,
           fontSize: Math.max(13, Math.round(size * 0.31)),
-          border: '1px solid #e2e8f0',
+          border: '1px solid var(--bd-e2e8f0)',
         }}
       >
         {getCompanyInitials(displayName)}

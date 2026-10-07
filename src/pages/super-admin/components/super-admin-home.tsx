@@ -46,7 +46,7 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
   const renderCreatedInfoCard = () => {
     if (!createdAdminInfo) {
       return (
-        <div style={{ background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: 16, padding: 16, color: '#64748b' }}>
+        <div style={{ background: 'var(--bg-f8fcff)', border: '1px dashed var(--bd-cbd5e1)', borderRadius: 16, padding: 16, color: 'var(--fg-64748b)' }}>
           Yeni şirkət yaradandan sonra şirkət məlumatları və Company Admin login məlumatı burada görünəcək.
         </div>
       );
@@ -55,13 +55,13 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
     const company = createdAdminInfo.company;
 
     return (
-      <div className="super-created-info-card" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 16, padding: 16 }}>
+      <div className="super-created-info-card" style={{ background: 'var(--bg-f0fdf4)', border: '1px solid var(--bd-bbf7d0)', borderRadius: 16, padding: 16 }}>
         <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 14 }} align="start" wrap>
           <Space align="center" size={12}>
             <CompanyLogo company={company} size={56} />
             <div>
-              <div style={{ color: '#166534', fontWeight: 900 }}>Son yaradılan şirkət və admin login məlumatı</div>
-              <div style={{ color: '#15803d', fontSize: 13 }}>{createdAdminInfo.companyName}</div>
+              <div style={{ color: 'var(--fg-166534)', fontWeight: 900 }}>Son yaradılan şirkət və admin login məlumatı</div>
+              <div style={{ color: 'var(--fg-15803d)', fontSize: 13 }}>{createdAdminInfo.companyName}</div>
             </div>
           </Space>
           <Space wrap>
@@ -120,16 +120,16 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
       <div className="super-home-logo-limit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 120px', gap: 12, alignItems: 'start' }}>
         <div
           style={{
-            border: '1px dashed #cbd5e1',
+            border: '1px dashed var(--bd-cbd5e1)',
             borderRadius: 12,
             padding: '10px 12px',
-            color: '#64748b',
-            background: '#f8fafc',
+            color: 'var(--fg-64748b)',
+            background: 'var(--bg-f8fcff)',
             fontSize: 13,
             lineHeight: 1.5,
           }}
         >
-          <strong style={{ color: '#334155', display: 'block', marginBottom: 8 }}>Logo şəkli</strong>
+          <strong style={{ color: 'var(--fg-334155)', display: 'block', marginBottom: 8 }}>Logo şəkli</strong>
           <Upload
             accept=".jpg,.jpeg,.png,image/jpeg,image/png"
             maxCount={1}
@@ -149,7 +149,7 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
             </Button>
           </Upload>
           {selectedLogoName ? (
-            <div style={{ marginTop: 8, color: '#334155', fontWeight: 700, overflowWrap: 'anywhere' }}>
+            <div style={{ marginTop: 8, color: 'var(--fg-334155)', fontWeight: 700, overflowWrap: 'anywhere' }}>
               Seçildi: {selectedLogoName}
             </div>
           ) : null}
@@ -203,23 +203,23 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
           <div
             className="super-home-hero"
             style={{
-              background: 'linear-gradient(135deg,#eff8ff 0%,#ffffff 55%,#e4f3ff 100%)',
+              background: 'linear-gradient(135deg,var(--bg-eef7ff) 0%,var(--bg-ffffff) 55%,var(--bg-e0f1fb) 100%)',
               borderRadius: 24,
               padding: '28px 30px',
-              color: '#263445',
+              color: 'var(--fg-263445)',
               position: 'relative',
               overflow: 'hidden',
               marginBottom: 22,
-              boxShadow: '0 18px 42px rgba(71,120,153,0.12)', border: '1px solid #d5e8f4',
+              boxShadow: '0 18px 42px rgba(71,120,153,0.12)', border: '1px solid var(--bd-d7eaf7)',
             }}
           >
-            <div style={{ position: 'absolute', right: -45, top: -45, width: 190, height: 190, borderRadius: '50%', background: 'rgba(24,85,130,0.08)' }} />
-            <div style={{ position: 'absolute', right: 100, bottom: -60, width: 160, height: 160, borderRadius: '50%', background: 'rgba(24,85,130,0.05)' }} />
+            <div style={{ position: 'absolute', right: -45, top: -45, width: 190, height: 190, borderRadius: '50%', background: 'var(--bg-rgba-24-85-130-p08)' }} />
+            <div style={{ position: 'absolute', right: 100, bottom: -60, width: 160, height: 160, borderRadius: '50%', background: 'var(--bg-rgba-24-85-130-p05)' }} />
             <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>
               <div>
                 <Tag color="processing" style={{ borderRadius: 999, marginBottom: 10 }}>Super Admin</Tag>
-                <h1 style={{ margin: 0, color: '#263445', fontSize: 30, fontWeight: 900 }}>Şirkət idarəetməsi</h1>
-                <p style={{ margin: '8px 0 0', color: '#607f94', maxWidth: 760 }}>
+                <h1 style={{ margin: 0, color: 'var(--fg-263445)', fontSize: 30, fontWeight: 900 }}>Şirkət idarəetməsi</h1>
+                <p style={{ margin: '8px 0 0', color: 'var(--fg-607f94)', maxWidth: 760 }}>
                   Şirkət yaradılan kimi backend Company Admin hesabını avtomatik yaratmalı və adminEmail/defaultPassword qaytarmalıdır.
                 </p>
               </div>
@@ -231,11 +231,11 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
 
           <div className="super-home-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.65fr) minmax(340px, 0.95fr)', gap: 24, alignItems: 'start' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-              <Card className="super-home-card" style={{ borderRadius: 22, border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(15,23,42,0.06)' }} styles={{ body: { padding: 24 } }}>
+              <Card className="super-home-card" style={{ borderRadius: 22, border: '1px solid var(--bd-e2e8f0)', boxShadow: '0 10px 30px rgba(15,23,42,0.06)' }} styles={{ body: { padding: 24 } }}>
                 <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 18 }} wrap>
                   <div>
-                    <h2 style={{ margin: 0, fontSize: 22, color: '#0f172a', fontWeight: 900 }}>Şirkətlər</h2>
-                    <p style={{ margin: '6px 0 0', color: '#64748b', fontSize: 14 }}>
+                    <h2 style={{ margin: 0, fontSize: 22, color: 'var(--fg-0f172a)', fontWeight: 900 }}>Şirkətlər</h2>
+                    <p style={{ margin: '6px 0 0', color: 'var(--fg-64748b)', fontSize: 14 }}>
                       Şirkəti seçib məlumatlarına baxın, redaktə edin və aktiv/deaktiv statusunu idarə edin.
                     </p>
                   </div>
@@ -267,7 +267,7 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
                             <Space align="center" size={12} style={{ minWidth: 0 }}>
                               <CompanyLogo company={company} size={44} />
                               <div style={{ minWidth: 0 }}>
-                                <div title={displayName} style={{ color: '#0f172a', fontWeight: 900, maxWidth: 190, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <div title={displayName} style={{ color: 'var(--fg-0f172a)', fontWeight: 900, maxWidth: 190, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {displayName}
                                 </div>
                                 <div style={{ color: '#94a3b8', fontSize: 12 }}>{company.address || 'Şirkət profili'}</div>
@@ -280,7 +280,7 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
                         title: 'VÖEN',
                         dataIndex: 'voen',
                         width: 140,
-                        render: (value: string) => <span style={{ fontFamily: 'monospace', color: '#334155' }}>{value || 'Yoxdur'}</span>,
+                        render: (value: string) => <span style={{ fontFamily: 'monospace', color: 'var(--fg-334155)' }}>{value || 'Yoxdur'}</span>,
                       },
                       {
                         title: 'Admin emaili',
@@ -295,8 +295,8 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
                         render: (_value: unknown, company) => (
                           <div>
                             <div>{company.address || '-'}</div>
-                            <div style={{ color: '#64748b', fontSize: 12, overflowWrap: 'anywhere' }}>{getCompanyBusinessEmail(company) || '-'}</div>
-                            <div style={{ color: '#64748b', fontSize: 12 }}>{getCompanyPhone(company) || '-'}</div>
+                            <div style={{ color: 'var(--fg-64748b)', fontSize: 12, overflowWrap: 'anywhere' }}>{getCompanyBusinessEmail(company) || '-'}</div>
+                            <div style={{ color: 'var(--fg-64748b)', fontSize: 12 }}>{getCompanyPhone(company) || '-'}</div>
                           </div>
                         ),
                       },
@@ -358,10 +358,10 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
                 )}
               </Card>
 
-              <Card className="super-home-card" style={{ borderRadius: 22, border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(15,23,42,0.06)' }} styles={{ body: { padding: 24 } }}>
+              <Card className="super-home-card" style={{ borderRadius: 22, border: '1px solid var(--bd-e2e8f0)', boxShadow: '0 10px 30px rgba(15,23,42,0.06)' }} styles={{ body: { padding: 24 } }}>
                 <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 20 }} wrap>
                   <div>
-                    <h2 style={{ margin: 0, fontSize: 20, color: '#1e293b', fontWeight: 900 }}>Company Admin hesabı</h2>
+                    <h2 style={{ margin: 0, fontSize: 20, color: 'var(--fg-1e293b)', fontWeight: 900 }}>Company Admin hesabı</h2>
                   </div>
                   <Tag color="orange">Manual / Redaktə</Tag>
                 </Space>
@@ -431,10 +431,10 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
                 </Form>
               </Card>
 
-              <Card className="super-home-card" style={{ borderRadius: 22, border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(15,23,42,0.06)' }} styles={{ body: { padding: 24 } }}>
+              <Card className="super-home-card" style={{ borderRadius: 22, border: '1px solid var(--bd-e2e8f0)', boxShadow: '0 10px 30px rgba(15,23,42,0.06)' }} styles={{ body: { padding: 24 } }}>
                 <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 14 }} wrap>
                   <div>
-                    <h2 style={{ margin: 0, fontSize: 20, color: '#1e293b', fontWeight: 900 }}>Company Admin avtomatik yaranır</h2>
+                    <h2 style={{ margin: 0, fontSize: 20, color: 'var(--fg-1e293b)', fontWeight: 900 }}>Company Admin avtomatik yaranır</h2>
                   </div>
                   <Tag color="green">Auto</Tag>
                 </Space>
@@ -442,9 +442,9 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
               </Card>
             </div>
 
-            <Card className="super-home-card super-home-sticky-card" style={{ borderRadius: 22, border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(15,23,42,0.06)', position: 'sticky', top: 88 }} styles={{ body: { padding: 24 } }}>
+            <Card className="super-home-card super-home-sticky-card" style={{ borderRadius: 22, border: '1px solid var(--bd-e2e8f0)', boxShadow: '0 10px 30px rgba(15,23,42,0.06)', position: 'sticky', top: 88 }} styles={{ body: { padding: 24 } }}>
               <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 18 }}>
-                <h2 style={{ margin: 0, fontSize: 20, color: '#1e293b', fontWeight: 900 }}>Yeni şirkət</h2>
+                <h2 style={{ margin: 0, fontSize: 20, color: 'var(--fg-1e293b)', fontWeight: 900 }}>Yeni şirkət</h2>
                 <Tag color="orange">Super Admin</Tag>
               </Space>
 
@@ -463,7 +463,7 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
                 <Input maxLength={50} showCount />
               </Form.Item>
               <Form.Item name="voen" label="VÖEN" tooltip="VÖEN dəyişdirilə bilməz">
-                <Input disabled style={{ fontFamily: 'monospace', color: '#64748b' }} />
+                <Input disabled style={{ fontFamily: 'monospace', color: 'var(--fg-64748b)' }} />
               </Form.Item>
               <Form.Item name="employeeLimit" label="Limit" rules={[{ required: true, message: 'Limit tələb olunur' }, { type: 'number', min: 1, max: 50, message: 'Limit 1-50 arası olmalıdır' }]}>
                 <InputNumber min={1} max={50} style={{ width: '100%' }} />
@@ -479,10 +479,10 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
                   <Input maxLength={50} showCount allowClear />
                 </Form.Item>
               </div>
-              <div style={{ background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: 12, padding: 12, color: '#64748b', marginBottom: 14 }}>
-                <strong style={{ color: '#334155', display: 'block', marginBottom: 8 }}>Loqonu dəyiş</strong>
+              <div style={{ background: 'var(--bg-f8fcff)', border: '1px dashed var(--bd-cbd5e1)', borderRadius: 12, padding: 12, color: 'var(--fg-64748b)', marginBottom: 14 }}>
+                <strong style={{ color: 'var(--fg-334155)', display: 'block', marginBottom: 8 }}>Loqonu dəyiş</strong>
                 <Space align="center" wrap>
-                  {editLogoDataUrl ? <img src={editLogoDataUrl} alt="Loqo" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 12, border: '1px solid #e2e8f0' }} /> : null}
+                  {editLogoDataUrl ? <img src={editLogoDataUrl} alt="Loqo" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 12, border: '1px solid var(--bd-e2e8f0)' }} /> : null}
                   <Upload
                     accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                     maxCount={1}
@@ -501,7 +501,7 @@ export function SuperAdminHome({ controller }: SuperAdminControllerProps) {
                       Yeni JPG/PNG seç
                     </Button>
                   </Upload>
-                  <span style={{ fontWeight: 700, color: '#334155', overflowWrap: 'anywhere' }}>
+                  <span style={{ fontWeight: 700, color: 'var(--fg-334155)', overflowWrap: 'anywhere' }}>
                     {editLogoName || 'Loqo seçilməyib'}
                   </span>
                 </Space>

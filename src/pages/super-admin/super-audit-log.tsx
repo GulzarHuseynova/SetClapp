@@ -3,7 +3,6 @@ import { Button, Card, Empty, Modal, Space, Table, Tag } from 'antd';
 import {AuditOutlined,ClockCircleOutlined,DatabaseOutlined,EyeOutlined,ReloadOutlined,UserOutlined} from '@ant-design/icons';
 import { superAdminActions, type SuperAuditLogRow } from '../../helpers/super-admin.helper';
 import type { AuditActionKind, AuditChange } from '../../types/super.type';
-import { BRAND_COLOR, BRAND_TINT } from '../../constants/theme';
 import { isGuidLike } from '../../utils/api.utils';
 
 const ACTION_MAP: Record<string, string> = {
@@ -351,9 +350,9 @@ const ChangeValueCard = ({ label, value, tone }: { label: string; value: string;
   const labelColor = tone === 'before' ? '#991b1b' : '#166534';
 
   return (
-    <div style={{ background: 'rgba(255,255,255,0.82)', borderRadius: 12, padding: 12 }}>
+    <div style={{ background: 'var(--bg-rgba-255-255-255-p82)', borderRadius: 12, padding: 12 }}>
       <div style={{ color: labelColor, fontSize: 12, fontWeight: 800, marginBottom: 4 }}>{label}</div>
-      <div style={{ color: '#334155', lineHeight: 1.6, overflowWrap: 'anywhere' }}>{value}</div>
+      <div style={{ color: 'var(--fg-334155)', lineHeight: 1.6, overflowWrap: 'anywhere' }}>{value}</div>
     </div>
   );
 };
@@ -410,8 +409,8 @@ function SuperAuditLog() {
     const todayCount = logs.filter((log) => log.date.slice(0, 10) === today).length;
 
     return [
-      { title: 'Ümumi log', value: totalLogs || logs.length, icon: <AuditOutlined />, color: BRAND_COLOR },
-      { title: 'Bu səhifədə bugünkü hadisə', value: todayCount, icon: <ClockCircleOutlined />, color: '#059669' },
+      { title: 'Ümumi log', value: totalLogs || logs.length, icon: <AuditOutlined />, color: 'var(--fg-185582)' },
+      { title: 'Bu səhifədə bugünkü hadisə', value: todayCount, icon: <ClockCircleOutlined />, color: 'var(--fg-059669)' },
       { title: 'Bu səhifədə istifadəçi', value: users.size, icon: <UserOutlined />, color: '#dc2626' },
       { title: 'Bu səhifədə obyekt tipi', value: entities.size, icon: <DatabaseOutlined />, color: '#9333ea' },
     ];
@@ -423,26 +422,26 @@ function SuperAuditLog() {
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20, width: '100%', maxWidth: '100%', minWidth: 0, overflowX: 'hidden' }}>        <div>
-        <h1 style={{ margin: 0, color: '#1e293b', fontSize: 28, fontWeight: 800 }}>Audit Log</h1>
-        <p style={{ margin: '8px 0 0', color: '#64748b' }}>
+        <h1 style={{ margin: 0, color: 'var(--fg-1e293b)', fontSize: 28, fontWeight: 800 }}>Audit Log</h1>
+        <p style={{ margin: '8px 0 0', color: 'var(--fg-64748b)' }}>
           Sistemdə edilən dəyişikliklər sadə və anlaşılan formada göstərilir.
         </p>
       </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 16 }}>
           {stats.map((item) => (
-            <Card key={item.title} style={{ borderRadius: 16, border: '1px solid #e2e8f0' }} styles={{ body: { padding: 18 } }}>
+            <Card key={item.title} style={{ borderRadius: 16, border: '1px solid var(--bd-e2e8f0)' }} styles={{ body: { padding: 18 } }}>
               <Space style={{ width: '100%', justifyContent: 'space-between' }}>
                 <div>
                   <div style={{ color: '#94a3b8', fontSize: 13, fontWeight: 700 }}>{item.title}</div>
-                  <div style={{ color: '#0f172a', fontSize: 28, fontWeight: 900, marginTop: 4 }}>{item.value}</div>
+                  <div style={{ color: 'var(--fg-0f172a)', fontSize: 28, fontWeight: 900, marginTop: 4 }}>{item.value}</div>
                 </div>
                 <div
                   style={{
                     width: 42,
                     height: 42,
                     borderRadius: 14,
-                    background: `${item.color}16`,
+                    background: `color-mix(in srgb, ${item.color} 9%, transparent)`,
                     color: item.color,
                     display: 'flex',
                     alignItems: 'center',
@@ -457,10 +456,10 @@ function SuperAuditLog() {
           ))}
         </div>
 
-        <Card style={{ borderRadius: 18, border: '1px solid #e2e8f0' }} styles={{ body: { padding: 20 } }}>
+        <Card style={{ borderRadius: 18, border: '1px solid var(--bd-e2e8f0)' }} styles={{ body: { padding: 20 } }}>
           <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }} wrap>
             <div>
-              <h2 style={{ margin: 0, color: '#0f172a', fontSize: 20 }}>Sistem audit jurnalı</h2>
+              <h2 style={{ margin: 0, color: 'var(--fg-0f172a)', fontSize: 20 }}>Sistem audit jurnalı</h2>
             </div>
             <Button icon={<ReloadOutlined />} onClick={() => void loadLogs(pagination.current, pagination.pageSize)} loading={loading}>
               Yenilə
@@ -496,7 +495,7 @@ function SuperAuditLog() {
                 title: 'Tarix və saat',
                 dataIndex: 'date',
                 width: 165,
-                render: (value: string) => <strong style={{ color: '#334155' }}>{formatDate(value)}</strong>,
+                render: (value: string) => <strong style={{ color: 'var(--fg-334155)' }}>{formatDate(value)}</strong>,
               },
               {
                 title: 'İstifadəçi',
@@ -521,7 +520,7 @@ function SuperAuditLog() {
                 key: 'detailsAction',
                 render: (_value: unknown, record) => (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, minWidth: 0 }}>
-                    <span style={{ color: '#334155', lineHeight: 1.5, whiteSpace: 'normal', overflowWrap: 'anywhere', minWidth: 0 }}>
+                    <span style={{ color: 'var(--fg-334155)', lineHeight: 1.5, whiteSpace: 'normal', overflowWrap: 'anywhere', minWidth: 0 }}>
                       {getAuditSummary(record)}
                     </span>
                     <Button
@@ -546,49 +545,49 @@ function SuperAuditLog() {
         onCancel={() => setSelectedLog(null)}
         footer={null}
         width={920}
-        title={<span style={{ fontWeight: 800, color: '#0f172a' }}>Dəyişiklik haqqında məlumat</span>}
+        title={<span style={{ fontWeight: 800, color: 'var(--fg-0f172a)' }}>Dəyişiklik haqqında məlumat</span>}
       >
         {selectedLog ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 8 }}>
             <div
               style={{
-                border: '1px solid #c9dbe8',
+                border: '1px solid var(--bd-c9dbe8)',
                 borderRadius: 16,
-                background: BRAND_TINT,
+                background: 'var(--bg-e7f0f8)',
                 padding: 18,
               }}
             >
-              <div style={{ color: BRAND_COLOR, fontSize: 12, fontWeight: 800, marginBottom: 6 }}>NƏ BAŞ VERDİ?</div>
-              <div style={{ color: '#0f2f47', fontSize: 18, fontWeight: 800, lineHeight: 1.55 }}>{getAuditSummary(selectedLog)}</div>
+              <div style={{ color: 'var(--fg-185582)', fontSize: 12, fontWeight: 800, marginBottom: 6 }}>NƏ BAŞ VERDİ?</div>
+              <div style={{ color: 'var(--fg-0f2f47)', fontSize: 18, fontWeight: 800, lineHeight: 1.55 }}>{getAuditSummary(selectedLog)}</div>
             </div>
 
             <div
               style={{
-                border: '1px solid #e2e8f0',
+                border: '1px solid var(--bd-e2e8f0)',
                 borderRadius: 16,
-                background: '#f8fafc',
+                background: 'var(--bg-f8fcff)',
                 padding: 16,
               }}
             >
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
                 <div>
                   <div style={{ color: '#94a3b8', fontSize: 12, fontWeight: 700 }}>Tarix və saat</div>
-                  <div style={{ color: '#0f172a', fontWeight: 700, marginTop: 4 }}>{formatDate(selectedLog.date)}</div>
+                  <div style={{ color: 'var(--fg-0f172a)', fontWeight: 700, marginTop: 4 }}>{formatDate(selectedLog.date)}</div>
                 </div>
                 <div>
                   <div style={{ color: '#94a3b8', fontSize: 12, fontWeight: 700 }}>Dəyişikliyi edən</div>
-                  <div style={{ color: '#0f172a', fontWeight: 700, marginTop: 4 }}>{displayActor(selectedLog)}</div>
+                  <div style={{ color: 'var(--fg-0f172a)', fontWeight: 700, marginTop: 4 }}>{displayActor(selectedLog)}</div>
                 </div>
                 <div>
                   <div style={{ color: '#94a3b8', fontSize: 12, fontWeight: 700 }}>Dəyişiklik edilən bölmə</div>
-                  <div style={{ color: '#0f172a', fontWeight: 700, marginTop: 4 }}>{translateEntity(selectedLog.entity)}</div>
+                  <div style={{ color: 'var(--fg-0f172a)', fontWeight: 700, marginTop: 4 }}>{translateEntity(selectedLog.entity)}</div>
                 </div>
               </div>
             </div>
 
             {selectedActionKind === 'create' && selectedChanges.length > 0 ? (
-              <div style={{ border: '1px solid #bbf7d0', background: '#f0fdf4', borderRadius: 18, padding: 16 }}>
-                <div style={{ color: '#15803d', fontWeight: 900, fontSize: 18, marginBottom: 14 }}>Əlavə edilən məlumatlar</div>
+              <div style={{ border: '1px solid var(--bd-bbf7d0)', background: 'var(--bg-f0fdf4)', borderRadius: 18, padding: 16 }}>
+                <div style={{ color: 'var(--fg-15803d)', fontWeight: 900, fontSize: 18, marginBottom: 14 }}>Əlavə edilən məlumatlar</div>
                 <div style={{ display: 'grid', gap: 10 }}>
                   {selectedChanges
                     .filter((item) => item.after !== '—')
@@ -600,8 +599,8 @@ function SuperAuditLog() {
             ) : null}
 
             {selectedActionKind === 'delete' && selectedChanges.length > 0 ? (
-              <div style={{ border: '1px solid #fecaca', background: '#fef2f2', borderRadius: 18, padding: 16 }}>
-                <div style={{ color: '#b91c1c', fontWeight: 900, fontSize: 18, marginBottom: 14 }}>Silinən məlumatlar</div>
+              <div style={{ border: '1px solid var(--bd-fecaca)', background: 'var(--bg-fef2f2)', borderRadius: 18, padding: 16 }}>
+                <div style={{ color: 'var(--fg-b91c1c)', fontWeight: 900, fontSize: 18, marginBottom: 14 }}>Silinən məlumatlar</div>
                 <div style={{ display: 'grid', gap: 10 }}>
                   {selectedChanges
                     .filter((item) => item.before !== '—')
@@ -621,8 +620,8 @@ function SuperAuditLog() {
                   alignItems: 'start',
                 }}
               >
-                <div style={{ border: '1px solid #fecaca', background: '#fef2f2', borderRadius: 18, padding: 16 }}>
-                  <div style={{ color: '#b91c1c', fontWeight: 900, fontSize: 18, marginBottom: 14 }}>Dəyişiklikdən əvvəl</div>
+                <div style={{ border: '1px solid var(--bd-fecaca)', background: 'var(--bg-fef2f2)', borderRadius: 18, padding: 16 }}>
+                  <div style={{ color: 'var(--fg-b91c1c)', fontWeight: 900, fontSize: 18, marginBottom: 14 }}>Dəyişiklikdən əvvəl</div>
                   <div style={{ display: 'grid', gap: 10 }}>
                     {selectedChanges.map((item) => (
                       <ChangeValueCard key={`before-${item.key}`} label={item.label} value={item.before} tone="before" />
@@ -630,8 +629,8 @@ function SuperAuditLog() {
                   </div>
                 </div>
 
-                <div style={{ border: '1px solid #bbf7d0', background: '#f0fdf4', borderRadius: 18, padding: 16 }}>
-                  <div style={{ color: '#15803d', fontWeight: 900, fontSize: 18, marginBottom: 14 }}>Dəyişiklikdən sonra</div>
+                <div style={{ border: '1px solid var(--bd-bbf7d0)', background: 'var(--bg-f0fdf4)', borderRadius: 18, padding: 16 }}>
+                  <div style={{ color: 'var(--fg-15803d)', fontWeight: 900, fontSize: 18, marginBottom: 14 }}>Dəyişiklikdən sonra</div>
                   <div style={{ display: 'grid', gap: 10 }}>
                     {selectedChanges.map((item) => (
                       <ChangeValueCard key={`after-${item.key}`} label={item.label} value={item.after} tone="after" />
@@ -642,7 +641,7 @@ function SuperAuditLog() {
             ) : null}
 
             {(['scan', 'login', 'logout'].includes(selectedActionKind) || selectedChanges.length === 0) ? (
-              <div style={{ border: '1px solid #c9dbe8', background: '#f8fafc', borderRadius: 16, padding: 18, color: '#475569' }}>
+              <div style={{ border: '1px solid var(--bd-c9dbe8)', background: 'var(--bg-f8fcff)', borderRadius: 16, padding: 18, color: 'var(--fg-475569)' }}>
                 Bu hadisə üçün əlavə texniki məlumat göstərilmir. Əsas məlumat yuxarıdakı “Nə baş verdi?” bölməsində verilib.
               </div>
             ) : null}

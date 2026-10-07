@@ -19,7 +19,7 @@ export function Section({ title, icon, accent = BRAND_COLOR, children }: {
 }) {
   return (
     <Card className="employee-section-card" styles={{ body: { padding: 0 } }}>
-      <div className="employee-section-head" style={{ background: `linear-gradient(90deg, ${accent}14, #fff)` }}>
+      <div className="employee-section-head" style={{ background: `linear-gradient(90deg, color-mix(in srgb, ${accent} 8%, transparent), var(--bg-ffffff))` }}>
         <div style={iconBox(`${accent}18`, accent, 36)}>{icon}</div>
         <span className="employee-section-title">{title}</span>
       </div>
@@ -80,9 +80,9 @@ export function InfoRow({ icon, label, value, color = BRAND_COLOR }: { icon: Rea
 export function CompanyInfoLine({ company }: { company: string }) {
   return (
     <div className="employee-info-row" style={{ marginTop: 12 }}>
-      <BankOutlined style={{ color: BRAND_COLOR, fontSize: 18 }} />
-      <span style={{ color: "#64748b", fontSize: 13 }}>Şirkət:</span>
-      <strong style={{ color: "#0f172a", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{company || "-"}</strong>
+      <BankOutlined style={{ color: 'var(--fg-185582)', fontSize: 18 }} />
+      <span style={{ color: "var(--fg-64748b)", fontSize: 13 }}>Şirkət:</span>
+      <strong style={{ color: "var(--fg-0f172a)", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{company || "-"}</strong>
     </div>
   );
 }

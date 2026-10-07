@@ -6,6 +6,8 @@ import type { EditableProfileValues, ProfileSocialAccount } from "../types/layou
 import type { PublicCardProfile } from "../types/public-card.type";
 import { downloadVCard, getQrPayload } from "../features/public-card/public-card";
 import { AppButton } from './ui/app-button';
+import { PhoneCountryInput } from './phone-country-input';
+import { phoneFromContactLink } from '../utils/phone.utils';
 import { CommonBusinessCardView } from './common-business-card-view';
 import { cleanText, platformIcon, platformMarker } from './business-card-links';
 import type { AdminCardProfileInput, BusinessCardViewModel, CompanyAdminProfileViewProps, LinkPreset } from '../types/business-card-view.type';
@@ -67,6 +69,9 @@ const LINK_PRESET_GROUPS = [
   { key: "social", label: "SOSİAL ŞƏBƏKƏ" },
   { key: "business", label: "İŞ VƏ ÖDƏNİŞ" },
 ] as const;
+
+// Telefon və WhatsApp üçün adi mətn əvəzinə ölkə kodu seçilən nömrə sahəsi göstərilir.
+const isPhonePreset = (name: string) => ["telefon", "whatsapp"].includes(normalizePlatformKey(name));
 
 const findPreset = (name: string) => LINK_ICON_PRESETS.find((item) => item.name === name) || CUSTOM_LINK_PRESET;
 
@@ -310,9 +315,11 @@ export default function CompanyAdminProfileView({
     const whatsappItem = take("whatsapp");
     const addressItem = take("ünvan");
 
-    const whatsappValue = cleanText(whatsappItem?.profileUrl)
-      .replace(/^https?:\/\/wa\.me\//i, "")
-      .replace(/^tel:/i, "");
+    // wa.me linkindəki rəqəmlər artıq ölkə kodunu ehtiva edir; "+" olmadan saxlansa, backend onu Azərbaycan
+    // nömrəsi sayıb əvvəlinə +994 əlavə edir.
+    const whatsappLink = cleanText(whatsappItem?.profileUrl);
+    const whatsappDigits = /wa\.me\/\+?(\d+)/i.exec(whatsappLink)?.[1];
+    const whatsappValue = whatsappDigits ? `+${whatsappDigits}` : whatsappLink.replace(/^tel:/i, "");
 
     const dedicatedKeys = new Set(["linkedin", "facebook", "instagram", "whatsapp", "ünvan"]);
     const customAccounts = accounts.filter(
@@ -382,7 +389,7 @@ export default function CompanyAdminProfileView({
     const preset = presetForAccount(account);
     setEditingLinkIndex(index);
     setSelectedPresetName(preset.name);
-    setLinkDraftValue(cleanText(account.profileUrl));
+    setLinkDraftValue(isPhonePreset(preset.name) ? phoneFromContactLink(account.profileUrl) : cleanText(account.profileUrl));
     setLinkDraftLabel(cleanText(account.platformName) || preset.label);
     setLinkModalStep("details");
   };
@@ -455,7 +462,7 @@ export default function CompanyAdminProfileView({
       className="ca-admin-share-modal"
     >
       <div className="ca-admin-share-qr">
-        <QRCode value={shareQrPayload} size={230} bordered={false} errorLevel="M" />
+        <QRCode type="svg" color="#000000e0" bgColor="#ffffff" value={shareQrPayload} size={230} bordered={false} errorLevel="M" />
         <strong>{fullName}</strong>
         <span>QR kodu skan etdikdə kontakt məlumatları açılacaq.</span>
       </div>
@@ -467,18 +474,18 @@ export default function CompanyAdminProfileView({
 
     if (linkModalStep !== null) {
       return (
-        <div className="min-h-full bg-[#f3f5f3]">
-          <div className="sticky top-0 z-10 flex h-16 items-center gap-3 border-b border-[#e5e7eb] bg-white px-5">
-            <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f6f6] text-xl text-[#1a1a1a]" onClick={() => setLinkModalStep(null)} aria-label="Redaktəyə qayıt">‹</button>
-            <strong className="text-[16px] font-semibold text-[#1a1a1a]">{linkModalStep === "picker" ? "Platforma əlavə et" : selectedPreset.label}</strong>
+        <div className="min-h-full bg-(--bg-f3f5f3)">
+          <div className="sticky top-0 z-10 flex h-16 items-center gap-3 border-b border-(--bd-e4e9ec) bg-white px-5">
+            <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full bg-(--bg-f3f5f3) text-xl text-(--fg-1a1a1a)" onClick={() => setLinkModalStep(null)} aria-label="Redaktəyə qayıt">‹</button>
+            <strong className="text-[16px] font-semibold text-(--fg-1a1a1a)">{linkModalStep === "picker" ? "Platforma əlavə et" : selectedPreset.label}</strong>
           </div>
 
           {linkModalStep === "picker" ? (
             <div className="space-y-5 p-5">
               {addedPlatformLabels.length > 0 && (
                 <div className="space-y-2">
-                  <span className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#6e7671]">ARTIQ ƏLAVƏ EDİLİB</span>
-                  <div className="flex flex-wrap gap-2">{addedPlatformLabels.map((label) => <b className="rounded-full bg-[#e7f0f8] px-3 py-1 text-[12px] font-medium text-[#185582]" key={label}>{label}</b>)}</div>
+                  <span className="text-[11px] font-semibold uppercase tracking-[.08em] text-(--fg-6e7671)">ARTIQ ƏLAVƏ EDİLİB</span>
+                  <div className="flex flex-wrap gap-2">{addedPlatformLabels.map((label) => <b className="rounded-full bg-(--bg-e7f0f8) px-3 py-1 text-[12px] font-medium text-(--fg-185582)" key={label}>{label}</b>)}</div>
                 </div>
               )}
               {LINK_PRESET_GROUPS.map((group) => {
@@ -486,11 +493,11 @@ export default function CompanyAdminProfileView({
                 if (rows.length === 0) return null;
                 return (
                   <section className="space-y-3" key={group.key}>
-                    <h4 className="m-0 text-[11px] font-semibold uppercase tracking-[.08em] text-[#6e7671]">{group.label}</h4>
+                    <h4 className="m-0 text-[11px] font-semibold uppercase tracking-[.08em] text-(--fg-6e7671)">{group.label}</h4>
                     <div className="grid grid-cols-4 gap-2">
                       {rows.map((preset) => (
-                        <button type="button" key={preset.name} onClick={() => choosePreset(preset)} className="flex min-h-20.5 flex-col items-center justify-center gap-2 rounded-2xl border border-[#dfe5e3] bg-white px-2 py-3 text-[#185582] hover:border-[#185582]">
-                          <span className="text-[22px]">{preset.icon}</span><strong className="text-[11px] font-medium text-[#1a1a1a]">{preset.label}</strong>
+                        <button type="button" key={preset.name} onClick={() => choosePreset(preset)} className="flex min-h-20.5 flex-col items-center justify-center gap-2 rounded-2xl border border-(--bd-dfe5e3) bg-white px-2 py-3 text-(--fg-185582) hover:border-(--bd-185582)">
+                          <span className="text-[22px]">{preset.icon}</span><strong className="text-[11px] font-medium text-(--fg-1a1a1a)">{preset.label}</strong>
                         </button>
                       ))}
                     </div>
@@ -500,15 +507,19 @@ export default function CompanyAdminProfileView({
             </div>
           ) : (
             <div className="space-y-4 p-5">
-              <div className="flex items-center gap-3 rounded-2xl bg-[#e7f0f8] p-4 text-[#185582]"><span className="text-xl">{selectedPreset.icon}</span><p className="m-0 text-[13px]">{selectedPreset.helper}</p></div>
+              <div className="flex items-center gap-3 rounded-2xl bg-(--bg-e7f0f8) p-4 text-(--fg-185582)"><span className="text-xl">{selectedPreset.icon}</span><p className="m-0 text-[13px]">{selectedPreset.helper}</p></div>
               <div className="rounded-[22px] bg-white p-4 shadow-sm">
-                <label className="mb-2 block text-[13px] font-semibold text-[#1a1a1a]">Link / məlumat</label>
-                <Input value={linkDraftValue} placeholder={selectedPreset.placeholder} onChange={(event) => setLinkDraftValue(event.target.value)} className="h-12 rounded-xl" />
-                <label className="mb-2 mt-4 block text-[13px] font-semibold text-[#1a1a1a]">Kartda görünən ad</label>
+                <label className="mb-2 block text-[13px] font-semibold text-(--fg-1a1a1a)">Link / məlumat</label>
+                {isPhonePreset(selectedPreset.name) ? (
+                  <PhoneCountryInput value={linkDraftValue} placeholder="50 000 00 00" maxLength={20} onChange={setLinkDraftValue} />
+                ) : (
+                  <Input value={linkDraftValue} placeholder={selectedPreset.placeholder} onChange={(event) => setLinkDraftValue(event.target.value)} className="h-12 rounded-xl" />
+                )}
+                <label className="mb-2 mt-4 block text-[13px] font-semibold text-(--fg-1a1a1a)">Kartda görünən ad</label>
                 <Input value={linkDraftLabel || selectedPreset.label} disabled={selectedPreset.name !== "Özəl link"} onChange={(event) => setLinkDraftLabel(event.target.value)} className="h-12 rounded-xl" />
               </div>
-              <div className="text-[11px] font-semibold uppercase tracking-[.08em] text-[#6e7671]">KARTDA BELƏ GÖRÜNƏCƏK</div>
-              <div className="flex items-center gap-3 rounded-[22px] bg-white p-4 shadow-sm"><span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e7f0f8] text-xl text-[#185582]">{selectedPreset.icon}</span><div className="min-w-0 flex-1"><small className="block text-[10px] uppercase text-[#6e7671]">{linkDraftLabel || selectedPreset.label}</small><strong className="block truncate text-[13px] text-[#1a1a1a]">{linkDraftValue || selectedPreset.placeholder}</strong></div><b>›</b></div>
+              <div className="text-[11px] font-semibold uppercase tracking-[.08em] text-(--fg-6e7671)">KARTDA BELƏ GÖRÜNƏCƏK</div>
+              <div className="flex items-center gap-3 rounded-[22px] bg-white p-4 shadow-sm"><span className="flex h-11 w-11 items-center justify-center rounded-full bg-(--bg-e7f0f8) text-xl text-(--fg-185582)">{selectedPreset.icon}</span><div className="min-w-0 flex-1"><small className="block text-[10px] uppercase text-(--fg-6e7671)">{linkDraftLabel || selectedPreset.label}</small><strong className="block truncate text-[13px] text-(--fg-1a1a1a)">{linkDraftValue || selectedPreset.placeholder}</strong></div><b>›</b></div>
               <div className="grid grid-cols-[1fr_2fr] gap-3 pt-1">
                 <AppButton className="force-navy-action h-12" type="primary" onClick={() => setLinkModalStep("picker")}>Geri</AppButton>
                 <AppButton className="force-navy-action h-12" type="primary" loading={saving} onClick={saveLinkDraft}>{editingLinkIndex === null ? "Əlavə et" : "Yadda saxla"}</AppButton>
@@ -601,19 +612,19 @@ export default function CompanyAdminProfileView({
                   </div>
                 );
               })}
-              <button type="button" className="ca-vcard-add-platform bg-[#185582]! text-white! border-[#185582]!" onClick={openLinkPicker}><PlusOutlined /> Yeni link əlavə et</button>
+              <button type="button" className="ca-vcard-add-platform bg-(--bg-185582)! text-white! border-(--bd-185582)!" onClick={openLinkPicker}><PlusOutlined /> Yeni link əlavə et</button>
             </div>
           </section>
 
           <button type="button" className="ca-vcard-qr-share" onClick={() => setShareOpen(true)}>
-            <span className="ca-vcard-qr-icon"><QRCode value={shareQrPayload} size={42} bordered={false} errorLevel="M" /></span>
+            <span className="ca-vcard-qr-icon"><QRCode type="svg" color="#000000e0" bgColor="transparent" value={shareQrPayload} size={42} bordered={false} errorLevel="M" /></span>
             <span><strong>QR kod və paylaşma</strong><small>Kodu göstər və vizitkartı paylaş</small></span>
             <b>›</b>
           </button>
 
           <div className="ca-vcard-editor-savebar">
-            <AppButton className="force-navy-action" type="primary" onClick={() => onCancelEdit ? onCancelEdit() : setEditing(false)}>Ləğv et</AppButton>
-            <AppButton className="force-navy-action" type="primary" htmlType="submit" loading={saving}>Yadda saxla</AppButton>
+            <AppButton className="force-navy-action ca-vcard-cancel" type="primary" onClick={() => onCancelEdit ? onCancelEdit() : setEditing(false)}>Ləğv et</AppButton>
+            <AppButton className="force-navy-action ca-vcard-save" type="primary" htmlType="submit" loading={saving}>Yadda saxla</AppButton>
           </div>
         </Form>
 

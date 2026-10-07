@@ -6,6 +6,7 @@ import type { AddUserFormValues } from '../../../../types/company-admin.type';
 import type { EditableProfileValues } from '../../../../types/layout.type';
 import CompanyAdminProfileView from '../../../../components/company-admin-profile-view';
 import { PhoneCountryInput } from '../../../../components/phone-country-input';
+import { phoneFromContactLink } from '../../../../utils/phone.utils';
 import { getEmployeeFullName, userIdentity } from '../../../../features/company-admin/business-card';
 import { AppButton } from '../../../../components/ui/app-button';
 import type { AddEmployeeModalProps, BirthDateInputProps, EditEmployeeModalProps, HtmlExportModalProps, ImportEmployeesModalProps } from '../../../../types/business-card.type';
@@ -54,6 +55,9 @@ const linkPlaceholderForPlatform = (platformName?: string) => {
   if (platform.includes('cv') || platform.includes('pdf')) return 'https://.../cv.pdf';
   return 'https://...';
 };
+
+// Telefon və WhatsApp üçün adi mətn əvəzinə ölkə kodu seçilən nömrə sahəsi göstərilir.
+const isPhoneLinkPlatform = (platformName?: string) => ['phone', 'whatsapp'].includes(directContactPlatform(platformName));
 
 const normalizeLinkValueForPlatform = (platformName: string, value?: string) => {
   const text = String(value || '').trim();
@@ -155,7 +159,9 @@ function EmployeeCardFields() {
     const accounts = [...(form.getFieldValue('socialAccounts') || [])];
     const current = accounts[pickerIndex] || {};
     setSelectedPresetName(platformName);
-    setPickerValue(normalizeLinkValueForPlatform(platformName, current.profileUrl));
+    setPickerValue(isPhoneLinkPlatform(platformName)
+      ? phoneFromContactLink(current.profileUrl)
+      : normalizeLinkValueForPlatform(platformName, current.profileUrl));
     setPickerStep('details');
   };
 
@@ -352,7 +358,11 @@ function EmployeeCardFields() {
               <div className="ca-platform-details-head"><button type="button" onClick={() => setPickerStep('picker')}>‹</button><strong>{selected.name}</strong></div>
               <div className="ca-platform-info-banner"><span>{selected.icon}</span><p>{selected.helper}</p></div>
               <label>Link / məlumat</label>
-              <Input value={pickerValue} placeholder={linkPlaceholderForPlatform(selected.name)} onChange={(event) => setPickerValue(event.target.value)} />
+              {isPhoneLinkPlatform(selected.name) ? (
+                <PhoneCountryInput value={pickerValue} placeholder="50 000 00 00" maxLength={20} onChange={setPickerValue} />
+              ) : (
+                <Input value={pickerValue} placeholder={linkPlaceholderForPlatform(selected.name)} onChange={(event) => setPickerValue(event.target.value)} />
+              )}
               <div className="ca-platform-preview-label">KARTDA BELƏ GÖRÜNƏCƏK</div>
               <div className="ca-platform-preview-row"><span>{selected.icon}</span><div><small>{selected.name}</small><strong>{pickerValue || linkPlaceholderForPlatform(selected.name)}</strong></div><b>›</b></div>
               <div className="ca-platform-detail-actions"><AppButton onClick={() => setPickerStep('picker')}>Geri</AppButton><AppButton className="force-navy-action" type="primary" onClick={savePickedLink}>Yadda saxla</AppButton></div>
@@ -588,10 +598,10 @@ export function EditEmployeeModal({
       width={430}
       centered
       title={null}
-      styles={{ body: { padding: 0, maxHeight: '88vh', overflowY: 'auto', background: '#f3f5f3' } }}
+      styles={{ body: { padding: 0, maxHeight: '88vh', overflowY: 'auto', background: 'var(--bg-ffffff)' } }}
     >
       {!selectedEditUser || !initialProfileValues ? (
-        <div className="p-6 text-[#6e7671]">Redaktə üçün işçi seçin.</div>
+        <div className="p-6 text-(--fg-6e7671)">Redaktə üçün işçi seçin.</div>
       ) : (
         <CompanyAdminProfileView
           key={selectedEditUserId || selectedEditUser.id || selectedEditUser.email}
@@ -740,7 +750,7 @@ export function ImportEmployeesModal({
           {importResult.success} işçi uğurla idxal edildi.
 
           {importResult.errors.length > 0 && (
-            <ul className="mt-2 pl-4 text-[#6d7f8d]">
+            <ul className="mt-2 pl-4 text-(--fg-6d7f8d)">
               {importResult.errors.map((error) => (
                 <li key={error}>{error}</li>
               ))}
@@ -749,7 +759,7 @@ export function ImportEmployeesModal({
         </div>
       )}
 
-      <div className="mb-5 rounded-lg border border-[#cde6f8] bg-[#f6fbff] p-3 text-[#527086]">
+      <div className="mb-5 rounded-lg border border-(--bd-cde6f8) bg-(--bg-f8fcff) p-3 text-(--fg-527086)">
         Şirkət limiti: <strong>{currentEmployeesCount}/{employeeLimit}</strong>
       </div>
 

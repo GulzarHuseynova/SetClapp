@@ -525,7 +525,7 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
         destroyOnHidden
         forceRender
       >
-        <p style={{ color: '#64748b', marginTop: 0 }}>
+        <p style={{ color: 'var(--fg-64748b)', marginTop: 0 }}>
           {resetPasswordUser ? `${resetPasswordUser.firstName} ${resetPasswordUser.lastName}`.trim() || resetPasswordUser.email : ''} üçün yeni kod/şifrə təyin edin.
         </p>
         <Form form={resetPasswordForm} layout="vertical" onFinish={handleResetPassword}>

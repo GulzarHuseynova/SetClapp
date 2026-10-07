@@ -6,7 +6,6 @@ import SuperInfo from './super-info';
 import { SuperAdminHome } from './components/super-admin-home';
 import SuperStatistics from './super-statistics';
 import { useSuperAdminController } from '../../hooks/use-super-admin-controller';
-import { BRAND_THEME } from '../../constants/theme';
 import { AntdAppProvider } from '../../components/antd-app-provider';
 
 function SuperAdmin({ onLogout }: SuperAdminProps) {
@@ -18,7 +17,7 @@ function SuperAdmin({ onLogout }: SuperAdminProps) {
   const isInfoPage = location.pathname.startsWith('/admin/info');
 
   return (
-    <AntdAppProvider theme={BRAND_THEME}>
+    <AntdAppProvider brand>
       <AppLayout
         role="super-admin"
         onLogout={controller.handleLogout}

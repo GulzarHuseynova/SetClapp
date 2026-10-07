@@ -16,14 +16,13 @@ body {
 
 .login-page {
   --login-accent: #185582;
-  --login-bg: #eaf4fd;
   width: 100%;
   min-height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  color: #0b0f13;
-  background: #e9eceb;
+  color: var(--fg-0a0f13);
+  background: var(--bg-e9eceb);
 }
 
 .login-mobile-shell {
@@ -33,14 +32,14 @@ body {
   display: grid;
   align-content: start;
   gap: 22px;
-  background: linear-gradient(180deg, #edf7ff 0%, #e5f2fd 100%);
+  background: linear-gradient(180deg, var(--bg-eef7ff) 0%, var(--bg-e0f1fb) 100%);
 }
 
 .login-brand-card,
 .login-card {
   width: 100%;
-  border: 1px solid #e4e8e7;
-  background: #ffffff;
+  border: 1px solid var(--bd-e7e9e8);
+  background: var(--bg-ffffff);
   box-shadow: 0 12px 32px rgba(24, 85, 130, 0.07);
 }
 
@@ -60,9 +59,9 @@ body {
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: 1px dashed #c6d7e4;
+  border: 1px dashed var(--bd-c9dbe8);
   border-radius: 16px;
-  background: #f8fbfe;
+  background: var(--bg-f8fcff);
 }
 
 .login-brand-mark img {
@@ -86,7 +85,7 @@ body {
 }
 
 .login-brand-card span {
-  color: #68716f;
+  color: var(--fg-64706d);
   font-size: 14px;
   line-height: 1.35;
 }
@@ -102,7 +101,7 @@ body {
 
 .login-card-head h1 {
   margin: 0 0 6px;
-  color: #090d10;
+  color: var(--fg-0a0f13);
   font-size: 24px;
   line-height: 1.16;
   font-weight: 800;
@@ -111,7 +110,7 @@ body {
 
 .login-card-head p {
   margin: 0;
-  color: #66706e;
+  color: var(--fg-64706d);
   font-size: 14px;
 }
 
@@ -124,7 +123,7 @@ body {
 }
 
 .login-form .ant-form-item-label > label {
-  color: #111519;
+  color: var(--fg-111519);
   font-size: 14px;
   font-weight: 700;
 }
@@ -134,9 +133,9 @@ body {
 .login-autocomplete .ant-input-affix-wrapper {
   min-height: 54px !important;
   padding-inline: 15px !important;
-  border: 1px solid #d8dfdd !important;
+  border: 1px solid var(--bd-d8dfdd) !important;
   border-radius: 14px !important;
-  background: #ffffff !important;
+  background: var(--bg-ffffff) !important;
   box-shadow: none !important;
 }
 
@@ -153,13 +152,13 @@ body {
 .login-input .ant-input-prefix,
 .login-autocomplete .ant-input-prefix,
 .login-input .ant-input-password-icon {
-  color: #73807c;
+  color: var(--fg-73807c);
   font-size: 17px;
 }
 
 .login-input .ant-input,
 .login-autocomplete .ant-input {
-  color: #111519 !important;
+  color: var(--fg-111519) !important;
   font-size: 15px !important;
   background: transparent !important;
 }
@@ -179,7 +178,7 @@ body {
 .login-button.ant-btn:hover,
 .login-button.ant-btn:focus,
 .login-button.ant-btn:active {
-  background: #12466c !important;
+  background: var(--bg-12466c) !important;
 }
 
 @media (max-width: 520px) {

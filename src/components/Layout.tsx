@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Avatar, Divider, Form, Input, Modal, Popover, Space, Tag, Tooltip } from "antd";
+import { Avatar, Divider, Form, Input, Modal, Popover, Segmented, Space, Tag, Tooltip } from "antd";
 import { message } from "../utils/antd-static";
-import {ClockCircleOutlined,LockOutlined,LogoutOutlined,MenuFoldOutlined,MenuUnfoldOutlined,SafetyCertificateOutlined,SettingOutlined,UserOutlined,} from "@ant-design/icons";
+import {ClockCircleOutlined,DesktopOutlined,LockOutlined,LogoutOutlined,MenuFoldOutlined,MenuUnfoldOutlined,MoonOutlined,SafetyCertificateOutlined,SettingOutlined,SunOutlined,UserOutlined,} from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router";
 import type { AppLayoutProps } from "../types/layout.type";
 import type { ChangePasswordRequest } from "../types/auth.type";
@@ -11,6 +11,8 @@ import CompanyAdminProfileView from "./company-admin-profile-view";
 import { AppButton } from "./ui/app-button";
 import { ROLES } from "../constants/roles";
 import { cn } from "../utils/classnames";
+import { themeStore, useThemeMode } from "../store/themeStore";
+import type { ThemeMode } from "../store/themeStore";
 
 export default function AppLayout({
   role,
@@ -87,7 +89,7 @@ export default function AppLayout({
       : 'w-[240px]';
 
   const sidebarThemeClass = isLightTheme
-    ? 'border-r border-[#c9deea] bg-gradient-to-b from-[#e7f4fc] to-[#f4f9fc] shadow-[18px_0_50px_rgba(35,78,104,0.10)]'
+    ? 'border-r border-(color:--bd-c9dbe8) bg-gradient-to-b from-(--bg-e7f0f8) to-(--bg-f8fcff) shadow-[18px_0_50px_rgba(35,78,104,0.10)]'
     : 'bg-gradient-to-b from-[#1e1b4b] via-[#312e81] to-[#4c1d95]';
 
   const sidebarHeaderPaddingClass = collapsed
@@ -103,7 +105,7 @@ export default function AppLayout({
     : 'border-[rgba(255,255,255,0.08)]';
 
   const sidebarLogoClass = isLightTheme
-    ? 'bg-[#185582] text-white shadow-[0_8px_20px_rgba(24,85,130,0.22)]'
+    ? 'bg-(color:--bg-185582) text-white shadow-[0_8px_20px_rgba(24,85,130,0.22)]'
     : 'bg-gradient-to-br from-[#818cf8] to-[#a78bfa] text-white shadow-[0_2px_12px_rgba(99,102,241,0.4)]';
 
   const mainOffsetClass = isMobileLayout
@@ -184,6 +186,7 @@ export default function AppLayout({
       setPasswordLoading(false);
     }
   };
+  const themeMode = useThemeMode();
   const profileContent = (
     <div className="w-72.5">
       <Space align="center" className="mb-3 w-full">
@@ -193,7 +196,7 @@ export default function AppLayout({
           className={cn(
             'shrink-0!',
             role === ROLES.COMPANY_ADMIN || isLightTheme
-              ? 'bg-[#185582]!'
+              ? 'bg-(--bg-185582)!'
               : 'bg-[linear-gradient(135deg,#6366f1,#8b5cf6)]!',
           )}
         >
@@ -217,13 +220,28 @@ export default function AppLayout({
         </div>
         <div className="flex items-center gap-2.5 text-slate-600">
           <ClockCircleOutlined
-            className={role === ROLES.COMPANY_ADMIN || isLightTheme ? 'text-[#185582]!' : 'text-indigo-500!'}
+            className={role === ROLES.COMPANY_ADMIN || isLightTheme ? 'text-(--fg-185582)!' : 'text-indigo-500!'}
           />
           <span className="text-[13px]">Profil ayarlarını buradan idarə edin</span>
         </div>
       </div>
 
       <Divider className="my-3!" />
+
+      <div className="mb-3">
+        <div className="theme-switch-label">Görünüş</div>
+        <Segmented<ThemeMode>
+          block
+          className="theme-switch"
+          value={themeMode}
+          onChange={(value) => themeStore.setMode(value)}
+          options={[
+            { value: 'light', label: 'Açıq', icon: <SunOutlined /> },
+            { value: 'dark', label: 'Tünd', icon: <MoonOutlined /> },
+            { value: 'system', label: 'Sistem', icon: <DesktopOutlined /> },
+          ]}
+        />
+      </div>
 
       <AppButton
         appTone="secondary"
@@ -345,8 +363,8 @@ export default function AppLayout({
                   {!avatarSrc && initials}
                 </Avatar>
                 <span className="ca-sidebar-profile-text">
-                  <strong className="block text-[16px] leading-5.5 font-semibold text-[#1a1a1a]">{displayName}</strong>
-                  <small className="block text-[13px] leading-4.5 font-normal text-[#1b4a75]">Şirkət admini</small>
+                  <strong className="block text-[16px] leading-5.5 font-semibold text-(--fg-1a1a1a)">{displayName}</strong>
+                  <small className="block text-[13px] leading-4.5 font-normal text-(--fg-1b4a75)">Şirkət admini</small>
                 </span>
                 <span className="ca-sidebar-chevron" aria-hidden="true">›</span>
               </button>
@@ -359,7 +377,7 @@ export default function AppLayout({
                 >
                   <span className="ca-sidebar-company-icon" aria-hidden="true">▦</span>
                   <span className="ca-sidebar-company-copy">
-                    <strong className="block text-[14px] leading-5 font-medium text-[#1a1a1a]">{titleSuffix}</strong>
+                    <strong className="block text-[14px] leading-5 font-medium text-(--fg-1a1a1a)">{titleSuffix}</strong>
                     <span className="ca-sidebar-usage-row">
                       <span className="ca-sidebar-usage-track">
                         <span style={{ width: `${usagePercent}%` }} />
@@ -404,8 +422,8 @@ export default function AppLayout({
                 rel="noreferrer"
                 aria-label="SetClapp saytına keç"
               >
-                <img src="/setclapp-logo-without-text.svg" alt="SetClapp" />
-                <strong>SetClapp</strong>
+                <img className="ca-brand-logo-light" src="/setclapp-logo-full.png" alt="SetClapp" />
+                <img className="ca-brand-logo-dark" src="/setclapp-logo-full-dark.png" alt="" aria-hidden="true" />
               </a>
               <span>© 2019–2026</span>
             </div>
@@ -428,8 +446,8 @@ export default function AppLayout({
               </button>
 
               <div className="ca-topbar-title">
-                <strong className="block text-[15px] leading-5.5 font-semibold text-[#1a1a1a]">{showAdminProfile ? "Mənim vizitkartım" : activeItem.label}</strong>
-                <span className="block text-[12px] leading-4 font-normal text-[#6e7671]">{titleSuffix}</span>
+                <strong className="block text-[15px] leading-5.5 font-semibold text-(--fg-1a1a1a)">{showAdminProfile ? "Mənim vizitkartım" : activeItem.label}</strong>
+                <span className="block text-[12px] leading-4 font-normal text-(--fg-6e7671)">{titleSuffix}</span>
               </div>
 
               <div className="ca-topbar-actions">
@@ -478,7 +496,7 @@ export default function AppLayout({
     <div
       className={cn(
         'app-layout-root flex min-h-screen font-sans',
-        isLightTheme ? 'employee-layout-theme bg-[#eef7ff]' : 'bg-slate-100',
+        isLightTheme ? 'employee-layout-theme bg-(--bg-eef7ff)' : 'bg-slate-100',
         role === ROLES.SUPER_ADMIN && 'super-admin-layout-theme',
       )}
     >
@@ -510,12 +528,12 @@ export default function AppLayout({
               <div
                 className={cn(
                   'text-[15px] font-bold leading-[1.2]',
-                  isLightTheme ? 'text-[#263445]' : 'text-white',
+                  isLightTheme ? 'text-(--fg-263445)' : 'text-white',
                 )}
               >
                 {config.brand}
               </div>
-              <div className={cn('text-[11px]', isLightTheme ? 'text-[#6d8191]' : 'text-[#a5b4fc]')}>
+              <div className={cn('text-[11px]', isLightTheme ? 'text-(--fg-6d7f8d)' : 'text-[#a5b4fc]')}>
                 {config.brandSub}
               </div>
             </div>
@@ -529,7 +547,7 @@ export default function AppLayout({
               className={cn(
                 'absolute right-3 top-4.5 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-[10px] border',
                 isLightTheme
-                  ? 'border-[#c9deea] bg-white/80 text-[#45677d] hover:bg-white'
+                  ? 'border-(--bd-c9dbe8) bg-white/80 text-(--fg-456b82) hover:bg-white'
                   : 'border-white/15 bg-white/10 text-[#e0e7ff] hover:bg-white/15',
               )}
             >
@@ -554,11 +572,11 @@ export default function AppLayout({
                     'flex w-full cursor-pointer items-center gap-3 rounded-[10px] border-0 border-l-[3px] text-sm transition-colors duration-150',
                     collapsed ? 'justify-center px-0 py-2.75' : 'justify-start py-2.75 pl-3.5 pr-3',
                     isActive && isLightTheme &&
-                      'border-l-[#185582] bg-white/90 font-semibold text-[#185582] shadow-[0_8px_22px_rgba(24,85,130,0.08)]',
+                      'border-l-[#185582] bg-white/90 font-semibold text-(--fg-185582) shadow-[0_8px_22px_rgba(24,85,130,0.08)]',
                     isActive && !isLightTheme &&
                       'border-l-[#818cf8] bg-linear-to-r from-indigo-400/25 to-violet-400/10 font-semibold text-[#c7d2fe]',
                     !isActive && isLightTheme &&
-                      'border-l-transparent font-normal text-[#527086] hover:bg-white/90 hover:text-[#234d68]',
+                      'border-l-transparent font-normal text-(--fg-527086) hover:bg-white/90 hover:text-(--fg-234d68)',
                     !isActive && !isLightTheme &&
                       'border-l-transparent font-normal text-slate-400 hover:bg-white/5 hover:text-[#e0e7ff]',
                   )}
@@ -583,7 +601,7 @@ export default function AppLayout({
               src={avatarSrc || undefined}
               className={cn(
                 'shrink-0!',
-                'bg-[#185582]!',
+                'bg-(--bg-185582)!',
               )}
             >
               {!avatarSrc && initials}
@@ -594,7 +612,7 @@ export default function AppLayout({
                 <div
                   className={cn(
                     'text-[13px] font-semibold',
-                    isLightTheme ? 'text-[#263445]' : 'text-[#e0e7ff]',
+                    isLightTheme ? 'text-(--fg-263445)' : 'text-[#e0e7ff]',
                   )}
                 >
                   {displayName}
@@ -603,7 +621,7 @@ export default function AppLayout({
                   className={cn(
                     'mt-0.5 inline-block rounded-full px-2 py-px text-[10px] font-bold uppercase tracking-[0.5px]',
                     isLightTheme
-                      ? 'bg-[#e7f0f8] text-[#185582]'
+                      ? 'bg-(--bg-e7f0f8) text-(--fg-185582)'
                       : 'bg-[rgba(52,211,153,0.18)] text-[#34d399]',
                   )}
                 >
@@ -671,7 +689,7 @@ export default function AppLayout({
                   size={28}
                   src={avatarSrc || undefined}
                   className={cn(
-                    'bg-[#185582]!',
+                    'bg-(--bg-185582)!',
                   )}
                 >
                   {!avatarSrc && initials}

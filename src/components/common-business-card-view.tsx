@@ -73,11 +73,11 @@ const resolveProfile = (profile: PublicCardProfile) => {
 
 const coverStyle = (backgroundUrl: string) => backgroundUrl
   ? {
-      backgroundImage: `linear-gradient(180deg,rgba(255,255,255,.08),rgba(18,51,74,.18)),url("${backgroundUrl.replace(/"/g, '%22')}")`,
+      backgroundImage: `linear-gradient(180deg,rgba(255, 255, 255, 0.08),var(--bg-rgba-18-51-74-p18)),url("${backgroundUrl.replace(/"/g, '%22')}")`,
       backgroundSize: 'contain',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      backgroundColor: '#f4f8fb',
+      backgroundColor: 'var(--bg-f8fcff)',
     }
   : undefined;
 

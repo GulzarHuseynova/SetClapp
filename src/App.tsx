@@ -8,9 +8,10 @@ import PublicRoute from './route/PublicRoute/PublicRoute';
 import { authSessionStorage } from './storage/auth-session.storage';
 import { readAuthStateFromStorage } from './storage/auth.storage';
 import { isPersistentRuntimeKey, runtimeStorage } from './storage/runtime.storage';
+import { THEME_STORAGE_KEY } from './store/themeStore';
 
 const cleanBrowserStorage = () => {
-  const allowedKeys = new Set(["token", "id"]);
+  const allowedKeys = new Set(["token", "id", THEME_STORAGE_KEY]);
   for (let index = localStorage.length - 1; index >= 0; index -= 1) {
     const key = localStorage.key(index);
     if (!key || allowedKeys.has(key)) continue;

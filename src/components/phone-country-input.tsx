@@ -1,6 +1,7 @@
 import { useId, useMemo, useState, type ChangeEvent } from 'react';
 import { Input, Select, Space } from 'antd';
 import {COUNTRY_PHONE_OPTIONS,DEFAULT_PHONE_COUNTRY_CODE,joinPhoneWithCountryCode,splitPhoneByCountryCode,} from '../utils/phone.utils';
+import { normalizeCountrySearch } from '../utils/country-calling-codes';
 import type { PhoneCountryInputProps } from '../types/phone.type';
 
 export function PhoneCountryInput({
@@ -43,12 +44,23 @@ export function PhoneCountryInput({
     <Space.Compact block className="phone-country-input">
       <Select
         id={countrySelectId}
-        showSearch={false}
+        showSearch
+        placeholder="Kod"
         aria-label="Ölkə telefon kodu"
         disabled={disabled}
         value={selectedCountryCode}
         options={COUNTRY_PHONE_OPTIONS}
-        optionFilterProp="label"
+        // Seçilmiş dəyər qısa görünür ("🇦🇿 +994"), açılan siyahıda isə ölkə adı da göstərilir.
+        optionLabelProp="label"
+        optionRender={(option) => (
+          <span className="phone-country-option">
+            <span>{String(option.data.label).split(' ')[0]} {option.data.name}</span>
+            <span className="phone-country-option-code">{option.data.value}</span>
+          </span>
+        )}
+        filterOption={(input, option) => Boolean(option?.searchText.includes(normalizeCountrySearch(input).replace(/^\+/, '')))}
+        popupMatchSelectWidth={280}
+        listHeight={280}
         onChange={handleCountryChange}
         style={{ width: 122 }}
       />

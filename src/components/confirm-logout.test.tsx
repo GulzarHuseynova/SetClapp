@@ -5,7 +5,6 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { confirmLogout } from './confirm-logout';
 import { AntdAppProvider } from './antd-app-provider';
-import { BRAND_THEME } from '../constants/theme';
 
 const findButton = async (text: string) => {
   await vi.waitFor(() => {
@@ -45,7 +44,7 @@ describe('confirmLogout', () => {
   it('opens inside the themed antd App without the static-function warning', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     const root = createRoot(document.body.appendChild(document.createElement('div')));
-    await act(async () => root.render(<AntdAppProvider theme={BRAND_THEME}><span /></AntdAppProvider>));
+    await act(async () => root.render(<AntdAppProvider brand><span /></AntdAppProvider>));
 
     await act(async () => confirmLogout(vi.fn()));
 

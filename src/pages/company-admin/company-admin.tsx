@@ -699,7 +699,7 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
         keyboard={false}
         width={480}
       >
-        <p style={{ color: "#64748b", marginTop: 0 }}>
+        <p style={{ color: "var(--fg-64748b)", marginTop: 0 }}>
           Super Admin tərəfindən verilən kod müvəqqətidir. Paneldən istifadə etmək üçün yeni şifrə təyin edin.
         </p>
 

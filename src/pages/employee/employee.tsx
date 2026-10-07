@@ -15,7 +15,6 @@ import EmployeeBusinessCard from "./employee-pages/business-card";
 import EmployeeContacts from "./employee-pages/contacts";
 import EmployeeIdentifiers from "./employee-pages/identifiers";
 import EmployeeProfile from "./employee-pages/profile";
-import { BRAND_THEME } from "../../constants/theme";
 import { AntdAppProvider } from "../../components/antd-app-provider";
 import { message } from "../../utils/antd-static";
 import "./employee.css";
@@ -179,7 +178,7 @@ function EmployeeShell({ onLogout }: EmployeeProps) {
         width={480}
         centered
       >
-        <p style={{ color: "#64748b", marginTop: 0 }}>
+        <p style={{ color: "var(--fg-64748b)", marginTop: 0 }}>
           Company Admin tərəfindən verilən kod müvəqqətidir. Employee panelindən istifadə etmək üçün yeni şifrə təyin edin.
         </p>
 
@@ -238,7 +237,7 @@ function EmployeeShell({ onLogout }: EmployeeProps) {
 
 export default function Employee({ onLogout }: EmployeeProps) {
   return (
-    <AntdAppProvider theme={BRAND_THEME}>
+    <AntdAppProvider brand>
       <EmployeeProvider>
         <EmployeeShell onLogout={onLogout} />
       </EmployeeProvider>

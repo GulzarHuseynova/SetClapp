@@ -5,6 +5,18 @@
     <link rel="icon" type="image/png" href="/setclapp-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>digitalbusiness</title>
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      // Tema yanıb-sönməsinin qarşısını almaq üçün: React yüklənməmiş seçilmiş tema tətbiq olunur (themeStore ilə eyni məntiq).
+      (function () {
+        try {
+          var mode = localStorage.getItem('setclapp-theme');
+          var dark = mode === 'dark' || (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">

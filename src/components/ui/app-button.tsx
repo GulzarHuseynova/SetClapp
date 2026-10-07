@@ -6,16 +6,16 @@ const BASE_CLASSES =
 
 const TONE_CLASSES: Record<AppButtonTone, string> = {
   primary:
-    '!border-[#185582] !bg-[#185582] !text-white hover:!border-[#12466c] hover:!bg-[#12466c] focus:!border-[#185582] focus:!bg-[#185582]',
+    '!border-(color:--bd-185582) !bg-(color:--bg-185582) !text-white hover:!border-(color:--bd-12466c) hover:!bg-(color:--bg-12466c) focus:!border-(color:--bd-185582) focus:!bg-(color:--bg-185582)',
   secondary:
-    '!border-[#185582] !bg-white !text-[#185582] hover:!border-[#12466c] hover:!text-[#12466c]',
+    '!border-(color:--bd-185582) !bg-white !text-(color:--fg-185582) hover:!border-(color:--bd-12466c) hover:!text-(color:--fg-12466c)',
   // Vizitkartdakı əməliyyat düymələri: secondary kimi, amma mətn kartın digər yazıları ilə eyni tondadır.
   muted:
-    '!border-[#185582] !bg-white !text-[#456b82] hover:!border-[#12466c] hover:!text-[#35566a]',
+    '!border-(color:--bd-185582) !bg-white !text-(color:--fg-456b82) hover:!border-(color:--bd-12466c) hover:!text-(color:--fg-35566a)',
   danger:
-    '!border-[#dc2626] !bg-white !text-[#dc2626] hover:!border-[#b91c1c] hover:!bg-[#fff5f5] hover:!text-[#b91c1c]',
+    '!border-[#dc2626] !bg-white !text-[#dc2626] hover:!border-(color:--bd-b91c1c) hover:!bg-(color:--bg-fef2f2) hover:!text-(color:--fg-b91c1c)',
   ghost:
-    '!border-transparent !bg-transparent !text-[#185582] hover:!bg-[#eef5fa] hover:!text-[#12466c]',
+    '!border-transparent !bg-transparent !text-(color:--fg-185582) hover:!bg-(color:--bg-eef7ff) hover:!text-(color:--fg-12466c)',
 };
 
 const resolveTone = ({
