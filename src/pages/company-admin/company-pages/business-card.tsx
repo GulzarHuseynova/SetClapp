@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+﻿import { useMemo, useState } from 'react';
 import { Button, Form, Input, Modal } from 'antd';
 import { message, modal } from '../../../utils/antd-static';
-import { exportImportActions } from '../../../helpers/export-import.helper';
+import { exportImportActions } from '../../../features/export/export-import.helper';
 import {downloadVCard,getPublicCardUrl,normalizeUserToPublicProfile,savePublicCardProfilesFromUsers,} from '../../../features/public-card/public-card';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
 import { KeyOutlined } from '@ant-design/icons';
@@ -42,7 +42,7 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
   const accountInfo = useAuthSelector((state) => state.accountInfo);
 
   const [form] = Form.useForm<AddUserFormValues>();
-  const [editForm] = Form.useForm<Partial<AddUserFormValues>>();
+  const [detailRefreshToken, setDetailRefreshToken] = useState(0);
   const [resetPasswordForm] = Form.useForm<{ newPassword: string }>();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -220,55 +220,10 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
     return String(record.instagram || record.instagramUrl || socialValueFromAdditionalInfo(record.additionalInfo, key) || '');
   };
 
-  const normalizeBirthDateForInput = (value?: string) => {
-    const text = String(value || '').trim();
-    if (!text) return '';
-
-    const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
-
-    const dottedMatch = text.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
-    if (dottedMatch) {
-      const day = dottedMatch[1].padStart(2, '0');
-      const month = dottedMatch[2].padStart(2, '0');
-      const year = dottedMatch[3];
-      return `${year}-${month}-${day}`;
-    }
-
-    return text;
-  };
-
   const openEditUser = (user: UserData) => {
     setSelectedEditUserId(userIdentity(user));
     setEditPhotoFile(null);
     setEditPhotoPreview(getEmployeePhotoFromRecord(user as unknown as Record<string, unknown>));
-    editForm.setFieldsValue({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      middleName: user.middleName,
-      jobTitle: user.jobTitle,
-      email: user.email,
-      phone1: normalizePhoneForInput(user.phone1),
-      phone2: normalizePhoneForInput(user.phone2),
-      extensionNumber: user.extensionNumber,
-      whatsapp: normalizePhoneForInput(user.whatsapp),
-      linkedin: socialValueFromUser(user, 'linkedin'),
-      facebook: socialValueFromUser(user, 'facebook'),
-      instagram: socialValueFromUser(user, 'instagram'),
-      photo: getEmployeePhotoFromRecord(user as unknown as Record<string, unknown>),
-      photoUrl: user.photoUrl || user.photo,
-      photoData: user.photoData || normalizeInlineImageData(user.photo || user.photoUrl),
-      additionalInfo: stripSocialLinksFromAdditionalInfo(user.additionalInfo, [
-        socialValueFromUser(user, 'linkedin'),
-        socialValueFromUser(user, 'facebook'),
-        socialValueFromUser(user, 'instagram'),
-      ]),
-      dateOfBirth: normalizeBirthDateForInput(user.dateOfBirth),
-      address: user.address,
-      googleMapsUrl: user.googleMapsUrl,
-      cardBackgroundUrl: user.cardBackgroundUrl,
-      socialAccounts: user.socialAccounts || [],
-    });
     setIsEditModalOpen(true);
   };
 
@@ -277,7 +232,6 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
     setSelectedEditUserId('');
     setEditPhotoFile(null);
     setEditPhotoPreview('');
-    editForm.resetFields();
   };
 
   const handleEditPhotoSelect = async (file: File) => {
@@ -290,7 +244,6 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
       const photoUrl = await fileToDataUrl(file);
       setEditPhotoFile(file);
       setEditPhotoPreview(photoUrl);
-      editForm.setFieldsValue({ photo: photoUrl, photoUrl });
       message.success('Foto seçildi və məlumat yenilənəndə saxlanacaq.');
     } catch {
       message.error('Şəkli oxumaq mümkün olmadı.');
@@ -350,6 +303,7 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
         whatsapp: normalizePhoneForBackend(mergedValues.whatsapp),
         photoFile: editPhotoFile || undefined,
       }, selectedEditUser);
+      setDetailRefreshToken((value) => value + 1);
       closeEditModal();
     } finally {
       setEditSubmitLoading(false);
@@ -468,6 +422,8 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
           activeUsersCount={activeUsers.length}
           archivedUsersCount={archivedUsers.length}
           tableRows={tableRows}
+          allUsers={usersList}
+          detailRefreshToken={detailRefreshToken}
           hasMore={hasMoreEmployees}
           onLoadMore={loadMoreEmployees}
           company={company}
@@ -496,7 +452,6 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
       />
 
       <EditEmployeeModal
-        form={editForm}
         isOpen={isEditModalOpen}
         companyUsers={companyUsers}
         selectedEditUser={selectedEditUser}
@@ -513,7 +468,7 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
       <Modal
         title={
           <div>
-            <KeyOutlined style={{ marginRight: 8, color: '#4b9ada' }} />
+            <KeyOutlined style={{ marginRight: 8, color: 'var(--brand-sky-hover)' }} />
             İşçinin kodunu dəyiş
           </div>
         }
@@ -525,7 +480,7 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
         destroyOnHidden
         forceRender
       >
-        <p style={{ color: 'var(--fg-64748b)', marginTop: 0 }}>
+        <p style={{ color: 'var(--color-text-slate-muted)', marginTop: 0 }}>
           {resetPasswordUser ? `${resetPasswordUser.firstName} ${resetPasswordUser.lastName}`.trim() || resetPasswordUser.email : ''} üçün yeni kod/şifrə təyin edin.
         </p>
         <Form form={resetPasswordForm} layout="vertical" onFinish={handleResetPassword}>

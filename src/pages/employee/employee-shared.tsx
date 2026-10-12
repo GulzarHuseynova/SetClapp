@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Button, Card, Select, Tooltip } from "antd";
 import { BankOutlined, CloseOutlined, LinkOutlined, PlusOutlined } from "@ant-design/icons";
 import { iconBox } from "../../features/employee/employee-card";
-import { BRAND_COLOR } from "../../constants/theme";
+import { BRAND_COLOR_VAR } from "../../constants/theme";
 
 const PHONE_TYPES = ["İş", "Şəxsi", "WhatsApp", "Viber", "Telegram", "Ev"];
 const SOCIAL_PLATFORMS = ["Instagram", "LinkedIn", "Facebook", "X", "YouTube", "Telegram", "TikTok", "WhatsApp", "Sayt", "Telefon", "E-poçt", "Ünvan", "Görüş", "Kart hesabı", "Özəl link", "CV / PDF"];
@@ -11,7 +11,7 @@ export function FieldLabel({ children }: { children: ReactNode }) {
   return <div className="employee-field-label">{children}</div>;
 }
 
-export function Section({ title, icon, accent = BRAND_COLOR, children }: {
+export function Section({ title, icon, accent = BRAND_COLOR_VAR, children }: {
   title: string;
   icon: ReactNode;
   accent?: string;
@@ -19,8 +19,8 @@ export function Section({ title, icon, accent = BRAND_COLOR, children }: {
 }) {
   return (
     <Card className="employee-section-card" styles={{ body: { padding: 0 } }}>
-      <div className="employee-section-head" style={{ background: `linear-gradient(90deg, color-mix(in srgb, ${accent} 8%, transparent), var(--bg-ffffff))` }}>
-        <div style={iconBox(`${accent}18`, accent, 36)}>{icon}</div>
+      <div className="employee-section-head" style={{ background: `linear-gradient(90deg, color-mix(in srgb, ${accent} 8%, transparent), var(--color-surface))` }}>
+        <div style={iconBox(`color-mix(in srgb, ${accent} 9%, transparent)`, accent, 36)}>{icon}</div>
         <span className="employee-section-title">{title}</span>
       </div>
       <div className="employee-section-body">{children}</div>
@@ -63,10 +63,10 @@ export function CopyBtn({ text }: { text: string }) {
   );
 }
 
-export function InfoRow({ icon, label, value, color = BRAND_COLOR }: { icon: ReactNode; label: string; value?: string; color?: string }) {
+export function InfoRow({ icon, label, value, color = BRAND_COLOR_VAR }: { icon: ReactNode; label: string; value?: string; color?: string }) {
   return (
     <div className="employee-info-row">
-      <div style={iconBox(`${color}16`, color, 38)}>{icon}</div>
+      <div style={iconBox(`color-mix(in srgb, ${color} 9%, transparent)`, color, 38)}>{icon}</div>
       <div className="employee-info-content">
         <div className="employee-info-label">{label}</div>
         <Tooltip title={value || "-"}>
@@ -80,9 +80,9 @@ export function InfoRow({ icon, label, value, color = BRAND_COLOR }: { icon: Rea
 export function CompanyInfoLine({ company }: { company: string }) {
   return (
     <div className="employee-info-row" style={{ marginTop: 12 }}>
-      <BankOutlined style={{ color: 'var(--fg-185582)', fontSize: 18 }} />
-      <span style={{ color: "var(--fg-64748b)", fontSize: 13 }}>Şirkət:</span>
-      <strong style={{ color: "var(--fg-0f172a)", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{company || "-"}</strong>
+      <BankOutlined style={{ color: 'var(--color-primary-text)', fontSize: 18 }} />
+      <span style={{ color: "var(--color-text-slate-muted)", fontSize: 13 }}>Şirkət:</span>
+      <strong style={{ color: "var(--color-text-slate-strong)", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{company || "-"}</strong>
     </div>
   );
 }

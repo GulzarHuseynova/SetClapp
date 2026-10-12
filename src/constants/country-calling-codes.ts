@@ -58,7 +58,7 @@ CG|242|Konqo - Brazzavil
 CD|243|Konqo - Kinşasa
 CK|682|Kuk adaları
 CR|506|Kosta Rika
-CI|225|Kotd’ivuar
+CI|225|Kotd'ivuar
 HR|385|Xorvatiya
 CU|53|Kuba
 CW|599|Kurasao

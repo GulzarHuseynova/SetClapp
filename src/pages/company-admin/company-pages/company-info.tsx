@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Form, Input, Switch, Upload } from 'antd';
+import { ColorPicker, Form, Input, Switch, Upload } from 'antd';
 import { message } from '../../../utils/antd-static';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
 import { useAuthSelector } from '../../../store/authStore';
 import { getStoredUser } from '../../../storage/auth.storage';
 import type { CompanyFormValues, UserData } from '../../../types/company-admin.type';
 import { AppButton } from '../../../components/ui/app-button';
+import { brandStore, useBrandColor } from '../../../store/brandStore';
+import { BRAND_PRESETS, DEFAULT_BRAND_COLOR } from '../../../constants/colors';
+import { resolveBrandPrimary } from '../../../utils/brand-color';
+import { useResolvedTheme } from '../../../store/themeStore';
+
 
 function CompanyLogoPreview({ src, name }: { src?: string; name: string }) {
   const [failedSrc, setFailedSrc] = useState('');
@@ -41,6 +46,8 @@ export default function CompanyInfo() {
   const authUserId = useAuthSelector((state) => state.userId);
   const accountInfo = useAuthSelector((state) => state.accountInfo);
   const storedUser = getStoredUser();
+  const brandColor = useBrandColor();
+  const resolvedTheme = useResolvedTheme();
 
   useEffect(() => {
     companyForm.setFieldsValue({
@@ -142,6 +149,53 @@ export default function CompanyInfo() {
             Yadda saxla
           </AppButton>
         </Form>
+      </section>
+
+      <section className="ca-reference-card ca-brand-card">
+        <header>
+          <h2>Kart rəngi</h2>
+          <p>Seçilən rəng şirkətinizin panelində, işçi panelində və public vizitkartlarda istifadə olunur.</p>
+        </header>
+
+        <div className="ca-brand-swatches" role="radiogroup" aria-label="Kart rəngi">
+          {BRAND_PRESETS.map((preset) => {
+            const selected = brandColor === preset.light;
+            const swatchBg = resolvedTheme === 'dark' ? preset.dark : preset.light;
+            return (
+              <button
+                key={preset.light}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                aria-label={preset.name}
+                title={preset.name}
+                className={`ca-brand-swatch${selected ? ' is-selected' : ''}`}
+                style={{ background: swatchBg }}
+                onClick={() => brandStore.setColor(preset.light)}
+              />
+            );
+          })}
+        </div>
+
+        <div className="ca-brand-custom">
+          <ColorPicker
+            value={brandColor}
+            disabledAlpha
+            format="hex"
+            showText
+            onChangeComplete={(value) => brandStore.setColor(value.toHexString())}
+          />
+          <span className="ca-brand-custom-label">İstədiyiniz rəngi özünüz seçin</span>
+        </div>
+
+        <div className="ca-brand-preview" aria-hidden="true">
+          <span className="ca-brand-preview-button" style={{ background: resolveBrandPrimary(brandColor) }}>Düymə</span>
+          <span className="ca-brand-preview-chip" style={{ color: resolveBrandPrimary(brandColor), borderColor: resolveBrandPrimary(brandColor) }}>Etiket</span>
+        </div>
+
+        {brandColor !== DEFAULT_BRAND_COLOR && (
+          <AppButton onClick={() => brandStore.setColor(null)}>Standart rəngə qayıt</AppButton>
+        )}
       </section>
 
       <section className="ca-reference-card ca-permissions-card">

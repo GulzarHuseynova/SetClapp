@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode } from "react";
+﻿import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import { message } from "../../utils/antd-static";
-import { userActions } from "../../helpers/user.helper";
+import { userActions } from "../../features/employee/user.helper";
 import { authSessionStorage } from "../../storage/auth-session.storage";
 import { useAuthSelector } from "../../store/authStore";
 import type { CardData } from "../../types/employee.type";
@@ -8,6 +8,7 @@ import {canEditEmployeeCard,canOpenEmployeePage,EMPTY_CARD,mapUserToCard,} from 
 import { EmployeeContext } from "../../hooks/use-employee";
 import { findStringDeep } from "../../utils/api.utils";
 import { normalizeAssetUrl } from "../../utils/asset-url.utils";
+import { appendCacheBust } from "../../utils/asset-version";
 import { getSavedCompanyLogo } from "../../storage/company.storage";
 import { getSavedCompanyCardBackgroundAsync } from "../../features/company/company-card-theme";
 import { fetchPublicCardProfile, findPublicCardProfile, savePublicCardProfile } from "../../features/public-card/public-card";
@@ -204,6 +205,8 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
         throw new Error("Backend kart fonunun URL-ni qaytarmadı.");
       }
 
+      // Backend eyni URL qaytara bilər: brauzer keşindən köhnə fon görünməsin.
+      cardBackground = appendCacheBust(cardBackground);
       setCard((previous) => ({ ...previous, cardBackground }));
       setDraft((previous) => ({ ...previous, cardBackground }));
 

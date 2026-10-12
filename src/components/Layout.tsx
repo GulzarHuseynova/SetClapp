@@ -1,11 +1,11 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+﻿import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Avatar, Divider, Form, Input, Modal, Popover, Segmented, Space, Tag, Tooltip } from "antd";
 import { message } from "../utils/antd-static";
 import {ClockCircleOutlined,DesktopOutlined,LockOutlined,LogoutOutlined,MenuFoldOutlined,MenuUnfoldOutlined,MoonOutlined,SafetyCertificateOutlined,SettingOutlined,SunOutlined,UserOutlined,} from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router";
 import type { AppLayoutProps } from "../types/layout.type";
 import type { ChangePasswordRequest } from "../types/auth.type";
-import { authOperations } from "../helpers/auth.helper";
+import { authOperations } from "../features/auth";
 import { ROLE_CONFIG } from "./menu-items";
 import CompanyAdminProfileView from "./company-admin-profile-view";
 import { AppButton } from "./ui/app-button";
@@ -78,7 +78,6 @@ export default function AppLayout({
   const displayName = userName || config.userTitle;
   const profileVoen = profileDetails.find((item) => /v[öo]en/i.test(item.label))?.value || "";
   const initials = avatarText || config.logo;
-  const isLightTheme = role === ROLES.EMPLOYEE || role === ROLES.SUPER_ADMIN;
 
   const sidebarWidthClass = isMobileLayout
     ? collapsed
@@ -88,9 +87,8 @@ export default function AppLayout({
       ? 'w-[72px]'
       : 'w-[240px]';
 
-  const sidebarThemeClass = isLightTheme
-    ? 'border-r border-(color:--bd-c9dbe8) bg-gradient-to-b from-(--bg-e7f0f8) to-(--bg-f8fcff) shadow-[18px_0_50px_rgba(35,78,104,0.10)]'
-    : 'bg-gradient-to-b from-[#1e1b4b] via-[#312e81] to-[#4c1d95]';
+  const sidebarThemeClass =
+    'border-r border-(color:--color-primary-border-light) bg-gradient-to-b from-(--color-primary-tint) to-(--color-surface-soft) shadow-[18px_0_50px_rgba(35,78,104,0.10)]';
 
   const sidebarHeaderPaddingClass = collapsed
     ? isMobileLayout
@@ -100,13 +98,9 @@ export default function AppLayout({
       ? 'px-4 py-[22px]'
       : 'px-5 py-6';
 
-  const sidebarDividerClass = isLightTheme
-    ? 'border-[rgba(89,139,172,0.22)]'
-    : 'border-[rgba(255,255,255,0.08)]';
+  const sidebarDividerClass = 'border-[rgba(89,139,172,0.22)]';
 
-  const sidebarLogoClass = isLightTheme
-    ? 'bg-(color:--bg-185582) text-white shadow-[0_8px_20px_rgba(24,85,130,0.22)]'
-    : 'bg-gradient-to-br from-[#818cf8] to-[#a78bfa] text-white shadow-[0_2px_12px_rgba(99,102,241,0.4)]';
+  const sidebarLogoClass = 'bg-(color:--color-primary) text-white shadow-[0_8px_20px_rgba(24,85,130,0.22)]';
 
   const mainOffsetClass = isMobileLayout
     ? 'ml-[52px] w-[calc(100vw-52px)] max-w-[calc(100vw-52px)] overflow-x-hidden'
@@ -193,12 +187,7 @@ export default function AppLayout({
         <Avatar
           size={44}
           src={avatarSrc || undefined}
-          className={cn(
-            'shrink-0!',
-            role === ROLES.COMPANY_ADMIN || isLightTheme
-              ? 'bg-(--bg-185582)!'
-              : 'bg-[linear-gradient(135deg,#6366f1,#8b5cf6)]!',
-          )}
+          className="shrink-0! bg-(--color-primary)!"
         >
           {!avatarSrc && initials}
         </Avatar>
@@ -220,7 +209,7 @@ export default function AppLayout({
         </div>
         <div className="flex items-center gap-2.5 text-slate-600">
           <ClockCircleOutlined
-            className={role === ROLES.COMPANY_ADMIN || isLightTheme ? 'text-(--fg-185582)!' : 'text-indigo-500!'}
+            className="text-(--color-primary-text)!"
           />
           <span className="text-[13px]">Profil ayarlarını buradan idarə edin</span>
         </div>
@@ -363,7 +352,7 @@ export default function AppLayout({
                   {!avatarSrc && initials}
                 </Avatar>
                 <span className="ca-sidebar-profile-text">
-                  <strong className="block text-[16px] leading-5.5 font-semibold text-(--fg-1a1a1a)">{displayName}</strong>
+                  <strong className="block text-[16px] leading-5.5 font-semibold text-(--color-text-ink)">{displayName}</strong>
                   <small className="block text-[13px] leading-4.5 font-normal text-(--fg-1b4a75)">Şirkət admini</small>
                 </span>
                 <span className="ca-sidebar-chevron" aria-hidden="true">›</span>
@@ -377,7 +366,7 @@ export default function AppLayout({
                 >
                   <span className="ca-sidebar-company-icon" aria-hidden="true">▦</span>
                   <span className="ca-sidebar-company-copy">
-                    <strong className="block text-[14px] leading-5 font-medium text-(--fg-1a1a1a)">{titleSuffix}</strong>
+                    <strong className="block text-[14px] leading-5 font-medium text-(--color-text-ink)">{titleSuffix}</strong>
                     <span className="ca-sidebar-usage-row">
                       <span className="ca-sidebar-usage-track">
                         <span style={{ width: `${usagePercent}%` }} />
@@ -446,8 +435,8 @@ export default function AppLayout({
               </button>
 
               <div className="ca-topbar-title">
-                <strong className="block text-[15px] leading-5.5 font-semibold text-(--fg-1a1a1a)">{showAdminProfile ? "Mənim vizitkartım" : activeItem.label}</strong>
-                <span className="block text-[12px] leading-4 font-normal text-(--fg-6e7671)">{titleSuffix}</span>
+                <strong className="block text-[15px] leading-5.5 font-semibold text-(--color-text-ink)">{showAdminProfile ? "Mənim vizitkartım" : activeItem.label}</strong>
+                <span className="block text-[12px] leading-4 font-normal text-(--color-text-muted)">{titleSuffix}</span>
               </div>
 
               <div className="ca-topbar-actions">
@@ -496,7 +485,7 @@ export default function AppLayout({
     <div
       className={cn(
         'app-layout-root flex min-h-screen font-sans',
-        isLightTheme ? 'employee-layout-theme bg-(--bg-eef7ff)' : 'bg-slate-100',
+        'employee-layout-theme bg-(--color-surface-tint)',
         role === ROLES.SUPER_ADMIN && 'super-admin-layout-theme',
       )}
     >
@@ -525,15 +514,10 @@ export default function AppLayout({
 
           {!collapsed && (
             <div>
-              <div
-                className={cn(
-                  'text-[15px] font-bold leading-[1.2]',
-                  isLightTheme ? 'text-(--fg-263445)' : 'text-white',
-                )}
-              >
+              <div className="text-[15px] font-bold leading-[1.2] text-(--color-text-soft)">
                 {config.brand}
               </div>
-              <div className={cn('text-[11px]', isLightTheme ? 'text-(--fg-6d7f8d)' : 'text-[#a5b4fc]')}>
+              <div className="text-[11px] text-(--fg-6d7f8d)">
                 {config.brandSub}
               </div>
             </div>
@@ -544,12 +528,7 @@ export default function AppLayout({
               type="button"
               aria-label="Menyunu bağla"
               onClick={() => setCollapsed(true)}
-              className={cn(
-                'absolute right-3 top-4.5 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-[10px] border',
-                isLightTheme
-                  ? 'border-(--bd-c9dbe8) bg-white/80 text-(--fg-456b82) hover:bg-white'
-                  : 'border-white/15 bg-white/10 text-[#e0e7ff] hover:bg-white/15',
-              )}
+              className="absolute right-3 top-4.5 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-[10px] border border-(--color-primary-border-light) bg-white/80 text-(--color-action-text) hover:bg-white"
             >
               <MenuFoldOutlined />
             </button>
@@ -571,14 +550,10 @@ export default function AppLayout({
                   className={cn(
                     'flex w-full cursor-pointer items-center gap-3 rounded-[10px] border-0 border-l-[3px] text-sm transition-colors duration-150',
                     collapsed ? 'justify-center px-0 py-2.75' : 'justify-start py-2.75 pl-3.5 pr-3',
-                    isActive && isLightTheme &&
-                      'border-l-[#185582] bg-white/90 font-semibold text-(--fg-185582) shadow-[0_8px_22px_rgba(24,85,130,0.08)]',
-                    isActive && !isLightTheme &&
-                      'border-l-[#818cf8] bg-linear-to-r from-indigo-400/25 to-violet-400/10 font-semibold text-[#c7d2fe]',
-                    !isActive && isLightTheme &&
+                    isActive &&
+                      'border-l-(--color-primary-border) bg-white/90 font-semibold text-(--color-primary-text) shadow-[0_8px_22px_rgba(24,85,130,0.08)]',
+                    !isActive &&
                       'border-l-transparent font-normal text-(--fg-527086) hover:bg-white/90 hover:text-(--fg-234d68)',
-                    !isActive && !isLightTheme &&
-                      'border-l-transparent font-normal text-slate-400 hover:bg-white/5 hover:text-[#e0e7ff]',
                   )}
                 >
                   <span className="shrink-0 text-[17px]">{item.icon}</span>
@@ -601,7 +576,7 @@ export default function AppLayout({
               src={avatarSrc || undefined}
               className={cn(
                 'shrink-0!',
-                'bg-(--bg-185582)!',
+                'bg-(--color-primary)!',
               )}
             >
               {!avatarSrc && initials}
@@ -609,22 +584,10 @@ export default function AppLayout({
 
             {!collapsed && (
               <div>
-                <div
-                  className={cn(
-                    'text-[13px] font-semibold',
-                    isLightTheme ? 'text-(--fg-263445)' : 'text-[#e0e7ff]',
-                  )}
-                >
+                <div className="text-[13px] font-semibold text-(--color-text-soft)">
                   {displayName}
                 </div>
-                <div
-                  className={cn(
-                    'mt-0.5 inline-block rounded-full px-2 py-px text-[10px] font-bold uppercase tracking-[0.5px]',
-                    isLightTheme
-                      ? 'bg-(--bg-e7f0f8) text-(--fg-185582)'
-                      : 'bg-[rgba(52,211,153,0.18)] text-[#34d399]',
-                  )}
-                >
+                <div className="mt-0.5 inline-block rounded-full bg-(--color-primary-tint) px-2 py-px text-[10px] font-bold uppercase tracking-[0.5px] text-(--color-primary-text)">
                   {config.userStatus}
                 </div>
               </div>
@@ -689,7 +652,7 @@ export default function AppLayout({
                   size={28}
                   src={avatarSrc || undefined}
                   className={cn(
-                    'bg-(--bg-185582)!',
+                    'bg-(--color-primary)!',
                   )}
                 >
                   {!avatarSrc && initials}

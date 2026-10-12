@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Avatar, Checkbox, Form, Input, Modal, Space, Switch, Upload } from 'antd';
 import { message } from '../../../../utils/antd-static';
 import {CalendarOutlined,CreditCardOutlined,DeleteOutlined,DownloadOutlined,EditOutlined,EnvironmentOutlined,FacebookOutlined,FileExcelOutlined,GlobalOutlined,Html5Outlined,ImportOutlined,InstagramOutlined,LinkOutlined,LinkedinOutlined,MailOutlined,PhoneOutlined,PlusOutlined,SendOutlined,TikTokOutlined,UploadOutlined,UserOutlined,WhatsAppOutlined,XOutlined,YoutubeOutlined,} from '@ant-design/icons';
@@ -387,7 +387,7 @@ export function AddEmployeeModal({
     <Modal
       title={
         <div>
-          <UserOutlined className="mr-2! text-[#4b9ada]!" />
+          <UserOutlined className="mr-2! text-(--brand-sky-hover)!" />
           Yeni işçi əlavə et
         </div>
       }
@@ -491,7 +491,6 @@ export function AddEmployeeModal({
 }
 
 export function EditEmployeeModal({
-  form,
   isOpen,
   companyUsers,
   selectedEditUser,
@@ -536,28 +535,14 @@ export function EditEmployeeModal({
     socialAccounts: selectedEditUser.socialAccounts || [],
   } : undefined;
 
-  const saveEmployeeProfile = async (values: EditableProfileValues) => {
-    form.setFieldsValue({
-      firstName: values.firstName,
-      lastName: values.lastName,
-      middleName: values.middleName,
-      jobTitle: values.jobTitle,
-      phone1: values.phone1,
-      phone2: values.phone2,
-      whatsapp: values.whatsappPhone,
-      extensionNumber: values.extensionNumber,
-      dateOfBirth: values.dateOfBirth,
-      additionalInfo: values.additionalInfo,
-      googleMapsUrl: values.googleMapsUrl,
-      linkedin: values.linkedinUrl,
-      facebook: values.facebookUrl,
-      instagram: values.instagramUrl,
-      cardBackgroundUrl: values.cardBackgroundUrl,
-      socialAccounts: values.socialAccounts,
-    });
+  const backgroundFileRef = useRef<File | undefined>(undefined);
+  // Əvvəlki işçi üçün seçilmiş fon faylı başqa işçinin yadda saxlanmasına qarışmasın.
+  useEffect(() => {
+    backgroundFileRef.current = undefined;
+  }, [selectedEditUserId, isOpen]);
 
+  const saveEmployeeProfile = async (values: EditableProfileValues) => {
     await onSubmit({
-      ...form.getFieldsValue(),
       firstName: values.firstName,
       lastName: values.lastName,
       middleName: values.middleName,
@@ -573,6 +558,7 @@ export function EditEmployeeModal({
       facebook: values.facebookUrl,
       instagram: values.instagramUrl,
       cardBackgroundUrl: values.cardBackgroundUrl,
+      cardBackgroundFile: backgroundFileRef.current,
       socialAccounts: values.socialAccounts,
     });
   };
@@ -584,7 +570,7 @@ export function EditEmployeeModal({
       reader.onerror = () => reject(new Error('Fon şəklini oxumaq mümkün olmadı.'));
       reader.readAsDataURL(file);
     });
-    form.setFieldsValue({ cardBackgroundFile: file, cardBackgroundUrl: dataUrl });
+    backgroundFileRef.current = file;
     return dataUrl;
   };
 
@@ -598,10 +584,10 @@ export function EditEmployeeModal({
       width={430}
       centered
       title={null}
-      styles={{ body: { padding: 0, maxHeight: '88vh', overflowY: 'auto', background: 'var(--bg-ffffff)' } }}
+      styles={{ body: { padding: 0, maxHeight: '88vh', overflowY: 'auto', background: 'var(--color-surface)' } }}
     >
       {!selectedEditUser || !initialProfileValues ? (
-        <div className="p-6 text-(--fg-6e7671)">Redaktə üçün işçi seçin.</div>
+        <div className="p-6 text-(--color-text-muted)">Redaktə üçün işçi seçin.</div>
       ) : (
         <CompanyAdminProfileView
           key={selectedEditUserId || selectedEditUser.id || selectedEditUser.email}
@@ -635,7 +621,7 @@ export function HtmlExportModal({
     <Modal
       title={
         <div>
-          <Html5Outlined className="mr-2! text-[#5aa8e8]!" />
+          <Html5Outlined className="mr-2! text-(--brand-sky)!" />
           Offline HTML ixracı
         </div>
       }
@@ -703,7 +689,7 @@ export function ImportEmployeesModal({
     <Modal
       title={
         <div>
-          <ImportOutlined className="mr-2! text-[#4b9ada]!" />
+          <ImportOutlined className="mr-2! text-(--brand-sky-hover)!" />
           Kütləvi işçi idxalı (CSV/Excel)
         </div>
       }
@@ -717,7 +703,7 @@ export function ImportEmployeesModal({
       <div className="mb-4 rounded-[10px] border border-slate-200 bg-slate-50 p-4">
         <strong>1. Boş şablonu yükləyin</strong>
         <br />
-        <AppButton icon={<FileExcelOutlined className="text-[#5aa8e8]!" />} onClick={onDownloadTemplate} loading={templateLoading} className="mt-2.5!">
+        <AppButton icon={<FileExcelOutlined className="text-(--brand-sky)!" />} onClick={onDownloadTemplate} loading={templateLoading} className="mt-2.5!">
           Şablonu yüklə
         </AppButton>
       </div>
@@ -759,7 +745,7 @@ export function ImportEmployeesModal({
         </div>
       )}
 
-      <div className="mb-5 rounded-lg border border-(--bd-cde6f8) bg-(--bg-f8fcff) p-3 text-(--fg-527086)">
+      <div className="mb-5 rounded-lg border border-(--bd-cde6f8) bg-(--color-surface-soft) p-3 text-(--fg-527086)">
         Şirkət limiti: <strong>{currentEmployeesCount}/{employeeLimit}</strong>
       </div>
 

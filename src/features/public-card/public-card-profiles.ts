@@ -8,9 +8,10 @@ import { normalizeAssetUrl } from '../../utils/asset-url.utils';
 import { stripSocialLinksFromAdditionalInfo } from '../profile/profile-info';
 import type { NormalizedCompanyInfo, NormalizedUser } from '../../types/company.type';
 import type { PublicCardProfile, PublicContactExtra, PublicContactPhone, PublicContactSocial, ScanSource } from '../../types/public-card.type';
+import { withAssetVersion } from '../../utils/asset-version';
 import {PUBLIC_CARD_STORAGE_KEY,getCompanyLogoFromSources,getPublicCardUrl,getSavedCompanyLogoForProfile,normalizeEmail,normalizeText,pickPublicEmail,readStoredArray,resolveQrUid,saveStoredArray,getEmployeePhotoFromRecord,pickPublicCardPhoto,} from './public-card-shared';
 
-const getCardBackgroundFromRecord = (record: AnyRecord) => normalizeAssetUrl(
+const readCardBackground = (record: AnyRecord) => normalizeAssetUrl(
   record.cardBackgroundUrl ||
     record.cardBackgroundURL ||
     record.cardBackground ||
@@ -34,6 +35,10 @@ const getCardBackgroundFromRecord = (record: AnyRecord) => normalizeAssetUrl(
       'profileCardBackgroundUrl',
     ])
 );
+
+// Yeni fon yükləndikdən sonra brauzer keşindəki köhnə faylı göstərməsin (bax: utils/asset-version.ts).
+const getCardBackgroundFromRecord = (record: AnyRecord) =>
+  withAssetVersion(readCardBackground(record), String(record.id ?? record.userId ?? record.employeeId ?? ''), 'background');
 
 const toPublicCardRecord = (payload: unknown, fallbackId: string): AnyRecord => {
   const root = unwrapData(payload);

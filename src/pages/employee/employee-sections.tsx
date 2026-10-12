@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { useEmployee } from "../../hooks/use-employee";
 import {AddBtn,CompanyInfoLine,CopyBtn,DynRow,EmptyLine,FieldLabel,InfoRow,PhoneTypeSelect,Section,SocialSelect,} from "./employee-shared";
 import { iconBox, inputStyle, shortText, uuid } from "../../features/employee/employee-card";
-import { BRAND_COLOR } from "../../constants/theme";
+import { BRAND_COLOR_VAR } from "../../constants/theme";
 
-const SOCIAL_COLOR = BRAND_COLOR;
+const SOCIAL_COLOR = BRAND_COLOR_VAR;
 
 const SOCIAL_META: Record<string, { icon: ReactNode; color: string }> = {
   Instagram: { icon: <InstagramOutlined />, color: SOCIAL_COLOR },
@@ -36,7 +36,7 @@ export function EmployeePageState({ children }: { children: ReactNode }) {
     return (
       <div className="employee-loading-card">
         <Spin />
-        <div style={{ marginTop: 12, color: "var(--fg-64748b)" }}>Vizitkart məlumatları yüklənir...</div>
+        <div style={{ marginTop: 12, color: "var(--color-text-slate-muted)" }}>Vizitkart məlumatları yüklənir...</div>
       </div>
     );
   }
@@ -95,13 +95,13 @@ export function EmployeeHero() {
             backgroundSize: usesCompanyLogo ? "42% auto" : "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            backgroundColor: "var(--bg-eef7ff)",
+            backgroundColor: "var(--color-surface-tint)",
           } : undefined}
         >
           <div>
             <div className="employee-profile-top">
               <div className="employee-avatar-wrap">
-                <Avatar src={d.photo || undefined} size={90} style={{ background: 'var(--bg-185582)', fontSize: 32, fontWeight: 900, border: "4px solid var(--bd-e7f0f8)" }}>
+                <Avatar src={d.photo || undefined} size={90} style={{ background: 'var(--color-primary)', fontSize: 32, fontWeight: 900, border: "4px solid var(--color-primary-tint-border)" }}>
                   {!d.photo && (d.firstName?.[0] || "E")}
                 </Avatar>
                 {editing && (
@@ -150,7 +150,7 @@ export function EmployeeHero() {
           </div>
 
           <div className="employee-mini-grid">
-            <InfoRow icon={<IdcardOutlined />} label="Daxili" value={d.internalNumber || "-"} color={BRAND_COLOR} />
+            <InfoRow icon={<IdcardOutlined />} label="Daxili" value={d.internalNumber || "-"} color={BRAND_COLOR_VAR} />
             <InfoRow icon={<QrcodeOutlined />} label="QR UID" value={shortText(d.qrUid)} color="#7c3aed" />
           </div>
         </div>
@@ -184,7 +184,7 @@ export function PersonalInfoSection() {
   const { editing, draft, currentCard: d, fullName, setField } = useEmployee();
 
   return (
-    <Section title="Şəxsi məlumat" icon={<UserOutlined />} accent={BRAND_COLOR}>
+    <Section title="Şəxsi məlumat" icon={<UserOutlined />} accent={BRAND_COLOR_VAR}>
       {editing ? (
         <>
           <div className="employee-edit-grid-3">
@@ -209,10 +209,10 @@ export function PersonalInfoSection() {
         </>
       ) : (
         <div className="employee-info-grid">
-          <InfoRow icon={<UserOutlined />} label="Ad Soyad" value={fullName} color={BRAND_COLOR} />
-          <InfoRow icon={<BankOutlined />} label="Şirkət" value={d.company} color={BRAND_COLOR} />
+          <InfoRow icon={<UserOutlined />} label="Ad Soyad" value={fullName} color={BRAND_COLOR_VAR} />
+          <InfoRow icon={<BankOutlined />} label="Şirkət" value={d.company} color={BRAND_COLOR_VAR} />
           <InfoRow icon={<IdcardOutlined />} label="Vəzifə" value={d.position} color="#8b5cf6" />
-          <InfoRow icon={<QrcodeOutlined />} label="Daxili nömrə" value={d.internalNumber} color={BRAND_COLOR} />
+          <InfoRow icon={<QrcodeOutlined />} label="Daxili nömrə" value={d.internalNumber} color={BRAND_COLOR_VAR} />
         </div>
       )}
     </Section>
@@ -302,7 +302,7 @@ export function ExtraInfoSection() {
           {d.extras.map((extra, index) => (
             <div key={`${extra.label}-${index}`} className="employee-extra-card">
               <div style={{ color: "var(--fg-92400e)", fontSize: 11, fontWeight: 900, textTransform: "uppercase", letterSpacing: 0.4 }}>{extra.label}</div>
-              <div style={{ color: "var(--fg-0f172a)", fontSize: 14, fontWeight: 800, marginTop: 3 }}>{extra.value}</div>
+              <div style={{ color: "var(--color-text-slate-strong)", fontSize: 14, fontWeight: 800, marginTop: 3 }}>{extra.value}</div>
             </div>
           ))}
         </div>

@@ -4,7 +4,7 @@ import { setLocalEmployeeMustChangePassword } from '../../storage/local-auth/emp
 import { extractCompanyVoen, findStringDeep, normalizeRole } from '../../utils/api.utils';
 import type { ChangePasswordRequest, ChangePasswordResponse } from '../../types/auth.type';
 import { ROLES } from '../../constants/roles';
-import { getStoredLoginEmail, markEmployeePasswordChangeCompleted, markStoredPasswordChanged } from '../../features/auth/auth-login.helpers';
+import { getStoredLoginEmail, markEmployeePasswordChangeCompleted, markStoredPasswordChanged } from './auth-login.helpers';
 
 export const changePassword = async (payload: ChangePasswordRequest): Promise<ChangePasswordResponse> => {
   const storedUser = getStoredUser();

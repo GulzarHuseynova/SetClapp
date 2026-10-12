@@ -1,9 +1,22 @@
 /* Avtomatik yaradılıb: layihədə sabit yazılmış rənglərin açıq/tünd dəyərləri.
    Ad formatı: --bg-* (fon), --fg-* (yazı/ikon), --bd-* (çərçivə). Açıq dəyər köhnə rənglə eynidir.
    Tünd dəyərlər qaydaya görə yaradılıb və əl ilə dəyişdirilə bilər. */
+/* Ən çox işlənən 27 dəyişən mənaya görə adlanıb (--color-*):
+   --color-surface / -surface-soft / -surface-tint   fon səthləri
+   --color-primary / -primary-text / -primary-border  brend rəngi (fon / yazı / kənar)
+   --color-primary-hover / -primary-hover-border      hover vəziyyəti
+   --color-primary-tint                               açıq brend tonu
+   --color-text / -text-soft / -text-muted            yazı rəngləri
+   --color-text-subtle / -text-ink / -action-text     əlavə yazı rəngləri (boz, qara, kart düymələri)
+   --color-text-slate / -slate-muted / -slate-strong  slate tonlu yazılar (super admin, işçi paneli)
+   --color-border / -border-slate                     neytral kənarlar
+   --color-primary-border-soft / -light / -faint      açıq brend kənarları
+   --color-primary-tint-border / -text-strong         brend tonlu kənar və tünd brend yazısı
+   --color-surface-muted / --color-page-bg            boz fon və səhifə fonu
+   Qalanlar rəngin hex dəyərini adında saxlayır (--bg/--fg/--bd-xxxxxx). */
 :root {
-  --bd-12466c: #12466c;
-  --bd-185582: #185582;
+  --color-primary-hover-border: #12466c;
+  --color-primary-border: #185582;
   --accent-347fad: #347fad;
   --bd-8cc7ef: #8cc7ef;
   --bd-8ec2df: #8ec2df;
@@ -15,21 +28,21 @@
   --bd-b9dcf1: #b9dcf1;
   --bd-bbf7d0: #bbf7d0;
   --bd-bcd2e2: #bcd2e2;
-  --bd-c9dbe8: #c9dbe8;
+  --color-primary-border-light: #c9dbe8;
   --bd-cbd5e1: #cbd5e1;
   --bd-cbd7df: #cbd7df;
   --bd-cde6f8: #cde6f8;
   --bd-cfe5f3: #cfe5f3;
-  --bd-d7eaf7: #d7eaf7;
+  --color-primary-border-soft: #d7eaf7;
   --bd-d8dfdd: #d8dfdd;
   --bd-d8e5ee: #d8e5ee;
-  --bd-dcebf5: #dcebf5;
+  --color-primary-border-faint: #dcebf5;
   --bd-dfe5e3: #dfe5e3;
-  --bd-e2e8f0: #e2e8f0;
+  --color-border-slate: #e2e8f0;
   --bd-e2f1fb: #e2f1fb;
   --bd-e4e9ec: #e4e9ec;
-  --bd-e7e9e8: #e7e9e8;
-  --bd-e7f0f8: #e7f0f8;
+  --color-border: #e7e9e8;
+  --color-primary-tint-border: #e7f0f8;
   --bd-e8f0f4: #e8f0f4;
   --bd-edf0ef: #edf0ef;
   --bd-fde68a: #fde68a;
@@ -42,25 +55,25 @@
   --bd-rgba-255-255-255-p7: rgba(255, 255, 255, 0.7);
   --bg-0d4f7f: #0d4f7f;
   --bg-0f2f47: #0f2f47;
-  --bg-12466c: #12466c;
-  --bg-185582: #185582;
+  --color-primary-hover: #12466c;
+  --color-primary: #185582;
   --bg-3f6e87: #3f6e87;
   --bg-456b82: #456b82;
   --bg-d6e6f2: #d6e6f2;
   --bg-d7ecfb: #d7ecfb;
   --bg-dff1ff: #dff1ff;
   --bg-e0f1fb: #e0f1fb;
-  --bg-e7f0f8: #e7f0f8;
-  --bg-e9eceb: #e9eceb;
+  --color-primary-tint: #e7f0f8;
+  --color-page-bg: #e9eceb;
   --bg-edf4f8: #edf4f8;
-  --bg-eef7ff: #eef7ff;
+  --color-surface-tint: #eef7ff;
   --bg-f0fdf4: #f0fdf4;
-  --bg-f3f5f3: #f3f5f3;
-  --bg-f8fcff: #f8fcff;
+  --color-surface-muted: #f3f5f3;
+  --color-surface-soft: #f8fcff;
   --bg-fef2f2: #fef2f2;
   --bg-fff1dc: #fff1dc;
   --bg-fffbeb: #fffbeb;
-  --bg-ffffff: #ffffff;
+  --color-surface: #ffffff;
   --bg-rgba-10-43-68-p12: rgba(10, 43, 68, 0.12);
   --bg-rgba-10-43-68-p16: rgba(10, 43, 68, 0.16);
   --bg-rgba-13-79-127-p1: rgba(13, 79, 127, 0.1);
@@ -89,27 +102,27 @@
   --bg-rgba-255-255-255-p97: rgba(255, 255, 255, 0.97);
   --bg-rgba-39-64-82-p12: rgba(39, 64, 82, 0.12);
   --fg-059669: #059669;
-  --fg-0a0f13: #0a0f13;
+  --color-text: #0a0f13;
   --fg-0b1720: #0b1720;
-  --fg-0c4e7e: #0c4e7e;
-  --fg-0f172a: #0f172a;
+  --color-primary-text-strong: #0c4e7e;
+  --color-text-slate-strong: #0f172a;
   --fg-0f2f47: #0f2f47;
   --fg-111519: #111519;
   --fg-12466c: #12466c;
   --fg-15803d: #15803d;
   --fg-166534: #166534;
-  --fg-185582: #185582;
-  --fg-1a1a1a: #1a1a1a;
+  --color-primary-text: #185582;
+  --color-text-ink: #1a1a1a;
   --fg-1b4a75: #1b4a75;
   --fg-1e293b: #1e293b;
   --fg-234d68: #234d68;
   --fg-235f82: #235f82;
   --fg-26323c: #26323c;
-  --fg-263445: #263445;
+  --color-text-soft: #263445;
   --fg-285e7d: #285e7d;
   --fg-2f7fb4: #2f7fb4;
   --fg-31536b: #31536b;
-  --fg-334155: #334155;
+  --color-text-slate: #334155;
   --fg-35566a: #35566a;
   --fg-356b89: #356b89;
   --fg-357eaf: #357eaf;
@@ -117,7 +130,7 @@
   --fg-3d5566: #3d5566;
   --fg-3d728f: #3d728f;
   --fg-40566b: #40566b;
-  --fg-456b82: #456b82;
+  --color-action-text: #456b82;
   --fg-475569: #475569;
   --fg-527086: #527086;
   --fg-527b96: #527b96;
@@ -125,11 +138,11 @@
   --fg-5b6b7a: #5b6b7a;
   --fg-5d7485: #5d7485;
   --fg-607f94: #607f94;
-  --fg-64706d: #64706d;
-  --fg-64748b: #64748b;
+  --color-text-subtle: #64706d;
+  --color-text-slate-muted: #64748b;
   --fg-697572: #697572;
   --fg-6d7f8d: #6d7f8d;
-  --fg-6e7671: #6e7671;
+  --color-text-muted: #6e7671;
   --fg-717b7a: #717b7a;
   --fg-73807c: #73807c;
   --fg-92400e: #92400e;
@@ -139,8 +152,8 @@
 }
 
 html[data-theme='dark'] {
-  --bd-12466c: #1c6ea9;
-  --bd-185582: #237cbe;
+  --color-primary-hover-border: #1c6ea9;
+  --color-primary-border: #237cbe;
   --accent-347fad: #3b90c4;
   --bd-8cc7ef: #476376;
   --bd-8ec2df: #4c6c7e;
@@ -152,21 +165,21 @@ html[data-theme='dark'] {
   --bd-b9dcf1: #374e5c;
   --bd-bbf7d0: #345741;
   --bd-bcd2e2: #3f515f;
-  --bd-c9dbe8: #384955;
+  --color-primary-border-light: #384955;
   --bd-cbd5e1: #3f4852;
   --bd-cbd7df: #414b52;
   --bd-cde6f8: #2e404d;
   --bd-cfe5f3: #2f424e;
-  --bd-d7eaf7: #2b3c48;
+  --color-primary-border-soft: #2b3c48;
   --bd-d8dfdd: #374350;
   --bd-d8e5ee: #313f49;
-  --bd-dcebf5: #2a3b46;
+  --color-primary-border-faint: #2a3b46;
   --bd-dfe5e3: #333d49;
-  --bd-e2e8f0: #2f3640;
+  --color-border-slate: #2f3640;
   --bd-e2f1fb: #26353f;
   --bd-e4e9ec: #333a3d;
-  --bd-e7e9e8: #2e3843;
-  --bd-e7f0f8: #25323e;
+  --color-border: #2e3843;
+  --color-primary-tint-border: #25323e;
   --bd-e8f0f4: #2a363c;
   --bd-edf0ef: #29323c;
   --bd-fde68a: #706743;
@@ -179,25 +192,25 @@ html[data-theme='dark'] {
   --bd-rgba-255-255-255-p7: rgba(29, 35, 42, 0.7);
   --bg-0d4f7f: #10609b;
   --bg-0f2f47: #144060;
-  --bg-12466c: #165786;
-  --bg-185582: #1d669c;
+  --color-primary-hover: #165786;
+  --color-primary: #1d669c;
   --bg-3f6e87: #497f9c;
   --bg-456b82: #507b96;
   --bg-d6e6f2: #2f4353;
   --bg-d7ecfb: #2a3d4b;
   --bg-dff1ff: #253541;
   --bg-e0f1fb: #263943;
-  --bg-e7f0f8: #253340;
-  --bg-e9eceb: #2d3844;
+  --color-primary-tint: #253340;
+  --color-page-bg: #2d3844;
   --bg-edf4f8: #23323a;
-  --bg-eef7ff: #1e2a35;
+  --color-surface-tint: #1e2a35;
   --bg-f0fdf4: #1e3525;
-  --bg-f3f5f3: #242c36;
-  --bg-f8fcff: #1a252d;
+  --color-surface-muted: #242c36;
+  --color-surface-soft: #1a252d;
   --bg-fef2f2: #331d1d;
   --bg-fff1dc: #433826;
   --bg-fffbeb: #373320;
-  --bg-ffffff: #171e27;
+  --color-surface: #171e27;
   --bg-rgba-10-43-68-p12: rgba(14, 60, 95, 0.12);
   --bg-rgba-10-43-68-p16: rgba(14, 60, 95, 0.16);
   --bg-rgba-13-79-127-p1: rgba(16, 96, 155, 0.1);
@@ -226,27 +239,27 @@ html[data-theme='dark'] {
   --bg-rgba-255-255-255-p97: rgba(23, 30, 39, 0.97);
   --bg-rgba-39-64-82-p12: rgba(49, 80, 103, 0.12);
   --fg-059669: #53e1b5;
-  --fg-0a0f13: #e2e6ea;
+  --color-text: #e2e6ea;
   --fg-0b1720: #dde3e7;
-  --fg-0c4e7e: #529ed6;
-  --fg-0f172a: #d9dde5;
+  --color-primary-text-strong: #529ed6;
+  --color-text-slate-strong: #d9dde5;
   --fg-0f2f47: #d5dce2;
   --fg-111519: #e0e3e5;
   --fg-12466c: #5b9dcd;
   --fg-15803d: #5fcf89;
   --fg-166534: #60c787;
-  --fg-185582: #65a1ce;
-  --fg-1a1a1a: #e0e0e0;
+  --color-primary-text: #65a1ce;
+  --color-text-ink: #e0e0e0;
   --fg-1b4a75: #6397c6;
   --fg-1e293b: #d5dae1;
   --fg-234d68: #6c9dbc;
   --fg-235f82: #76aac8;
   --fg-26323c: #d7dcdf;
-  --fg-263445: #d6dbe0;
+  --color-text-soft: #d6dbe0;
   --fg-285e7d: #7aa9c4;
   --fg-2f7fb4: #98bed7;
   --fg-31536b: #7e9fb7;
-  --fg-334155: #bfc8d5;
+  --color-text-slate: #bfc8d5;
   --fg-35566a: #afc5d3;
   --fg-356b89: #90b3c7;
   --fg-357eaf: #9bbdd4;
@@ -254,7 +267,7 @@ html[data-theme='dark'] {
   --fg-3d5566: #b2c2cd;
   --fg-3d728f: #9bb9ca;
   --fg-40566b: #aebdcb;
-  --fg-456b82: #9db6c6;
+  --color-action-text: #9db6c6;
   --fg-475569: #afb8c6;
   --fg-527086: #9aadbc;
   --fg-527b96: #8ea9bb;
@@ -262,11 +275,11 @@ html[data-theme='dark'] {
   --fg-5b6b7a: #a2acb6;
   --fg-5d7485: #9aa9b4;
   --fg-607f94: #8fa3b1;
-  --fg-64706d: #a8b0ae;
-  --fg-64748b: #959faf;
+  --color-text-subtle: #a8b0ae;
+  --color-text-slate-muted: #959faf;
   --fg-697572: #a4acaa;
   --fg-6d7f8d: #939fa8;
-  --fg-6e7671: #a3a9a5;
+  --color-text-muted: #a3a9a5;
   --fg-717b7a: #a0a6a6;
   --fg-73807c: #9ca5a2;
   --fg-92400e: #d98e60;

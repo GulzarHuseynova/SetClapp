@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DatePicker, Select, Spin } from 'antd';
 import { ScanOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { analyticsActions } from '../../../helpers/analytics.helper';
+import { analyticsActions } from '../../../features/company-admin/analytics.helper';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
 import type { AnalyticsScanLogRow } from '../../../types/company-admin.type';
 

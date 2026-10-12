@@ -21,7 +21,7 @@ export function CompanyLogo({ company, size = 46 }: CompanyLogoProps) {
             height: size,
             borderRadius: Math.round(size * 0.32),
             objectFit: 'cover',
-            border: '1px solid var(--bd-e2e8f0)',
+            border: '1px solid var(--color-border-slate)',
           }}
         />
       )}
@@ -30,14 +30,14 @@ export function CompanyLogo({ company, size = 46 }: CompanyLogoProps) {
           width: size,
           height: size,
           borderRadius: Math.round(size * 0.32),
-          background: 'var(--bg-e7f0f8)',
-          color: 'var(--fg-185582)',
+          background: 'var(--color-primary-tint)',
+          color: 'var(--color-primary-text)',
           display: logo ? 'none' : 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           fontWeight: 900,
           fontSize: Math.max(13, Math.round(size * 0.31)),
-          border: '1px solid var(--bd-e2e8f0)',
+          border: '1px solid var(--color-border-slate)',
         }}
       >
         {getCompanyInitials(displayName)}

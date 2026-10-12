@@ -1,9 +1,9 @@
-import { analyticsService } from '../services/analytics.service';
-import type { AnalyticsQueryParams, ScanLogParams } from '../types/company-admin.type';
-import { asNumber, findDeep, normalizeArray, unwrapData } from '../utils/api.utils';
-import { getLocalAnalytics } from '../storage/local-auth/employee-local-auth';
-import { getSavedCompanyId, getSavedCompanyVoen } from '../storage/company.storage';
-import { getPublicScanAnalytics } from '../features/public-card/public-card';
+import { analyticsService } from '../../services/analytics.service';
+import type { AnalyticsQueryParams, ScanLogParams } from '../../types/company-admin.type';
+import { asNumber, findDeep, normalizeArray, unwrapData } from '../../utils/api.utils';
+import { getLocalAnalytics } from '../../storage/local-auth/employee-local-auth';
+import { getSavedCompanyId, getSavedCompanyVoen } from '../../storage/company.storage';
+import { getPublicScanAnalytics } from '../public-card/public-card';
 
 const readCount = (data: unknown) => {
   const unwrapped = unwrapData(data);

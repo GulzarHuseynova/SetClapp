@@ -1,7 +1,7 @@
 import { useId, useMemo, useState, type ChangeEvent } from 'react';
 import { Input, Select, Space } from 'antd';
 import {COUNTRY_PHONE_OPTIONS,DEFAULT_PHONE_COUNTRY_CODE,joinPhoneWithCountryCode,splitPhoneByCountryCode,} from '../utils/phone.utils';
-import { normalizeCountrySearch } from '../utils/country-calling-codes';
+import { normalizeCountrySearch } from '../constants/country-calling-codes';
 import type { PhoneCountryInputProps } from '../types/phone.type';
 
 export function PhoneCountryInput({

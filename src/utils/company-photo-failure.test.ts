@@ -9,7 +9,7 @@ vi.mock('../features/company/company-user-payloads', async (importOriginal) => (
   putUserWithOptionalPhoto: putMock,
 }));
 
-import { companyActions } from './company.helper';
+import { companyActions } from '../features/company/company.helper';
 import type { AddUserPayload, UpdateUserPayload } from '../types/company.type';
 
 const addPayload = {

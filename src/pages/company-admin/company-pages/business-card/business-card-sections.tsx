@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+﻿import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { Avatar, Dropdown, Segmented, Space, Switch, Tooltip } from 'antd';
 import { message } from '../../../../utils/antd-static';
@@ -12,7 +12,7 @@ import type { BusinessCardViewModel } from '../../../../types/business-card-view
 import { cleanText } from '../../../../components/business-card-links';
 import { CardQrModal } from '../../../../components/card-qr-modal';
 import {downloadQrByFormat,downloadVCard,getQrPayload,normalizeUserToPublicProfile,} from '../../../../features/public-card/public-card';
-import { userActions } from '../../../../helpers/user.helper';
+import { userActions } from '../../../../features/employee/user.helper';
 import type { BusinessCardToolbarProps, EmployeesTableProps } from '../../../../types/business-card.type';
 
 export function BusinessCardToolbar({
@@ -57,11 +57,19 @@ const employeeInitials = (user: UserData) => {
 
 const normalizeIdentity = (value: unknown) => String(value || '').trim().toLowerCase();
 
+const FRESH_USER_FIELDS = [
+  'firstName', 'lastName', 'middleName', 'jobTitle', 'phone1', 'phone2', 'whatsapp', 'extensionNumber',
+  'linkedin', 'facebook', 'instagram', 'additionalInfo', 'dateOfBirth', 'address', 'googleMapsUrl',
+  'socialAccounts', 'photo', 'photoUrl', 'photoData', 'cardBackgroundUrl',
+] as const satisfies ReadonlyArray<keyof UserData>;
+
 export function EmployeesTable({
   employeeStatusTab,
   activeUsersCount,
   archivedUsersCount,
   tableRows,
+  allUsers,
+  detailRefreshToken,
   hasMore,
   onLoadMore,
   company,
@@ -109,7 +117,7 @@ export function EmployeesTable({
     return () => {
       cancelled = true;
     };
-  }, [employeeId]);
+  }, [employeeId, detailRefreshToken]);
 
   useEffect(() => {
     const node = infiniteScrollSentinelRef.current;
@@ -127,7 +135,19 @@ export function EmployeesTable({
   }, [hasMore, onLoadMore, tableRows.length]);
 
   const selectedRouteId = decodeURIComponent(employeeId || '').trim();
-  const selectedEmployee = employeeDetailState.key === selectedRouteId ? employeeDetailState.user : null;
+  const detailUser = employeeDetailState.key === selectedRouteId ? employeeDetailState.user : null;
+  // Açıq kart ayrıca GET /api/User/{id} ilə yüklənir və redaktədən sonra özü yenilənmirdi: şəkil, fon və
+  // dəyişən sahələr səhifə yenilənənə qədər köhnə qalırdı. İndi siyahıdakı yenilənmiş qeyd üstünə qoyulur.
+  const selectedEmployee = useMemo(() => {
+    if (!detailUser) return null;
+    const keys = [detailUser.id, detailUser.email].map(normalizeIdentity).filter(Boolean);
+    const fresh = allUsers.find((user) => [user.id, user.email].map(normalizeIdentity).some((key) => keys.includes(key)));
+    if (!fresh) return detailUser;
+    return {
+      ...detailUser,
+      ...Object.fromEntries(FRESH_USER_FIELDS.flatMap((field) => (fresh[field] === undefined ? [] : [[field, fresh[field]]]))),
+    } as UserData;
+  }, [allUsers, detailUser]);
   const employeeLoadError = employeeDetailState.key === selectedRouteId ? employeeDetailState.error : '';
   const isEmployeeDetailLoading = Boolean(selectedRouteId) && employeeDetailState.key !== selectedRouteId;
   const selectedStatus = selectedEmployee?.isActive !== false;

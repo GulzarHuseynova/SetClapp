@@ -2,6 +2,7 @@ import { runtimeStorage } from '../../storage/runtime.storage';
 import { asString, findStringDeep, normalizeArray, type AnyRecord } from '../../utils/api.utils';
 import { getSavedCompanyLogo, getSavedCompanySnapshot, mapCompanyLogoResponse } from '../../storage/company.storage';
 import { normalizeAssetUrl } from '../../utils/asset-url.utils';
+import { withAssetVersion } from '../../utils/asset-version';
 import type { PublicCardProfile, ScanSource } from '../../types/public-card.type';
 import { stableQrUid, isEmailLike } from '../../utils/qr.utils';
 
@@ -32,7 +33,7 @@ const rawImageMime = (value: string) => {
   return 'image/jpeg';
 };
 
-export const normalizeEmployeePhotoValue = (value: unknown, depth = 0): string => {
+const normalizeEmployeePhotoValue = (value: unknown, depth = 0): string => {
   if (depth > 2 || value === undefined || value === null) return '';
 
   if (typeof value === 'object') {
@@ -73,6 +74,8 @@ export const pickPublicCardPhoto = (...values: unknown[]) => {
 
   return normalized.find(isInlinePhoto) || normalized[0] || '';
 };
+
+const recordOwnerId = (record: AnyRecord) => String(record.id ?? record.userId ?? record.employeeId ?? '').trim();
 
 export const getEmployeePhotoFromRecord = (record: AnyRecord) => {
   const keys = [
@@ -119,7 +122,9 @@ export const getEmployeePhotoFromRecord = (record: AnyRecord) => {
   const directValues = keys.map((key) => record[key]);
   const deepValue = findStringDeep(record, keys);
 
-  return pickPublicCardPhoto(...directValues, deepValue);
+  const photo = pickPublicCardPhoto(...directValues, deepValue);
+  // Yeni şəkil yükləndikdən sonra brauzer keşindəki köhnə faylı göstərməsin (bax: utils/asset-version.ts).
+  return withAssetVersion(photo, recordOwnerId(record), 'photo');
 };
 
 export const getCompanyLogoFromSources = (...sources: unknown[]) => {

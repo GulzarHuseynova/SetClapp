@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { Button, Form, Input, Modal } from "antd";
 import { Navigate, Route, Routes } from "react-router";
 import AppLayout from "../../components/Layout";
-import { authOperations } from "../../helpers/auth.helper";
+import { authOperations } from "../../features/auth";
 import { authSessionStorage } from "../../storage/auth-session.storage";
 import type { ChangePasswordRequest } from "../../types/auth.type";
 import type { EmployeeProps } from "../../types/employee.type";
@@ -17,8 +17,8 @@ import EmployeeIdentifiers from "./employee-pages/identifiers";
 import EmployeeProfile from "./employee-pages/profile";
 import { AntdAppProvider } from "../../components/antd-app-provider";
 import { message } from "../../utils/antd-static";
-import "./employee.css";
-import { confirmLogout } from "../../components/confirm-logout";
+import "../../styles/employee.css";
+import { confirmLogout } from "../../utils/confirm-logout";
 import { findStringInObject } from "../../utils/api.utils";
 
 function EmployeePages() {
@@ -162,7 +162,6 @@ function EmployeeShell({ onLogout }: EmployeeProps) {
         userName={`${card.firstName} ${card.lastName}`.trim() || "Əməkdaş"}
         avatarText={card.firstName?.[0] || "E"}
         avatarSrc={card.photo}
-        notificationCount={1}
       >
         <EmployeePages />
       </AppLayout>
@@ -178,7 +177,7 @@ function EmployeeShell({ onLogout }: EmployeeProps) {
         width={480}
         centered
       >
-        <p style={{ color: "var(--fg-64748b)", marginTop: 0 }}>
+        <p style={{ color: "var(--color-text-slate-muted)", marginTop: 0 }}>
           Company Admin tərəfindən verilən kod müvəqqətidir. Employee panelindən istifadə etmək üçün yeni şifrə təyin edin.
         </p>
 

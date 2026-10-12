@@ -474,18 +474,18 @@ export default function CompanyAdminProfileView({
 
     if (linkModalStep !== null) {
       return (
-        <div className="min-h-full bg-(--bg-f3f5f3)">
+        <div className="min-h-full bg-(--color-surface-muted)">
           <div className="sticky top-0 z-10 flex h-16 items-center gap-3 border-b border-(--bd-e4e9ec) bg-white px-5">
-            <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full bg-(--bg-f3f5f3) text-xl text-(--fg-1a1a1a)" onClick={() => setLinkModalStep(null)} aria-label="Redaktəyə qayıt">‹</button>
-            <strong className="text-[16px] font-semibold text-(--fg-1a1a1a)">{linkModalStep === "picker" ? "Platforma əlavə et" : selectedPreset.label}</strong>
+            <button type="button" className="flex h-10 w-10 items-center justify-center rounded-full bg-(--color-surface-muted) text-xl text-(--color-text-ink)" onClick={() => setLinkModalStep(null)} aria-label="Redaktəyə qayıt">‹</button>
+            <strong className="text-[16px] font-semibold text-(--color-text-ink)">{linkModalStep === "picker" ? "Platforma əlavə et" : selectedPreset.label}</strong>
           </div>
 
           {linkModalStep === "picker" ? (
             <div className="space-y-5 p-5">
               {addedPlatformLabels.length > 0 && (
                 <div className="space-y-2">
-                  <span className="text-[11px] font-semibold uppercase tracking-[.08em] text-(--fg-6e7671)">ARTIQ ƏLAVƏ EDİLİB</span>
-                  <div className="flex flex-wrap gap-2">{addedPlatformLabels.map((label) => <b className="rounded-full bg-(--bg-e7f0f8) px-3 py-1 text-[12px] font-medium text-(--fg-185582)" key={label}>{label}</b>)}</div>
+                  <span className="text-[11px] font-semibold uppercase tracking-[.08em] text-(--color-text-muted)">ARTIQ ƏLAVƏ EDİLİB</span>
+                  <div className="flex flex-wrap gap-2">{addedPlatformLabels.map((label) => <b className="rounded-full bg-(--color-primary-tint) px-3 py-1 text-[12px] font-medium text-(--color-primary-text)" key={label}>{label}</b>)}</div>
                 </div>
               )}
               {LINK_PRESET_GROUPS.map((group) => {
@@ -493,11 +493,11 @@ export default function CompanyAdminProfileView({
                 if (rows.length === 0) return null;
                 return (
                   <section className="space-y-3" key={group.key}>
-                    <h4 className="m-0 text-[11px] font-semibold uppercase tracking-[.08em] text-(--fg-6e7671)">{group.label}</h4>
+                    <h4 className="m-0 text-[11px] font-semibold uppercase tracking-[.08em] text-(--color-text-muted)">{group.label}</h4>
                     <div className="grid grid-cols-4 gap-2">
                       {rows.map((preset) => (
-                        <button type="button" key={preset.name} onClick={() => choosePreset(preset)} className="flex min-h-20.5 flex-col items-center justify-center gap-2 rounded-2xl border border-(--bd-dfe5e3) bg-white px-2 py-3 text-(--fg-185582) hover:border-(--bd-185582)">
-                          <span className="text-[22px]">{preset.icon}</span><strong className="text-[11px] font-medium text-(--fg-1a1a1a)">{preset.label}</strong>
+                        <button type="button" key={preset.name} onClick={() => choosePreset(preset)} className="flex min-h-20.5 flex-col items-center justify-center gap-2 rounded-2xl border border-(--bd-dfe5e3) bg-white px-2 py-3 text-(--color-primary-text) hover:border-(--color-primary-border)">
+                          <span className="text-[22px]">{preset.icon}</span><strong className="text-[11px] font-medium text-(--color-text-ink)">{preset.label}</strong>
                         </button>
                       ))}
                     </div>
@@ -507,19 +507,19 @@ export default function CompanyAdminProfileView({
             </div>
           ) : (
             <div className="space-y-4 p-5">
-              <div className="flex items-center gap-3 rounded-2xl bg-(--bg-e7f0f8) p-4 text-(--fg-185582)"><span className="text-xl">{selectedPreset.icon}</span><p className="m-0 text-[13px]">{selectedPreset.helper}</p></div>
+              <div className="flex items-center gap-3 rounded-2xl bg-(--color-primary-tint) p-4 text-(--color-primary-text)"><span className="text-xl">{selectedPreset.icon}</span><p className="m-0 text-[13px]">{selectedPreset.helper}</p></div>
               <div className="rounded-[22px] bg-white p-4 shadow-sm">
-                <label className="mb-2 block text-[13px] font-semibold text-(--fg-1a1a1a)">Link / məlumat</label>
+                <label className="mb-2 block text-[13px] font-semibold text-(--color-text-ink)">Link / məlumat</label>
                 {isPhonePreset(selectedPreset.name) ? (
                   <PhoneCountryInput value={linkDraftValue} placeholder="50 000 00 00" maxLength={20} onChange={setLinkDraftValue} />
                 ) : (
                   <Input value={linkDraftValue} placeholder={selectedPreset.placeholder} onChange={(event) => setLinkDraftValue(event.target.value)} className="h-12 rounded-xl" />
                 )}
-                <label className="mb-2 mt-4 block text-[13px] font-semibold text-(--fg-1a1a1a)">Kartda görünən ad</label>
+                <label className="mb-2 mt-4 block text-[13px] font-semibold text-(--color-text-ink)">Kartda görünən ad</label>
                 <Input value={linkDraftLabel || selectedPreset.label} disabled={selectedPreset.name !== "Özəl link"} onChange={(event) => setLinkDraftLabel(event.target.value)} className="h-12 rounded-xl" />
               </div>
-              <div className="text-[11px] font-semibold uppercase tracking-[.08em] text-(--fg-6e7671)">KARTDA BELƏ GÖRÜNƏCƏK</div>
-              <div className="flex items-center gap-3 rounded-[22px] bg-white p-4 shadow-sm"><span className="flex h-11 w-11 items-center justify-center rounded-full bg-(--bg-e7f0f8) text-xl text-(--fg-185582)">{selectedPreset.icon}</span><div className="min-w-0 flex-1"><small className="block text-[10px] uppercase text-(--fg-6e7671)">{linkDraftLabel || selectedPreset.label}</small><strong className="block truncate text-[13px] text-(--fg-1a1a1a)">{linkDraftValue || selectedPreset.placeholder}</strong></div><b>›</b></div>
+              <div className="text-[11px] font-semibold uppercase tracking-[.08em] text-(--color-text-muted)">KARTDA BELƏ GÖRÜNƏCƏK</div>
+              <div className="flex items-center gap-3 rounded-[22px] bg-white p-4 shadow-sm"><span className="flex h-11 w-11 items-center justify-center rounded-full bg-(--color-primary-tint) text-xl text-(--color-primary-text)">{selectedPreset.icon}</span><div className="min-w-0 flex-1"><small className="block text-[10px] uppercase text-(--color-text-muted)">{linkDraftLabel || selectedPreset.label}</small><strong className="block truncate text-[13px] text-(--color-text-ink)">{linkDraftValue || selectedPreset.placeholder}</strong></div><b>›</b></div>
               <div className="grid grid-cols-[1fr_2fr] gap-3 pt-1">
                 <AppButton className="force-navy-action h-12" type="primary" onClick={() => setLinkModalStep("picker")}>Geri</AppButton>
                 <AppButton className="force-navy-action h-12" type="primary" loading={saving} onClick={saveLinkDraft}>{editingLinkIndex === null ? "Əlavə et" : "Yadda saxla"}</AppButton>
@@ -612,7 +612,7 @@ export default function CompanyAdminProfileView({
                   </div>
                 );
               })}
-              <button type="button" className="ca-vcard-add-platform bg-(--bg-185582)! text-white! border-(--bd-185582)!" onClick={openLinkPicker}><PlusOutlined /> Yeni link əlavə et</button>
+              <button type="button" className="ca-vcard-add-platform bg-(--color-primary)! text-white! border-(--color-primary-border)!" onClick={openLinkPicker}><PlusOutlined /> Yeni link əlavə et</button>
             </div>
           </section>
 

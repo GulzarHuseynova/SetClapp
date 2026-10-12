@@ -55,7 +55,6 @@ export interface AppLayoutProps {
   userName?: string;
   avatarText?: string;
   avatarSrc?: string;
-  notificationCount?: number;
   profileDetails?: { label: string; value?: string }[];
   profileInitialValues?: EditableProfileValues;
   onSaveProfile?: (values: EditableProfileValues) => Promise<void>;

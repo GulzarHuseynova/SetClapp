@@ -1,25 +1,21 @@
-import { companyService } from '../services/company.service';
-import { getStoredUser } from '../storage/auth.storage';
-import { asString, findStringDeep, isRecord, normalizeArray } from '../utils/api.utils';
-import {addLocalAuditLog,employeeToRecord,getLocalEmployeesForCompany,readLocalAuditLogs,saveLocalEmployeeOverride,setLocalEmployeeMustChangePassword,} from '../storage/local-auth/employee-local-auth';
-import { normalizeAssetUrl, normalizeInlineImageData } from '../utils/asset-url.utils';
-import { imageAssetToDataUrl } from '../utils/image-data-url.utils';
-import { employeeBackgroundImageKey, employeePhotoImageKey, writePersistentImage } from '../storage/persistent-image-cache';
-import { normalizeAuditLog, stringifyAuditValue } from '../features/company/audit';
-import {getSavedCompanyId,getSavedCompanyName,getSavedCompanyVoen,mapCompanyLogoResponse,resolveCompanyId,saveCompanyIdFromUnknown,saveCompanyLogoToStorage,} from '../storage/company.storage';
-import { markEmployeePasswordChangeRequired } from '../features/auth/auth-login.helpers';
-import { normalizeUser, normalizeUserWithLocalOverride } from '../mappers/company.mapper';
-import { filterCompanyUsers, mergeNormalizedUsers, uniq } from '../features/company/company-user-identity';
-import {patchCompanyUsersCache,readCompanyUsersCache,saveCompanyUsersCache,toLocalUsers,} from '../features/company/company-users-cache';
-import {buildBaseUserPayload,buildUpdateUserPayload,getUploadedPhotoUrl, postUserWithOptionalPhoto,putUserWithOptionalPhoto,} from '../features/company/company-user-payloads';
-import { buildCurrentCompanyUpdatePayload,buildLocalCompanyFallback,createLocalEmployee, getCreatedEmployeeId, getEmployeeBeforeState,persistCompanyInfo, updateEmployeeLocalState,} from '../features/company/company-user-local';
-import type { AddUserPayload, CompanyInfo, NormalizedUser, UpdateUserPayload } from '../types/company.type';
+import { companyService } from '../../services/company.service';
+import { getStoredUser } from '../../storage/auth.storage';
+import { asString, findStringDeep, isRecord, normalizeArray } from '../../utils/api.utils';
+import {addLocalAuditLog,employeeToRecord,getLocalEmployeesForCompany,readLocalAuditLogs,saveLocalEmployeeOverride,setLocalEmployeeMustChangePassword,} from '../../storage/local-auth/employee-local-auth';
+import { normalizeAssetUrl, normalizeInlineImageData } from '../../utils/asset-url.utils';
+import { bumpAssetVersion } from '../../utils/asset-version';
+import { imageAssetToDataUrl } from '../../utils/image-data-url.utils';
+import { employeeBackgroundImageKey, employeePhotoImageKey, writePersistentImage } from '../../storage/persistent-image-cache';
+import { normalizeAuditLog, stringifyAuditValue } from './audit';
+import {getSavedCompanyId,getSavedCompanyName,getSavedCompanyVoen,mapCompanyLogoResponse,resolveCompanyId,saveCompanyIdFromUnknown,saveCompanyLogoToStorage,} from '../../storage/company.storage';
+import { markEmployeePasswordChangeRequired } from '../auth/auth-login.helpers';
+import { normalizeUser, normalizeUserWithLocalOverride } from '../../mappers/company.mapper';
+import { filterCompanyUsers, mergeNormalizedUsers, uniq } from './company-user-identity';
+import {patchCompanyUsersCache,readCompanyUsersCache,saveCompanyUsersCache,toLocalUsers,} from './company-users-cache';
+import {buildBaseUserPayload,buildUpdateUserPayload,getUploadedPhotoUrl, postUserWithOptionalPhoto,putUserWithOptionalPhoto,} from './company-user-payloads';
+import { buildCurrentCompanyUpdatePayload,buildLocalCompanyFallback,createLocalEmployee, getCreatedEmployeeId, getEmployeeBeforeState,persistCompanyInfo, updateEmployeeLocalState,} from './company-user-local';
+import type { AddUserPayload, CompanyInfo, NormalizedUser, UpdateUserPayload } from '../../types/company.type';
 
-export { findStringDeep, normalizeArray };
-export { mapCompanyInfo, normalizeUser, normalizeUserWithLocalOverride } from '../mappers/company.mapper';
-export {getSavedCompanyId,mapCompanyLogoResponse,resolveCompanyId,saveCompanyIdFromUnknown,} from '../storage/company.storage';
-export { mergeNormalizedUsers } from '../features/company/company-user-identity';
-export type { AddUserPayload, CompanyInfo, NormalizedCompanyInfo, NormalizedUser, UpdateUserPayload } from '../types/company.type';
 
 
 const hydrateUsersWithPersistentPhotoData = async (
@@ -288,6 +284,9 @@ export const companyActions = {
     };
 
     const updateLocal = (apiData?: unknown) => {
+      // Yeni şəkil/fon yüklənibsə keşdəki köhnə fayl göstərilməsin deyə URL versiyası yenilənir.
+      if (photoFile) bumpAssetVersion(userId, 'photo');
+      if (cardBackgroundFile || normalizeInlineImageData(profilePayload.cardBackgroundUrl)) bumpAssetVersion(userId, 'background');
       const normalizedApiData = apiData && typeof apiData === 'object' ? normalizeUser(apiData) : undefined;
       const responsePhoto = getUploadedPhotoUrl(apiData) || normalizeAssetUrl(normalizedApiData?.photoUrl || normalizedApiData?.photo);
       const existingPhoto = normalizeAssetUrl(patch.photoUrl || patch.photo) || snapshotPhoto;

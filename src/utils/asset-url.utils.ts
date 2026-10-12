@@ -35,7 +35,7 @@ const stripOrigin = (value: string) => {
   }
 };
 
-export const isBrokenEmployeePhotoEndpoint = (value: unknown) => {
+const isBrokenEmployeePhotoEndpoint = (value: unknown) => {
   const text = toText(value);
   if (!text) return false;
 
@@ -47,9 +47,15 @@ export const isBrokenEmployeePhotoEndpoint = (value: unknown) => {
   );
 };
 
+// Sosial şəbəkə profil linkləri (məs. linkedin.com/in/...) şəkil deyil, səhifədir: <img src> kimi yüklənmir və
+// brauzer ERR_BLOCKED_BY_RESPONSE xətası verir.
+const socialProfileHostPattern = /^(https?:)?\/\/([a-z0-9-]+\.)*(linkedin|facebook|fb|instagram|twitter|x|tiktok|youtube|youtu|wa|t|telegram)\.(com|me|be)(\/|$)/i;
+const isSocialProfileLink = (text: string) => socialProfileHostPattern.test(text) && !imageExtensionPattern.test(text);
+
 export const isUsableAssetValue = (value: unknown) => {
   const text = toText(value);
   if (!text || unusableAssetValues.has(text.toLowerCase())) return false;
+  if (isSocialProfileLink(text)) return false;
   if (isBrokenEmployeePhotoEndpoint(text)) return false;
   return true;
 };
@@ -86,10 +92,4 @@ export const getNormalizedImageAsset = (...values: unknown[]) => {
   }
 
   return '';
-};
-
-export const looksLikeImageAsset = (value: unknown) => {
-  const text = toText(value);
-  if (!isUsableAssetValue(text)) return false;
-  return /^(https?:\/\/|data:image\/|blob:|\/|uploads\/|images\/|files\/)/i.test(text) || imageExtensionPattern.test(text);
 };

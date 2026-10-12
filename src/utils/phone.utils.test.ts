@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeCountrySearch } from './country-calling-codes';
+import { normalizeCountrySearch } from '../constants/country-calling-codes';
 import {
   COUNTRY_PHONE_OPTIONS,
   joinPhoneWithCountryCode,

@@ -1,14 +1,13 @@
 import axios from 'axios';
-import { userService } from '../services/user.service';
-import {addLocalAuditLog,applyLocalEmployeeOverrideToRecord,employeeToRecord,findLocalEmployeeById,findLocalEmployeeOverride,saveLocalEmployeeOverride,updateLocalEmployeeById,type LocalEmployeeAccount,} from '../storage/local-auth/employee-local-auth';
-import { getStoredUser, patchStoredUser } from '../storage/auth.storage';
-import { getSavedCompanyId, getSavedCompanyVoen } from '../storage/company.storage';
-import { asBoolean, findDeep, findObjectDeep, findStringDeep, isRecord, unwrapData, toRecord } from '../utils/api.utils';
-import { normalizeAssetUrl } from '../utils/asset-url.utils';
-import { getEmployeePhotoFromRecord, pickPublicCardPhoto } from '../features/public-card/public-card-shared';
+import { userService } from '../../services/user.service';
+import {addLocalAuditLog,applyLocalEmployeeOverrideToRecord,employeeToRecord,findLocalEmployeeById,findLocalEmployeeOverride,saveLocalEmployeeOverride,updateLocalEmployeeById,type LocalEmployeeAccount,} from '../../storage/local-auth/employee-local-auth';
+import { getStoredUser, patchStoredUser } from '../../storage/auth.storage';
+import { getSavedCompanyId, getSavedCompanyVoen } from '../../storage/company.storage';
+import { asBoolean, findDeep, findObjectDeep, findStringDeep, isRecord, unwrapData, toRecord } from '../../utils/api.utils';
+import { normalizeAssetUrl } from '../../utils/asset-url.utils';
+import { getEmployeePhotoFromRecord, pickPublicCardPhoto } from '../public-card/public-card-shared';
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
 
 const PROFILE_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const PROFILE_IMAGE_MAX_INPUT_BYTES = 12 * 1024 * 1024;
@@ -97,6 +96,29 @@ const prepareProfilePhotoFile = async (file: File) => {
 
 const unique = (values: string[]) => Array.from(new Set(values.map((value) => value.trim()).filter(Boolean)));
 
+const normalizeString = (value: unknown) => String(value ?? '').trim();
+
+const INVALID_PROFILE_TEXTS = new Set([
+  '', '-', '--', 'null', 'undefined', 'string', '[object object]',
+  'n/a', 'na', 'yoxdur', 'yox',
+]);
+
+const cleanProfileText = (value: unknown) => {
+  const text = normalizeString(value);
+  return INVALID_PROFILE_TEXTS.has(text.toLowerCase()) ? '' : text;
+};
+
+const usefulText = (...values: unknown[]) => {
+  for (const value of values) {
+    const text = cleanProfileText(value);
+    if (text) return text;
+  }
+
+  return '';
+};
+
+const getStoredAccountInfo = () => toRecord(getStoredUser()?.accountInfo);
+
 const isUsefulBackendUserId = (value: unknown) => {
   const id = normalizeString(value);
   if (!UUID_PATTERN.test(id)) return false;
@@ -115,8 +137,6 @@ const isUsefulBackendUserId = (value: unknown) => {
 
   return true;
 };
-
-const getStoredAccountInfo = () => toRecord(getStoredUser()?.accountInfo);
 
 const getUserLookupCandidates = (requestedId: string) => {
   const stored = getStoredUser();
@@ -160,28 +180,6 @@ const stringifyAuditValue = (value: unknown) => {
   } catch {
     return String(value);
   }
-};
-
-
-const normalizeString = (value: unknown) => String(value ?? '').trim();
-
-const INVALID_PROFILE_TEXTS = new Set([
-  '', '-', '--', 'null', 'undefined', 'string', '[object object]',
-  'n/a', 'na', 'yoxdur', 'yox',
-]);
-
-const cleanProfileText = (value: unknown) => {
-  const text = normalizeString(value);
-  return INVALID_PROFILE_TEXTS.has(text.toLowerCase()) ? '' : text;
-};
-
-const usefulText = (...values: unknown[]) => {
-  for (const value of values) {
-    const text = cleanProfileText(value);
-    if (text) return text;
-  }
-
-  return '';
 };
 
 const normalizeProfileUrl = (value: unknown) => {
@@ -662,15 +660,8 @@ export const userActions = {
       const rawData = response.data;
       const photoUrl = normalizeAssetUrl(
         findStringDeep(rawData, [
-          'photoUrl',
-          'photoURL',
-          'photo',
-          'avatarUrl',
-          'profilePhotoUrl',
-          'imageUrl',
-          'fileUrl',
-          'url',
-          'path',
+          'photoUrl', 'photoURL', 'photo', 'avatarUrl',
+          'profilePhotoUrl', 'imageUrl', 'fileUrl', 'url', 'path',
         ])
       );
 
@@ -691,11 +682,8 @@ export const userActions = {
 
     const cardBackgroundUrl = normalizeAssetUrl(
       findStringDeep(response.data, [
-        'cardBackgroundUrl',
-        'cardBackgroundURL',
-        'cardBackground',
-        'backgroundUrl',
-        'backgroundImageUrl',
+        'cardBackgroundUrl', 'cardBackgroundURL', 'cardBackground',
+        'backgroundUrl', 'backgroundImageUrl',
       ])
     );
 
@@ -727,13 +715,7 @@ export const userActions = {
     const response = await userService.uploadSocialIcon(formData);
 
     const iconUrl = normalizeAssetUrl(
-      findStringDeep(response.data, [
-        'iconUrl',
-        'socialIconUrl',
-        'imageUrl',
-        'url',
-        'path',
-      ])
+      findStringDeep(response.data, ['iconUrl', 'socialIconUrl', 'imageUrl', 'url', 'path'])
     );
 
     return {

@@ -45,7 +45,6 @@ export interface AddEmployeeModalProps {
 }
 
 export interface EditEmployeeModalProps {
-  form: FormInstance<Partial<AddUserFormValues>>;
   isOpen: boolean;
   companyUsers: UserData[];
   selectedEditUser?: UserData;
@@ -99,6 +98,10 @@ export interface EmployeesTableProps {
   activeUsersCount: number;
   archivedUsersCount: number;
   tableRows: BusinessCardTableRow[];
+  /** Bütün işçilər: redaktədən sonra açıq kartın məlumatı bu siyahıdakı yenilənmiş qeydlə eyniləşdirilir. */
+  allUsers: UserData[];
+  /** Hər uğurlu redaktədən sonra artır: açıq kartın məlumatı serverdən yenidən oxunur. */
+  detailRefreshToken: number;
   hasMore: boolean;
   onLoadMore: () => void;
   company: NormalizedCompanyInfo;

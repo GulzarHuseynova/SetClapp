@@ -1,50 +1,21 @@
 /* Tünd rejim: CSS dəyişənlərində (theme-colors.css) əhatə olunmayan yerlər.
    Aktivləşdirmə: <html data-theme="dark"> (src/store/themeStore.ts). Açıq rejim bu fayldan təsirlənmir. */
 
-/* Sabit rənglə təyin olunmuş xüsusi dəyişənlər */
-html[data-theme='dark'] {
-  color-scheme: dark;
-  --pro-primary: #4a95cc;
-  --pro-primary-dark: #6fb1e3;
-  --pro-bg: #0f141a;
-  --pro-surface: #171e27;
-  --pro-border: #2a3441;
-  --pro-border-strong: #34414f;
-  --pro-text: #e6edf3;
-  --pro-muted: #9aa9b7;
-  --pro-shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --ca-ink: #e6edf3;
-  --ca-role: #8ec2df;
-  --ca-muted: #9aa9b7;
-  --ca-track: #2a3441;
-  --ca-card-border: #2a3441;
-}
-
-html[data-theme='dark'] .ca-compact-root {
-  --ca-accent: #2a76ab;
-  --ca-accent-dark: #1d669c;
-  --ca-accent-soft: #203141;
-}
-
-html[data-theme='dark'] .login-page {
-  --login-accent: #6fb1e3;
-}
-
 /* Səhifə fonları */
 html[data-theme='dark'],
 html[data-theme='dark'] body,
 html[data-theme='dark'] #root {
-  background-color: #0f141a;
+  background-color: var(--dark-bg);
   background-image: none;
-  color: #e6edf3;
+  color: var(--dark-text);
 }
 
 html[data-theme='dark'] body:has(.ca-compact-root) {
-  background: #0f141a !important;
+  background: var(--dark-bg) !important;
 }
 
 html[data-theme='dark'] .ca-compact-root {
-  background: #0f141a !important;
+  background: var(--dark-bg) !important;
 }
 
 /* QR kodlar skan olunmaq üçün həmişə qara-ağ qalır */
@@ -68,13 +39,13 @@ html[data-theme='dark'] * {
   margin-bottom: 6px;
   font-size: 12px;
   font-weight: 700;
-  color: var(--fg-64748b);
+  color: var(--color-text-slate-muted);
 }
 
 /* Tailwind adlı siniflər (utilities qatında olmalıdır ki, !important siniflərini də üstələsin) */
 @layer utilities {
   html[data-theme='dark'] .bg-white,
-  html[data-theme='dark'] .\!bg-white { background-color: #171e27 !important; }
+  html[data-theme='dark'] .\!bg-white { background-color: var(--dark-surface) !important; }
   html[data-theme='dark'] .bg-white\/90 { background-color: rgb(23 30 39 / 0.9); }
   html[data-theme='dark'] .bg-white\/80 { background-color: rgb(23 30 39 / 0.8); }
   html[data-theme='dark'] .bg-slate-50 { background-color: #1b2430; }
@@ -83,7 +54,7 @@ html[data-theme='dark'] * {
   html[data-theme='dark'] .bg-green-50 { background-color: #14291f; }
   html[data-theme='dark'] .border-slate-200 { border-color: #2a3441; }
   html[data-theme='dark'] .border-green-200 { border-color: #24543a; }
-  html[data-theme='dark'] .text-slate-900 { color: #e6edf3; }
+  html[data-theme='dark'] .text-slate-900 { color: var(--dark-text); }
   html[data-theme='dark'] .text-slate-800 { color: #dbe3ea; }
   html[data-theme='dark'] .text-slate-600 { color: #b3c0cc; }
   html[data-theme='dark'] .text-slate-500 { color: #9aa9b7; }
@@ -93,7 +64,7 @@ html[data-theme='dark'] * {
 }
 
 html[data-theme='dark'] .login-page {
-  background: #0f141a;
+  background: var(--dark-bg);
 }
 
 /* Yan menyu (sidebar) yazıları və menyu ikonları tünd rejimdə ağ */

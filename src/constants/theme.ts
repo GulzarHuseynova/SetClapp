@@ -1,29 +1,36 @@
 import type { ThemeConfig } from 'antd';
+import {
+  BRAND_DARK_LINK_COLOR,
+  BRAND_DARK_LINK_HOVER_COLOR,
+  BRAND_HOVER_COLOR,
+  DARK_PALETTE,
+  DEFAULT_BRAND_COLOR,
+} from './colors';
 
-export const BRAND_COLOR = '#185582';
-export const BRAND_COLOR_HOVER = '#12466c';
+// Inline stillərdə istifadə üçün: şirkətin seçdiyi kart rənginə uyğun dəyişir (src/store/brandStore.ts).
+export const BRAND_COLOR_VAR = 'var(--color-primary)';
 
 export const BRAND_THEME: ThemeConfig = {
   token: {
-    colorPrimary: BRAND_COLOR,
-    colorInfo: BRAND_COLOR,
-    colorLink: BRAND_COLOR,
-    colorLinkHover: BRAND_COLOR_HOVER,
+    colorPrimary: DEFAULT_BRAND_COLOR,
+    colorInfo: DEFAULT_BRAND_COLOR,
+    colorLink: DEFAULT_BRAND_COLOR,
+    colorLinkHover: BRAND_HOVER_COLOR,
   },
 };
 
-// Tünd rejim: antd tokenləri (src/styles/theme-colors.css-dəki tünd palitra ilə uyğundur)
+// Tünd rejim: antd tokenləri (CSS tərəfi: src/styles/tokens.css -> --dark-*).
 export const DARK_TOKENS: ThemeConfig['token'] = {
-  colorBgBase: '#171e27',
-  colorBgContainer: '#171e27',
-  colorBgElevated: '#1d2631',
-  colorBgLayout: '#0f141a',
-  colorBorder: '#2f3b49',
-  colorBorderSecondary: '#27323f',
-  colorText: '#e6edf3',
-  colorTextBase: '#e6edf3',
-  colorPrimary: '#2a76ab',
-  colorInfo: '#2a76ab',
-  colorLink: '#6fb1e3',
-  colorLinkHover: '#9ccbee',
+  colorBgBase: DARK_PALETTE.surface,
+  colorBgContainer: DARK_PALETTE.surface,
+  colorBgElevated: DARK_PALETTE.elevated,
+  colorBgLayout: DARK_PALETTE.bg,
+  colorBorder: DARK_PALETTE.border,
+  colorBorderSecondary: DARK_PALETTE.borderSoft,
+  colorText: DARK_PALETTE.text,
+  colorTextBase: DARK_PALETTE.text,
+  colorPrimary: DARK_PALETTE.primary,
+  colorInfo: DARK_PALETTE.primary,
+  colorLink: BRAND_DARK_LINK_COLOR,
+  colorLinkHover: BRAND_DARK_LINK_HOVER_COLOR,
 };

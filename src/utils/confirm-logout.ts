@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import { LogoutOutlined } from '@ant-design/icons';
-import { modal } from '../utils/antd-static';
+import { modal } from './antd-static';
 
 export const confirmLogout = (onConfirm: () => void) => {
   modal.confirm({

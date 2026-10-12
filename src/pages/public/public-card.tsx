@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'react-router';
 import { CommonBusinessCardView } from '../../components/common-business-card-view';
 import type { BusinessCardViewModel } from '../../types/business-card-view.type';
 import { CardQrModal } from '../../components/card-qr-modal';
+import { brandStore } from '../../store/brandStore';
 import {
   downloadPublicCardVcf,
   fetchPublicCardProfile,
@@ -55,6 +56,13 @@ export default function PublicCard() {
       cancelled = true;
     };
   }, [cardId, requestKey, source]);
+
+  // Public vizitkart həmin şirkətin seçdiyi kart rəngində açılır.
+  const profileCompanyId = profile?.companyId;
+  useEffect(() => {
+    brandStore.setActiveCompany(profileCompanyId, 'public');
+    return () => brandStore.setActiveCompany('', 'public');
+  }, [profileCompanyId]);
 
   useEffect(() => {
     if (!profile || scanRecordedRef.current) return;

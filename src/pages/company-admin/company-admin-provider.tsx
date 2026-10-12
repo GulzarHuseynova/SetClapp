@@ -1,8 +1,8 @@
-import {useCallback,useEffect,useEffectEvent,useRef, useState,type ReactNode,} from "react";
+﻿import {useCallback,useEffect,useEffectEvent,useRef, useState,type ReactNode,} from "react";
 import { message } from "../../utils/antd-static";
 import axios from "axios";
-import { analyticsActions } from "../../helpers/analytics.helper";
-import { companyActions } from "../../helpers/company.helper";
+import { analyticsActions } from "../../features/company-admin/analytics.helper";
+import { companyActions } from "../../features/company/company.helper";
 import type { AddUserPayload, NormalizedCompanyInfo } from "../../types/company.type";
 import { mapCompanyInfo, normalizeUser } from "../../mappers/company.mapper";
 import { getSavedCompanyId, mapCompanyLogoResponse, resolveCompanyId, saveCompanyIdFromUnknown } from "../../storage/company.storage";
@@ -233,7 +233,7 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
             user: "Admin",
             action: "İşçi siyahısı API-dən yükləndi",
             time: "İndi",
-            color: "#4b9ada",
+            color: "var(--brand-sky-hover)",
           },
         ]);
       } catch {

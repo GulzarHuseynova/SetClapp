@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/theme-colors.css";
+@import "./styles/tokens.css";
 @import "./styles/company-admin.css";
 @import "./styles/theme-dark.css";
 
@@ -74,14 +75,14 @@
 }
 
 .ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled) {
-  border-color: var(--bd-185582) !important;
-  background: var(--bg-185582) !important;
+  border-color: var(--color-primary-border) !important;
+  background: var(--color-primary) !important;
   box-shadow: 0 6px 14px rgba(24, 85, 130, 0.18) !important;
 }
 
 .ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-cancel-button:not(.ant-btn-dangerous):not(:disabled):hover {
-  border-color: var(--bd-12466c) !important;
-  background: var(--bg-12466c) !important;
+  border-color: var(--color-primary-hover-border) !important;
+  background: var(--color-primary-hover) !important;
 }
 
 .ant-modal-root .ant-modal-wrap .logout-confirm-modal.ant-modal-confirm .ant-modal-confirm-btns .ant-btn.logout-confirm-button:not(:disabled) {
@@ -126,7 +127,7 @@
 .employee-card-menu .ant-dropdown-menu .ant-dropdown-menu-item {
   padding: 8px 12px;
   border-radius: 8px;
-  color: var(--fg-456b82);
+  color: var(--color-action-text);
   font-size: 13px;
   font-weight: 500;
 }
@@ -152,28 +153,28 @@
 }
 
 .ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-cancel:not(:disabled) {
-  border-color: var(--bd-185582) !important;
-  background: var(--bg-ffffff) !important;
-  color: var(--fg-185582) !important;
+  border-color: var(--color-primary-border) !important;
+  background: var(--color-surface) !important;
+  color: var(--color-primary-text) !important;
   box-shadow: none !important;
 }
 
 .ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-cancel:not(:disabled):hover {
-  border-color: var(--bd-12466c) !important;
-  background: var(--bg-e7f0f8) !important;
+  border-color: var(--color-primary-hover-border) !important;
+  background: var(--color-primary-tint) !important;
   color: var(--fg-12466c) !important;
 }
 
 .ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-submit:not(:disabled) {
-  border-color: var(--bd-185582) !important;
-  background: var(--bg-185582) !important;
+  border-color: var(--color-primary-border) !important;
+  background: var(--color-primary) !important;
   color: #ffffff !important;
   box-shadow: 0 6px 14px rgba(24, 85, 130, 0.18) !important;
 }
 
 .ant-modal-root .ant-modal-wrap .employee-code-modal .ant-modal-container .code-modal-actions .ant-btn.code-modal-submit:not(:disabled):hover {
-  border-color: var(--bd-12466c) !important;
-  background: var(--bg-12466c) !important;
+  border-color: var(--color-primary-hover-border) !important;
+  background: var(--color-primary-hover) !important;
   color: #ffffff !important;
 }
 
@@ -191,7 +192,7 @@
 }
 
 .phone-country-option-code {
-  color: var(--fg-6e7671);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 

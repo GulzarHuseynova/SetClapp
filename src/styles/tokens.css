@@ -1,0 +1,67 @@
+/* Əl ilə idarə olunan rəng və ölçü dəyişənləri (TƏK yer). Avtomatik yaradılan --bg/--fg/--bd-* dəyişənləri
+   theme-colors.css-dədir. Şirkət kart rəngi seçəndə bu fayldakı (və theme-colors.css-dəki) brend tonlu
+   hex dəyişənlər src/store/brandStore.ts tərəfindən avtomatik yenidən rənglənir. */
+:root {
+  /* Tünd rejim paleti (TS tərəfi: src/constants/colors.ts -> DARK_PALETTE; colors.test.ts eyni qalmasını yoxlayır) */
+  --dark-bg: #0f141a;
+  --dark-surface: #171e27;
+  --dark-elevated: #1d2631;
+  --dark-border: #2f3b49;
+  --dark-border-soft: #27323f;
+  --dark-text: #e6edf3;
+  --dark-primary: #2a76ab;
+
+  /* Company Admin paneli */
+  --brand-sky: #5aa8e8;
+  --brand-sky-hover: #4b9ada;
+  --brand-sky-deep: #438fca;
+  --brand-sky-focus: #3d88c2;
+  --pro-primary: #4f9ed7;
+  --pro-primary-dark: #347fad;
+  --pro-bg: #f3f8fb;
+  --pro-surface: #ffffff;
+  --pro-border: #d9e7ef;
+  --pro-border-strong: #c8dce8;
+  --pro-text: #17324a;
+  --pro-muted: #6d8191;
+  --pro-shadow-sm: 0 8px 24px rgba(35, 78, 104, 0.07);
+  --pro-radius: 20px;
+  --ca-app-width: 430px;
+  --ca-ink: #1a1a1a;
+  --ca-role: #1b4a75;
+  --ca-muted: #6e7671;
+  --ca-track: #eceeed;
+  --ca-card-border: #d8e5ee;
+  --ca-accent: #185582;
+  --ca-accent-dark: #12466c;
+  --ca-accent-soft: #e7f1fa;
+
+  /* Login */
+  --login-accent: #185582;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --brand-sky: #5aa8e8;
+  --brand-sky-hover: #4b9ada;
+  --brand-sky-deep: #438fca;
+  --brand-sky-focus: #3d88c2;
+  --pro-primary: #4a95cc;
+  --pro-primary-dark: #6fb1e3;
+  --pro-bg: var(--dark-bg);
+  --pro-surface: var(--dark-surface);
+  --pro-border: #2a3441;
+  --pro-border-strong: #34414f;
+  --pro-text: var(--dark-text);
+  --pro-muted: #9aa9b7;
+  --pro-shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --ca-ink: var(--dark-text);
+  --ca-role: #8ec2df;
+  --ca-muted: #9aa9b7;
+  --ca-track: #2a3441;
+  --ca-card-border: #2a3441;
+  --ca-accent: #2a76ab; /* hex olmalıdır: brend rəngi seçiləndə yenidən rənglənir */
+  --ca-accent-dark: #1d669c;
+  --ca-accent-soft: #203141;
+  --login-accent: #6fb1e3;
+}

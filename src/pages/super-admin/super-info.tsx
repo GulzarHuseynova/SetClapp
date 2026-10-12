@@ -30,7 +30,7 @@ export default function SuperInfo() {
       <div
         className="super-info-hero"
         style={{
-          background: 'linear-gradient(135deg,var(--bg-0f2f47) 0%,var(--bg-185582) 100%)',
+          background: 'linear-gradient(135deg,var(--bg-0f2f47) 0%,var(--color-primary) 100%)',
           borderRadius: 26,
           padding: '28px 30px',
           color: '#fff',
@@ -109,14 +109,14 @@ export default function SuperInfo() {
       <Row gutter={[18, 18]}>
         {quickCards.map((item) => (
           <Col xs={24} sm={12} xl={6} key={item.title}>
-            <Card style={{ borderRadius: 22, border: '1px solid var(--bd-e2e8f0)', boxShadow: '0 12px 30px rgba(15,23,42,0.05)', height: '100%' }}>
+            <Card style={{ borderRadius: 22, border: '1px solid var(--color-border-slate)', boxShadow: '0 12px 30px rgba(15,23,42,0.05)', height: '100%' }}>
               <div
                 style={{
                   width: 50,
                   height: 50,
                   borderRadius: 18,
-                  background: 'var(--bg-e7f0f8)',
-                  color: 'var(--fg-185582)',
+                  background: 'var(--color-primary-tint)',
+                  color: 'var(--color-primary-text)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -126,8 +126,8 @@ export default function SuperInfo() {
               >
                 {item.icon}
               </div>
-              <h3 style={{ margin: 0, color: 'var(--fg-0f172a)', fontSize: 18, fontWeight: 900 }}>{item.title}</h3>
-              <p style={{ margin: '10px 0 0', color: 'var(--fg-64748b)', lineHeight: 1.7 }}>{item.text}</p>
+              <h3 style={{ margin: 0, color: 'var(--color-text-slate-strong)', fontSize: 18, fontWeight: 900 }}>{item.title}</h3>
+              <p style={{ margin: '10px 0 0', color: 'var(--color-text-slate-muted)', lineHeight: 1.7 }}>{item.text}</p>
             </Card>
           </Col>
         ))}

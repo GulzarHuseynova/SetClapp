@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useMemo, useState } from "react";
+﻿import { useEffect, useEffectEvent, useMemo, useState } from "react";
 import { Button, Form, Input, Modal } from "antd";
 import { message } from "../../utils/antd-static";
 import { Navigate, Route, Routes, useLocation } from "react-router";
@@ -9,9 +9,9 @@ import CompanyAnalytics from "./company-pages/company-analytics";
 import CompanyInfo from "./company-pages/company-info";
 import CompanyScanLogs from "./company-pages/company-scan-logs";
 import CompanyExportImport from "./company-pages/company-export-import";
-import { authOperations } from "../../helpers/auth.helper";
+import { authOperations } from "../../features/auth";
 import { authSessionStorage } from "../../storage/auth-session.storage";
-import { userActions } from "../../helpers/user.helper";
+import { userActions } from "../../features/employee/user.helper";
 import { companyService } from "../../services/company.service";
 import { buildSwaggerUpdateUserPayload } from "../../features/company/company-user-payloads";
 import type { UpdateUserPayload } from "../../types/company.type";
@@ -27,7 +27,7 @@ import {clearRuntimeCompanyAdminProfile,mergeRuntimeCompanyAdminProfile,readRunt
 import type { ChangePasswordRequest } from "../../types/auth.type";
 import type { CompanyAdminProps } from "../../types/company-admin.type";
 import type { EditableProfileValues } from "../../types/layout.type";
-import { confirmLogout } from "../../components/confirm-logout";
+import { confirmLogout } from "../../utils/confirm-logout";
 import { findStringInObject } from "../../utils/api.utils";
 
 const findArrayInObject = (source: unknown, keys: string[]) => {
@@ -646,7 +646,6 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
 
       window.location.replace("/login");
       return;
-      message.success("Şifrə uğurla yeniləndi.");
     } catch {
       message.error("Şifrə dəyişdirilmədi. Köhnə kod/şifrəni və yeni şifrəni yoxlayın.");
     } finally {
@@ -676,7 +675,6 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
         userName={adminFullName || "CompanyAdmin"}
         avatarText={(adminFullName || "CA").split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase()}
         avatarSrc={adminAvatarSrc}
-        notificationCount={3}
         profileDetails={profileDetails}
         profileInitialValues={profileInitialValues}
         onSaveProfile={handleSaveAdminProfile}
@@ -699,7 +697,7 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
         keyboard={false}
         width={480}
       >
-        <p style={{ color: "var(--fg-64748b)", marginTop: 0 }}>
+        <p style={{ color: "var(--color-text-slate-muted)", marginTop: 0 }}>
           Super Admin tərəfindən verilən kod müvəqqətidir. Paneldən istifadə etmək üçün yeni şifrə təyin edin.
         </p>
 

@@ -1,5 +1,5 @@
 import type { CountryPhoneOption } from '../types/phone.type';
-import { buildCountryPhoneOptions } from './country-calling-codes';
+import { buildCountryPhoneOptions } from '../constants/country-calling-codes';
 
 export const DEFAULT_PHONE_COUNTRY_CODE = '+994';
 

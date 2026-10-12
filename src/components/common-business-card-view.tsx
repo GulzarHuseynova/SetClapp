@@ -77,7 +77,7 @@ const coverStyle = (backgroundUrl: string) => backgroundUrl
       backgroundSize: 'contain',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      backgroundColor: 'var(--bg-f8fcff)',
+      backgroundColor: 'var(--color-surface-soft)',
     }
   : undefined;
 
