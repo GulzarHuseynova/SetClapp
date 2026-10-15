@@ -12,7 +12,9 @@ export const confirmLogout = (onConfirm: () => void) => {
     content: 'Hesabınızdan çıxacaqsınız. Davam etmək üçün yenidən daxil olmalısınız.',
     okText: 'Bəli',
     cancelText: 'Xeyr',
-    autoFocusButton: 'cancel',
+    focusable: {
+      autoFocusButton: 'cancel',
+    },
     okButtonProps: { danger: true, className: 'logout-confirm-button' },
     cancelButtonProps: { className: 'logout-cancel-button' },
     onOk: onConfirm,
