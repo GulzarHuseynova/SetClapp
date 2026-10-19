@@ -289,9 +289,7 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
 
     try {
       await loadAnalyticsCached(params, cacheKey);
-    } catch {
-      
-    }
+    } catch { /* analytics cache miss — silently ignored */ }
   }, [loadAnalyticsCached]);
 
   const fetchAuditLogs = useCallback(async () => {

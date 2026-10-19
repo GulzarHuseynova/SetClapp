@@ -54,9 +54,7 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
         try {
           const publicProfile = await fetchPublicCardProfile(userId, "Direct");
           if (publicProfile) fallbackCard = mapUserToCard(publicProfile, fallbackCard);
-        } catch {
-          
-        }
+        } catch { /* public profile fetch failed — use local fallback */ }
       }
 
       let mapped = mapUserToCard(data, fallbackCard);
