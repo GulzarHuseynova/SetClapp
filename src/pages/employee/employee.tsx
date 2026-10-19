@@ -74,8 +74,8 @@ function EmployeeShell({ onLogout }: EmployeeProps) {
       employeeIdentity,
     );
 
-    // Uğurlu ilk şifrə dəyişikliyi backend köhnə firstLogin=true qaytarsa belə
-    // modalın sonrakı girişlərdə yenidən açılmasına üstünlük təşkil edir.
+    
+    
     if (alreadyChanged) return false;
 
     const account = accountInfo && typeof accountInfo === "object"

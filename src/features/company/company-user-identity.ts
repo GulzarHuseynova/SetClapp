@@ -1,4 +1,4 @@
-import { normalizeRole } from '../../utils/api.utils';
+﻿import { normalizeRole } from '../../utils/api.utils';
 import { normalizeAssetUrl, normalizeInlineImageData } from '../../utils/asset-url.utils';
 import type { NormalizedUser } from '../../types/company.type';
 

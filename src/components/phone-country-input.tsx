@@ -1,4 +1,4 @@
-import { useId, useMemo, useState, type ChangeEvent } from 'react';
+﻿import { useId, useMemo, useState, type ChangeEvent } from 'react';
 import { Input, Select, Space } from 'antd';
 import {COUNTRY_PHONE_OPTIONS,DEFAULT_PHONE_COUNTRY_CODE,joinPhoneWithCountryCode,splitPhoneByCountryCode,} from '../utils/phone.utils';
 import { normalizeCountrySearch } from '../constants/country-calling-codes';
@@ -50,7 +50,7 @@ export function PhoneCountryInput({
         disabled={disabled}
         value={selectedCountryCode}
         options={COUNTRY_PHONE_OPTIONS}
-        // Seçilmiş dəyər qısa görünür ("🇦🇿 +994"), açılan siyahıda isə ölkə adı da göstərilir.
+        
         optionLabelProp="label"
         optionRender={(option) => (
           <span className="phone-country-option">

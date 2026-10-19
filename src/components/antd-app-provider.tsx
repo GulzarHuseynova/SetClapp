@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+﻿import { useEffect, useMemo } from 'react';
 import { App, ConfigProvider, theme as antdTheme } from 'antd';
 import type { ThemeConfig } from 'antd';
 import { registerAntdApp } from '../utils/antd-static';
@@ -24,7 +24,7 @@ export function AntdAppProvider({ brand, children }: AntdAppProviderProps) {
 
   const themeConfig = useMemo<ThemeConfig | undefined>(() => {
     const dark = resolved === 'dark';
-    // Şirkət kart rəngi seçibsə antd komponentləri də həmin rəngi istifadə edir.
+    
     const custom = brandColor !== DEFAULT_BRAND_COLOR;
     const primary = dark ? resolveBrandPrimaryDark(brandColor) : resolveBrandPrimary(brandColor);
     const customTokens: ThemeConfig['token'] = custom
@@ -50,7 +50,7 @@ export function AntdAppProvider({ brand, children }: AntdAppProviderProps) {
     </App>
   );
 
-  // ConfigProvider həmişə render olunur və theme həmişə obyektdir (antd boş theme-də uşaqları fərqli qatla sarıyır):
-  // tema/brend dəyişəndə komponent ağacı yenidən qurulmur, state itmir.
+  
+  
   return <ConfigProvider theme={themeConfig ?? {}}>{app}</ConfigProvider>;
 }

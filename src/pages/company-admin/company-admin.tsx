@@ -127,7 +127,7 @@ function CompanyAdminPages() {
       <Route path="settings" element={<CompanyInfo />} />
       <Route path="my-card" element={<div />} />
 
-      {/* Köhnə linklər də birbaşa yeni səhifələrə yönlənsin. */}
+      {}
       <Route path="company" element={<Navigate to="/company-admin/settings" replace />} />
       <Route path="business-card" element={<Navigate to="/company-admin/employees" replace />} />
       <Route path="qr-codes" element={<Navigate to="/company-admin/employees" replace />} />
@@ -152,8 +152,8 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
   const [profileOverride, setProfileOverride] = useState<Partial<EditableProfileValues>>(() => readRuntimeCompanyAdminProfile());
   const [avatarOverride, setAvatarOverride] = useState(() => readRuntimeCompanyAdminAvatar());
 
-  // Şirkət məlumatı sonradan yüklənir; effekt ondan asılı olsaydı profil sorğuları
-  // (account-info və User/{id}) ikinci dəfə göndərilərdi. Ən son dəyər burdan oxunur.
+  
+  
   const readLatestCompany = useEffectEvent(() => ({
     id: company.id,
     voen: companyVoen || company.voen,
@@ -513,7 +513,7 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
             photoUrl: getEmployeePhotoFromRecord(responseRecord) || inlinePhoto,
           });
         } catch {
-          // Multipart upload uğurludursa profil PUT xətası lokal Base64 şəkli silmir.
+          
         }
       }
 
@@ -543,7 +543,7 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
   const handleUploadAdminCardBackground = async (file: File) => {
     const inlineBackground = await fileToImageDataUrl(file);
 
-    // Endpoint cavabı gələnə qədər yalnız preview göstərilir.
+    
     setProfileOverride((current) => ({ ...current, cardBackgroundUrl: inlineBackground }));
 
     try {
@@ -577,7 +577,7 @@ function CompanyAdminShell({ onLogout }: CompanyAdminProps) {
       message.success('Kart fonu backend-ə yükləndi və backend cardBackgroundUrl ilə saxlanıldı.');
       return backendBackground;
     } catch (error) {
-      // Backend uğursuz olduqda köhnə backend fonunu saxlayırıq; Base64-i əsas mənbə etmirik.
+      
       setProfileOverride((current) => ({
         ...current,
         cardBackgroundUrl: backendProfileValues.cardBackgroundUrl || current.cardBackgroundUrl,

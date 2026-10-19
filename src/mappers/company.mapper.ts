@@ -1,4 +1,4 @@
-import {asBoolean,asNumber,asString,extractCompanyId,findDeep,findStringDeep,isRecord,normalizeArray,normalizeRole,type AnyRecord,} from '../utils/api.utils';
+﻿import {asBoolean,asNumber,asString,extractCompanyId,findDeep,findStringDeep,isRecord,normalizeArray,normalizeRole,type AnyRecord,} from '../utils/api.utils';
 import { normalizeAssetUrl, normalizeInlineImageData } from '../utils/asset-url.utils';
 import { getEmployeePhotoFromRecord } from '../features/public-card/public-card-shared';
 import { applyLocalEmployeeOverrideToRecord } from '../storage/local-auth/employee-local-auth';

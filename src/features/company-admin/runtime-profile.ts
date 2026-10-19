@@ -1,4 +1,4 @@
-import type { EditableProfileValues, ProfileSocialAccount } from '../../types/layout.type';
+﻿import type { EditableProfileValues, ProfileSocialAccount } from '../../types/layout.type';
 import { runtimeStorage } from '../../storage/runtime.storage';
 
 let profileCache: Partial<EditableProfileValues> = {};
@@ -27,7 +27,7 @@ const persistProfile = (profile: Partial<EditableProfileValues>) => {
   try {
     runtimeStorage.setItem(COMPANY_ADMIN_PROFILE_KEY, JSON.stringify(profile));
   } catch {
-    // Runtime storage əlçatmaz olsa belə cari sessiya cache ilə davam edir.
+    
   }
 };
 

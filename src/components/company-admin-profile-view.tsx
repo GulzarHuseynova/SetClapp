@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+﻿import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { Avatar, Form, Input, Modal, QRCode } from "antd";
 import { message } from "../utils/antd-static";
 import {CalendarOutlined,CameraOutlined,CreditCardOutlined,DeleteOutlined,EnvironmentOutlined,FacebookOutlined,GlobalOutlined,InstagramOutlined,LinkOutlined,LinkedinOutlined,MailOutlined,PhoneOutlined,PlusOutlined,SendOutlined,TikTokOutlined,UploadOutlined,WhatsAppOutlined,XOutlined,YoutubeOutlined,} from "@ant-design/icons";
@@ -70,7 +70,7 @@ const LINK_PRESET_GROUPS = [
   { key: "business", label: "İŞ VƏ ÖDƏNİŞ" },
 ] as const;
 
-// Telefon və WhatsApp üçün adi mətn əvəzinə ölkə kodu seçilən nömrə sahəsi göstərilir.
+
 const isPhonePreset = (name: string) => ["telefon", "whatsapp"].includes(normalizePlatformKey(name));
 
 const findPreset = (name: string) => LINK_ICON_PRESETS.find((item) => item.name === name) || CUSTOM_LINK_PRESET;
@@ -265,9 +265,9 @@ export default function CompanyAdminProfileView({
       return;
     }
 
-    // Link yadda saxlananda parent initialValues yenilənir. Formu hər prop dəyişiklikdə
-    // yenidən qurmaq yeni əlavə olunan linki sıfırlayırdı. Form yalnız redaktə sessiyası
-    // açılan anda ilkin dəyərlərlə doldurulur.
+    
+    
+    
     if (editSessionInitializedRef.current) return;
     editSessionInitializedRef.current = true;
 
@@ -315,8 +315,8 @@ export default function CompanyAdminProfileView({
     const whatsappItem = take("whatsapp");
     const addressItem = take("ünvan");
 
-    // wa.me linkindəki rəqəmlər artıq ölkə kodunu ehtiva edir; "+" olmadan saxlansa, backend onu Azərbaycan
-    // nömrəsi sayıb əvvəlinə +994 əlavə edir.
+    
+    
     const whatsappLink = cleanText(whatsappItem?.profileUrl);
     const whatsappDigits = /wa\.me\/\+?(\d+)/i.exec(whatsappLink)?.[1];
     const whatsappValue = whatsappDigits ? `+${whatsappDigits}` : whatsappLink.replace(/^tel:/i, "");
@@ -342,9 +342,9 @@ export default function CompanyAdminProfileView({
 
     try {
       setSaving(true);
-      // socialAccounts ayrıca Form.Item kimi render olunmur; buna görə Ant Design
-      // onFinish values obyektinə onu həmişə daxil etmir. Cari form state-dən
-      // oxumasaq, əsas “Yadda saxla” düyməsi yeni linkləri boş massivlə əvəz edir.
+      
+      
+      
       const currentAccounts = (form.getFieldValue("socialAccounts") || editorAccounts || []) as ProfileSocialAccount[];
       await onSave(prepareProfileValues({ ...values, socialAccounts: currentAccounts }, currentAccounts));
       setEditing(false);

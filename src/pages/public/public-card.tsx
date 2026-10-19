@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+﻿import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Empty } from 'antd';
 import { useParams, useSearchParams } from 'react-router';
 import { CommonBusinessCardView } from '../../components/common-business-card-view';
@@ -57,7 +57,7 @@ export default function PublicCard() {
     };
   }, [cardId, requestKey, source]);
 
-  // Public vizitkart həmin şirkətin seçdiyi kart rəngində açılır.
+  
   const profileCompanyId = profile?.companyId;
   useEffect(() => {
     brandStore.setActiveCompany(profileCompanyId, 'public');

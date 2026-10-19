@@ -1,4 +1,4 @@
-import { isPersistentRuntimeKey, runtimeStorage } from './runtime.storage';
+﻿import { isPersistentRuntimeKey, runtimeStorage } from './runtime.storage';
 import {asBoolean,asString,extractCompanyId,extractCompanyVoen,extractUserId,findDeep,findStringDeep,isRecord,normalizeRole,parseJwt,} from '../utils/api.utils';
 import type { AuthState } from '../types/auth-store.type';
 import { ROLES } from '../constants/roles';
@@ -62,7 +62,7 @@ const snapshotPersistentRuntimeEntries = () => {
 
   for (let index = 0; index < runtimeStorage.length; index += 1) {
     const key = runtimeStorage.key(index);
-    // Sessiya meta-məlumatı (rol) logout-dan sonra bərpa olunmamalıdır.
+    
     if (!key || key === AUTH_META_KEY || !isPersistentRuntimeKey(key)) continue;
 
     const value = runtimeStorage.getItem(key);
@@ -123,7 +123,7 @@ const writeAuthMeta = (meta: StoredAuthMeta) => {
   };
 
   if (cleanMeta.companyVoen || cleanMeta.user) {
-    // Meta hər oxunuşda yenidən yazılır; dəyişməyibsə IndexedDB-yə boş yazı göndərilmir.
+    
     const serialized = JSON.stringify(cleanMeta);
     if (runtimeStorage.getItem(AUTH_META_KEY) !== serialized) runtimeStorage.setItem(AUTH_META_KEY, serialized);
   } else {
@@ -175,8 +175,7 @@ const extractRoleFromSources = (...sources: unknown[]) => {
   return '';
 };
 
-// Rol JWT-dən oxunanda login ilə eyni qayda tətbiq olunur: backend employee tokenində də
-// super-admin rolu qaytara bilir, amma şirkətə (VÖEN-ə) bağlı token super-admin ola bilməz.
+
 const resolveTokenRole = (decoded: unknown) => {
   const role = normalizeRole(extractRoleFromSources(decoded));
   return role === ROLES.SUPER_ADMIN && extractCompanyVoen(decoded) ? ROLES.EMPLOYEE : role;
@@ -244,8 +243,8 @@ export const cleanupLegacyAuthStorage = () => {
 
   removeByPrefix(localStorage);
 
-  // Local Storage-də yalnız token və id qalır. Köhnə employee ilk-giriş
-  // markerləri və şirkət loqoları varsa Session Storage-ə köçürülür.
+  
+  
   for (let index = localStorage.length - 1; index >= 0; index -= 1) {
     const key = localStorage.key(index);
     if (!key || key === AUTH_TOKEN_KEY || key === AUTH_USER_KEY || key === THEME_STORAGE_KEY) continue;
@@ -259,7 +258,7 @@ export const cleanupLegacyAuthStorage = () => {
   }
 };
 
-// Köhnə versiyaların brauzerdə yaratdığı saxta "local-*" tokenləri etibarsızdır.
+
 const isForgedLocalToken = (token: string) => token.startsWith('local-');
 
 export const getStoredToken = () => {

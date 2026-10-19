@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from 'react';
+﻿import type { Dispatch, SetStateAction } from 'react';
 import type { FormInstance } from 'antd';
 import type { AddUserFormValues, UserData } from './company-admin.type';
 import type { NormalizedCompanyInfo } from './company.type';
@@ -98,9 +98,9 @@ export interface EmployeesTableProps {
   activeUsersCount: number;
   archivedUsersCount: number;
   tableRows: BusinessCardTableRow[];
-  /** Bütün işçilər: redaktədən sonra açıq kartın məlumatı bu siyahıdakı yenilənmiş qeydlə eyniləşdirilir. */
+  
   allUsers: UserData[];
-  /** Hər uğurlu redaktədən sonra artır: açıq kartın məlumatı serverdən yenidən oxunur. */
+  
   detailRefreshToken: number;
   hasMore: boolean;
   onLoadMore: () => void;

@@ -1,4 +1,4 @@
-import { superAdminService } from '../../services/super.service';
+﻿import { superAdminService } from '../../services/super.service';
 import { asNumber, findDeep, normalizeArray, type AnyRecord } from '../../utils/api.utils';
 import { saveLocalCompanyAdminAccount, updateLocalCompanyAdminCompany } from '../../storage/local-auth/company-admin-local-auth';
 import { readLocalAuditLogs } from '../../storage/local-auth/employee-local-auth';
@@ -20,7 +20,7 @@ export const superAdminActions = {
       saveCompaniesCache(companies);
       return companies;
     } catch {
-      // Cache is fallback only; API request is always attempted first and appears in Network.
+      
       return cached;
     }
   },
@@ -142,8 +142,8 @@ export const superAdminActions = {
           const response = await superAdminService.getCompanyScansCount(companyId);
           scanCount = readCount(response.data);
         } catch {
-          // Some backends include the count in the companies/dashboard response.
-          // Keep that value as a safe fallback when per-company analytics is unavailable.
+          
+          
         }
       }
 
@@ -214,7 +214,6 @@ export const superAdminActions = {
 
     throw new Error(getErrorMessage(lastError) || 'Company Admin hesabı backend-də yaradılmadı.');
   },
-
 
   updateCompanyLimit: async (company: ApiCompany | string, limit: number): Promise<void> => {
     const id = typeof company === 'string' ? company : company.id;

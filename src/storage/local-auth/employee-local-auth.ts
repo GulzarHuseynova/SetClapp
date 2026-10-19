@@ -1,4 +1,4 @@
-import { runtimeStorage } from '../runtime.storage';
+﻿import { runtimeStorage } from '../runtime.storage';
 import { asBoolean, asNumber, asString, findDeep, findStringDeep, normalizeArray, type AnyRecord } from '../../utils/api.utils';
 import { getStoredUser } from '../auth.storage';
 import type { LocalAuditLog, LocalEmployeeAccount, LocalEmployeeOverride } from '../../types/local-auth.type';
@@ -58,14 +58,14 @@ const saveArray = <T>(key: string, rows: T[]) => {
   const serialized = JSON.stringify(rows);
   runtimeStorage.setItem(key, serialized);
 
-  // İşçi şəkli və redaktə icazəsi logout/login və brauzer yenilənməsindən sonra
-  // itirilməsin deyə employee məlumatları üçün sinxron localStorage ehtiyatı saxlayırıq.
-  // Digər runtime məlumatları əvvəlki kimi yalnız runtime/IndexedDB axınında qalır.
+  
+  
+  
   if (LOCAL_EMPLOYEE_BACKUP_KEYS.has(key)) {
     try {
       localStorage.setItem(key, serialized);
     } catch {
-      // localStorage limiti dolarsa runtimeStorage/IndexedDB əsas mənbə olaraq qalır.
+      
     }
   } else {
     localStorage.removeItem(key);
@@ -119,9 +119,9 @@ const sameOverrideTarget = (override: LocalEmployeeOverride, target: Partial<Loc
   );
   const sameProfile = sameName && (sameJob || samePhone);
 
-  // Backend bəzən companyId/VOEN-i fərqli formatda və ya boş qaytarır.
-  // Stabil employee ID tam uyğun gəlirsə override həmin işçiyə məxsusdur və
-  // şirkət metadatasındakı fərq foto/redaktə icazəsini bloklamamalıdır.
+  
+  
+  
   const stableIdMatch = Boolean(
     sameId &&
     !overrideId.includes('@') &&
@@ -348,7 +348,7 @@ export const readLocalEmployeeAccounts = (): LocalEmployeeAccount[] => {
     return acc;
   }, []);
 
-  // Köhnə versiyalar şifrəni açıq mətn kimi saxlayırdı; belə qeydlər təmizlənib yenidən yazılır.
+  
   const hasStoredSecrets = rawRows.some((row) => STORED_SECRET_KEYS.some((key) => key in (row as AnyRecord)));
   if (hasStoredSecrets) saveArray(EMPLOYEE_STORAGE_KEY, unique);
 

@@ -1,8 +1,5 @@
-import { runtimeStorage } from '../storage/runtime.storage';
+﻿import { runtimeStorage } from '../storage/runtime.storage';
 
-// Backend şəkil/fon faylını yenilədikdə çox vaxt eyni URL-i qaytarır. Brauzer həmin URL-i keşdən
-// göstərdiyi üçün yeni şəkil yalnız səhifə yenilənəndən sonra görünürdü. Yükləmədən sonra URL-ə
-// "?v=<vaxt>" əlavə edirik ki, brauzer faylı yenidən yükləsin.
 const ASSET_VERSION_PREFIX = 'assetVersion:';
 
 export type AssetKind = 'photo' | 'background';

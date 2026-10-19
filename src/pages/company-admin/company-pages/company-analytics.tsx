@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { useCompanyAdmin } from '../../../hooks/use-company-admin';
 import type { AnalyticsRankingRow, AnalyticsScanLogRow, UserData } from '../../../types/company-admin.type';
 import type { AnalyticsChartItem, AnalyticsPeriodKey } from '../../../types/company-admin.type';
@@ -189,7 +189,7 @@ export default function CompanyAnalytics() {
     void fetchAnalytics(getPeriodRange(period), period);
   }, [fetchAnalytics, period]);
 
-  // Digər dövrlər fonda, növbə ilə hazırlanır ki, Gün/Həftə/Ay/İl klikləri dərhal cavab versin.
+  
   useEffect(() => {
     let cancelled = false;
 

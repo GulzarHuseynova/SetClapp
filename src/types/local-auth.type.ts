@@ -1,4 +1,4 @@
-export interface LocalCompanyAdminAccount {
+﻿export interface LocalCompanyAdminAccount {
   companyId: string;
   companyName: string;
   voen: string;
@@ -14,7 +14,6 @@ export interface LocalCompanyAdminAccount {
   firstLogin?: boolean;
   isFirstLogin?: boolean;
 }
-
 
 export interface LocalEmployeeAccount {
   id: string;

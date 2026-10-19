@@ -377,7 +377,7 @@ export default function BusinessCard({ detailOnly = false }: BusinessCardProps) 
       return;
     }
 
-    // Brauzer avtomatik kopyalamağa icazə vermədikdə link göstərilir ki, əl ilə kopyalana bilsin.
+    
     modal.info({
       title: 'Linki kopyalayın',
       icon: null,

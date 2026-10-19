@@ -1,4 +1,4 @@
-import { axiosInstance } from '../../api/client';
+﻿import { axiosInstance } from '../../api/client';
 import { normalizeAssetUrl } from '../../utils/asset-url.utils';
 import { findStringDeep, isRecord, cleanObject } from '../../utils/api.utils';
 import { stripSocialLinksFromAdditionalInfo } from '../profile/profile-info';
@@ -28,8 +28,8 @@ const normalizeCustomSocialAccounts = (value: unknown): CustomSocialAccount[] | 
 
 const backendPhotoUrlValue = (value: unknown) => {
   const text = String(value ?? '').trim();
-  // JSON profil payload-ına yalnız backend URL göndərilir. Yeni şəkil ayrıca
-  // /api/CompanyAdmin/users/{id}/photo endpointinə multipart/form-data ilə yüklənir.
+  
+  
   return /^https?:\/\//i.test(text) ? text : '';
 };
 
@@ -80,9 +80,9 @@ const buildSwaggerCreateUserPayload = (
     Object.values(socials),
   );
 
-  // CreateUserDto əlavə property qəbul etmir. Yalnız Swagger modelində olan
-  // sahələri göndəririk; photoUrl/cardBackgroundUrl/canEdit/dateOfBirth kimi
-  // sahələr POST zamanı 400 Bad Request yarada bilər.
+  
+  
+  
   return cleanObject({
     companyId: getPayloadString(payload, 'companyId'),
     firstName: getPayloadString(payload, 'firstName'),
@@ -120,8 +120,8 @@ export const buildSwaggerUpdateUserPayload = (
     Object.values(socials),
   );
 
-  // UpdateUserProfileDto-ya tam uyğun payload. dateOfBirth əvəzinə birthday,
-  // telefon/e-poçt məlumatları üçün isə contactInfos göndərilir.
+  
+  
   return cleanObject({
     firstName: getPayloadString(payload, 'firstName'),
     lastName: getPayloadString(payload, 'lastName'),
@@ -331,7 +331,7 @@ const convertPhotoToJpeg = async (file: File) => {
     const context = canvas.getContext('2d');
     if (!context) throw new Error('Şəkli emal etmək mümkün olmadı.');
 
-    // JPEG şəffaf fon saxlamadığı üçün şəffaf sahələri ağ fonla doldururuq.
+    
     context.fillStyle = '#ffffff';
     context.fillRect(0, 0, width, height);
     context.drawImage(image, 0, 0, width, height);
@@ -365,8 +365,8 @@ const normalizeEmployeePhotoUploadFile = async (file: File): Promise<File> => {
     });
   }
 
-  // WEBP, BMP və brauzerin aça bildiyi digər şəkillər backendin qəbul etdiyi
-  // JPG formatına çevrilir. Beləliklə endpointə image/webp və ya application/octet-stream getmir.
+  
+  
   return convertPhotoToJpeg(file);
 };
 
@@ -393,8 +393,8 @@ const findCreatedEmployeeIdOnce = async (
   responseData: unknown,
   payload: Record<string, unknown>,
 ) => {
-  // Əvvəlcə konkret employee identifikatorlarını axtarırıq. Dərin obyektlərdəki
-  // istənilən "id" companyId ola bildiyi üçün generic id yalnız top-level-də oxunur.
+  
+  
   const directEmployeeId = getExactStringDeep(responseData, ['userId', 'employeeId', 'cardId']);
   if (directEmployeeId) return directEmployeeId;
 
@@ -444,7 +444,7 @@ const findCreatedEmployeeIdOnce = async (
       }
     }
   } catch {
-    // İşçi yaradılması uğurlu qalıb; siyahıdan ID tapılmasa foto yükləməsi ayrıca buraxılır.
+    
   }
 
   return '';

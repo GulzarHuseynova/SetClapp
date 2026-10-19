@@ -1,4 +1,4 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 import { userService } from '../../services/user.service';
 import {addLocalAuditLog,applyLocalEmployeeOverrideToRecord,employeeToRecord,findLocalEmployeeById,findLocalEmployeeOverride,saveLocalEmployeeOverride,updateLocalEmployeeById,type LocalEmployeeAccount,} from '../../storage/local-auth/employee-local-auth';
 import { getStoredUser, patchStoredUser } from '../../storage/auth.storage';
@@ -321,8 +321,8 @@ const cleanVisibleAdditionalInfo = (value: unknown) => {
 const buildAdditionalInfo = (record: Record<string, unknown>) => {
   const extras = Array.isArray(record.extras) ? record.extras as Array<Record<string, unknown>> : [];
 
-  // Sosial linklər ayrıca sosial sahələrdə saxlanılır. Onları additionalInfo daxilinə
-  // yenidən yazmırıq ki, public kartda "Əlavə məlumat" kimi təkrarlanmasın.
+  
+  
   return extras
     .filter((item) => {
       const label = normalizeString(item.label);
@@ -359,7 +359,7 @@ const cleanProfileDto = (dto: Record<string, unknown>) => Object.fromEntries(
 
 const asBackendPhotoUrl = (value: unknown) => {
   const text = cleanProfileText(value);
-  // /api/User/profile/photo multipart endpoint-i var. PUT /api/User/profile-ə base64 göndərmirik.
+  
   if (/^https?:\/\//i.test(text)) return text;
   return '';
 };
@@ -374,8 +374,8 @@ const buildUpdateUserProfileDto = (payload: unknown) => {
   const photoUrl = asBackendPhotoUrl(record.photoUrl || record.photo);
   const cardBackgroundUrl = asBackendPhotoUrl(record.cardBackgroundUrl || record.cardBackground);
 
-  // OpenAPI UpdateUserProfileDto-da yalnız bu field-lər var.
-  // Boş string göndərmirik: bəzi backend validasiyaları boş field-lərə 400 qaytarır.
+  
+  
   const socialAccounts = Array.isArray(record.socialAccounts)
     ? (record.socialAccounts as Array<Record<string, unknown>>)
       .map((item) => {
@@ -635,8 +635,8 @@ export const userActions = {
       return result;
     };
 
-    // userId companyId/e-mail/local id kimi olanda PUT /api/User/profile backenddə 400 verir.
-    // Belə sessiyada səhv request atmırıq, kart məlumatını lokal override ilə qoruyuruq.
+    
+    
     if (!isUsefulBackendUserId(userId)) {
       return saveLocalProfile();
     }
@@ -655,7 +655,7 @@ export const userActions = {
     formData.append('file', preparedFile, preparedFile.name);
 
     try {
-      // Content-Type-i əl ilə yazmırıq. Brauzer multipart boundary-ni özü əlavə edir.
+      
       const response = await userService.uploadProfilePhoto(formData);
       const rawData = response.data;
       const photoUrl = normalizeAssetUrl(

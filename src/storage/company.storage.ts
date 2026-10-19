@@ -1,4 +1,4 @@
-import { runtimeStorage } from './runtime.storage';
+﻿import { runtimeStorage } from './runtime.storage';
 import { API_BASE_URL, axiosInstance } from '../api/client';
 import {asNumber,asString,cleanObject,extractCompanyId,extractCompanyVoen,findDeep,findObjectDeep,isRecord,normalizeArray,unwrapData,type AnyRecord,} from '../utils/api.utils';
 import { updateLocalCompanyAdminCompany } from './local-auth/company-admin-local-auth';
@@ -58,7 +58,6 @@ export const cleanupCompanyLogoStorage = () => {
     void error;
   }
 };
-
 
 const readAppStorage = (key: string) => {
   const runtimeValue = runtimeStorage.getItem(key);
@@ -175,7 +174,6 @@ export const getSavedCompanyVoen = () => {
   const storedUser = getStoredUser();
   return storedUser?.companyVoen || extractCompanyVoen(storedUser?.accountInfo) || '';
 };
-
 
 const companyInfoStorageKeys = (companyId?: string, voen?: string) => [
   companyId ? `companyInfo:${companyId}` : '',

@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+﻿import { useSyncExternalStore } from 'react';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ResolvedTheme = 'light' | 'dark';
@@ -44,7 +44,7 @@ const persistMode = () => {
   try {
     window.localStorage.setItem(THEME_STORAGE_KEY, mode);
   } catch {
-    /* saxlamaq mümkün deyil — seçim yalnız bu sessiyada qalır */
+    
   }
 };
 

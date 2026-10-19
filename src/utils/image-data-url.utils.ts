@@ -1,4 +1,4 @@
-import { API_TARGET_URL } from '../api/client';
+﻿import { API_TARGET_URL } from '../api/client';
 import { normalizeAssetUrl, normalizeInlineImageData } from './asset-url.utils';
 import { readPersistentImage, writePersistentImage } from '../storage/persistent-image-cache';
 
@@ -69,8 +69,8 @@ export const imageAssetToDataUrl = async (
   const fetchUrl = getSafeImageFetchUrl(value);
   if (!fetchUrl || /^blob:/i.test(fetchUrl)) return cachedImage;
 
-  // API şəkilləri eyni-origin /api və /uploads proxy yolu ilə oxunur. Başqa
-  // domenlər CORS icazəsi vermirsə son IndexedDB nüsxəsi istifadə olunur.
+  
+  
   if (/^https?:\/\//i.test(fetchUrl)) {
     try {
       if (typeof window === 'undefined' || new URL(fetchUrl).origin !== window.location.origin) {

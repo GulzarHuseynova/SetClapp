@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+﻿import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Avatar, Checkbox, Form, Input, Modal, Space, Switch, Upload } from 'antd';
 import { message } from '../../../../utils/antd-static';
 import {CalendarOutlined,CreditCardOutlined,DeleteOutlined,DownloadOutlined,EditOutlined,EnvironmentOutlined,FacebookOutlined,FileExcelOutlined,GlobalOutlined,Html5Outlined,ImportOutlined,InstagramOutlined,LinkOutlined,LinkedinOutlined,MailOutlined,PhoneOutlined,PlusOutlined,SendOutlined,TikTokOutlined,UploadOutlined,UserOutlined,WhatsAppOutlined,XOutlined,YoutubeOutlined,} from '@ant-design/icons';
@@ -56,7 +56,7 @@ const linkPlaceholderForPlatform = (platformName?: string) => {
   return 'https://...';
 };
 
-// Telefon və WhatsApp üçün adi mətn əvəzinə ölkə kodu seçilən nömrə sahəsi göstərilir.
+
 const isPhoneLinkPlatform = (platformName?: string) => ['phone', 'whatsapp'].includes(directContactPlatform(platformName));
 
 const normalizeLinkValueForPlatform = (platformName: string, value?: string) => {
@@ -536,7 +536,7 @@ export function EditEmployeeModal({
   } : undefined;
 
   const backgroundFileRef = useRef<File | undefined>(undefined);
-  // Əvvəlki işçi üçün seçilmiş fon faylı başqa işçinin yadda saxlanmasına qarışmasın.
+  
   useEffect(() => {
     backgroundFileRef.current = undefined;
   }, [selectedEditUserId, isOpen]);

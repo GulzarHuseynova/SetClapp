@@ -1,13 +1,13 @@
-// Şirkət kartı rəngi: layihədəki #185582 ailəsinə aid rəngləri (CSS dəyişənləri) seçilmiş rəngə uyğun çevirir.
+﻿
 
 import { BRAND_DARK_BASE_COLOR, DEFAULT_BRAND_COLOR } from '../constants/colors';
 
 const HEX_RE = /^#[0-9a-f]{6}$/i;
-// Brend rənginə aid olmayan rənglər (boz, yaşıl, qırmızı və s.) toxunulmaz qalır.
+
 const FAMILY_HUE_MIN = 180;
 const FAMILY_HUE_MAX = 245;
 const FAMILY_MIN_SATURATION = 0.2;
-// Düymə mətni ağdır: açıq rənglər oxunmaz olmasın deyə açıq rejimdə lightness bu həddi keçmir.
+
 const MAX_LIGHT_LIGHTNESS = 0.46;
 const MIN_DARK_LIGHTNESS = 0.4;
 
@@ -53,7 +53,7 @@ const hslToHex = ([h, s, l]: Hsl): string => {
 };
 
 const BASE_LIGHT = hexToHsl(DEFAULT_BRAND_COLOR);
-// Tünd rejimdə #185582 üçün istifadə olunan əsas rəng (theme-colors.css: --color-primary).
+
 const BASE_DARK = hexToHsl(BRAND_DARK_BASE_COLOR);
 
 export const isFamilyColor = (hex: string) => {
@@ -61,19 +61,19 @@ export const isFamilyColor = (hex: string) => {
   return h >= FAMILY_HUE_MIN && h <= FAMILY_HUE_MAX && s >= FAMILY_MIN_SATURATION;
 };
 
-/** Seçilmiş rəngin düymə/mətn üçün tətbiq olunan variantı (açıq rejim). */
+
 export const resolveBrandPrimary = (color: string): string => {
   const [h, s, l] = hexToHsl(color);
   return hslToHex([h, s, Math.min(l, MAX_LIGHT_LIGHTNESS)]);
 };
 
-/** Tünd rejimdə fonda oxunan variant. */
+
 export const resolveBrandPrimaryDark = (color: string): string => {
   const [h, s, l] = hexToHsl(color);
   return hslToHex([h, s, clamp(l + 0.06, MIN_DARK_LIGHTNESS, 0.6)]);
 };
 
-/** Brend ailəsindən olan bir rəngi seçilmiş rəngin tonuna köçürür; digər rənglər dəyişmir. */
+
 export const recolor = (hex: string, brand: string, mode: 'light' | 'dark'): string => {
   const source = normalizeHex(hex);
   if (!source || !isFamilyColor(source) || normalizeHex(brand) === DEFAULT_BRAND_COLOR) return hex;
@@ -82,7 +82,7 @@ export const recolor = (hex: string, brand: string, mode: 'light' | 'dark'): str
   const base = mode === 'dark' ? BASE_DARK : BASE_LIGHT;
   const wantedL = mode === 'dark' ? clamp(targetL + 0.06, MIN_DARK_LIGHTNESS, 0.6) : Math.min(targetL, MAX_LIGHT_LIGHTNESS);
   const [h, s, l] = hexToHsl(source);
-  // Tünd rejimdə fon səthləri (tünd tonlar) açılmır: yalnız rəng tonu dəyişir, aksent rənglər isə seçilmiş rəngə uyğunlaşır.
+  
   const weight = mode === 'dark' && l < 0.3 ? 0 : clamp((1 - l) / (1 - base[2]), 0, 1);
   const satRatio = base[1] > 0 ? targetS / base[1] : 1;
 

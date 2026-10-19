@@ -1,4 +1,4 @@
-const SOCIAL_LABEL_PATTERN = /^(linkedin|facebook|instagram|youtube|tiktok|twitter|x(?:\.com)?|telegram|sosial(?:\s+şəbəkə(?:lər)?)?|social(?:\s+media)?)\s*$/i;
+﻿const SOCIAL_LABEL_PATTERN = /^(linkedin|facebook|instagram|youtube|tiktok|twitter|x(?:\.com)?|telegram|sosial(?:\s+şəbəkə(?:lər)?)?|social(?:\s+media)?)\s*$/i;
 const SOCIAL_URL_PATTERN = /(?:https?:\/\/)?(?:www\.)?(?:linkedin|facebook|instagram|youtube|tiktok|twitter|x)\.com\//i;
 
 const normalizeComparableUrl = (value: unknown) => String(value ?? '')
@@ -7,7 +7,6 @@ const normalizeComparableUrl = (value: unknown) => String(value ?? '')
   .replace(/^https?:\/\//, '')
   .replace(/^www\./, '')
   .replace(/\/+$/, '');
-
 
 export const stripSocialLinksFromAdditionalInfo = (
   value: unknown,

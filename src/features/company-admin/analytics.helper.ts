@@ -1,4 +1,4 @@
-import { analyticsService } from '../../services/analytics.service';
+﻿import { analyticsService } from '../../services/analytics.service';
 import type { AnalyticsQueryParams, ScanLogParams } from '../../types/company-admin.type';
 import { asNumber, findDeep, normalizeArray, unwrapData } from '../../utils/api.utils';
 import { getLocalAnalytics } from '../../storage/local-auth/employee-local-auth';
@@ -58,7 +58,7 @@ const toTimestamp = (value: string) => {
   const direct = new Date(value).getTime();
   if (Number.isFinite(direct)) return direct;
 
-  // API/local mock may return DD.MM.YYYY or DD.MM.YYYY HH:mm strings.
+  
   const match = value.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})(?:[ T](\d{1,2}):?(\d{2})?)?/);
   if (!match) return Number.NaN;
   const [, day, month, year, hour = '0', minute = '0'] = match;
@@ -150,8 +150,6 @@ const buildLocalRanking = (rows: unknown[]) => {
     }));
 };
 
-// Lokal fallback (storage oxunması və parse) yalnız API istifadə oluna bilməyəndə hesablanır;
-// əks halda hər filtr klikində sorğudan əvvəl əsas thread boş yerə yüklənirdi.
 const requestOrFallback = async <T>(
   request: () => Promise<{ data: unknown }>,
   getFallback: () => T,
@@ -162,8 +160,8 @@ const requestOrFallback = async <T>(
 
   try {
     const response = await request();
-    // Empty arrays and zero are valid filtered API results. Do not silently
-    // replace them with unfiltered local data; that made the period filters look broken.
+    
+    
     return mapper(response.data);
   } catch {
     return getFallback();

@@ -139,8 +139,8 @@ export default function AppLayout({
   };
 
   const navigateCompanyAdminPage = (path: string) => {
-    // Menyu keçidini UI animasiyasından ayırırıq: əvvəl route dəyişir, sonra drawer bağlanır.
-    // Bu yanaşma mobil drawer-in inert/focus vəziyyətinin naviqasiyanı bloklamasının qarşısını alır.
+    
+    
     setProfileOpen(false);
 
     if (location.pathname !== path) {

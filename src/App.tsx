@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router';
 
 import { AntdAppProvider } from './components/antd-app-provider';
@@ -21,8 +21,8 @@ const cleanBrowserStorage = () => {
 
     const value = localStorage.getItem(key);
 
-    // İşçi məlumatları, override-lar və şirkət cache-i login zamanı silinməsin.
-    // Bütün persistent runtime açarlarını əvvəlcə session/IndexedDB qatına köçürürük.
+    
+    
     if (value !== null && isPersistentRuntimeKey(key)) {
       runtimeStorage.setItem(key, value);
     }
@@ -36,7 +36,7 @@ const hasValidSession = () => {
   return readAuthStateFromStorage().isAuthenticated;
 };
 
-// Giriş etmiş istifadəçinin şirkətinin seçdiyi kart rəngini tətbiq edir (Super Admin üçün standart rəng qalır).
+
 function BrandSync({ active }: { active: boolean }) {
   const companyId = useAuthSelector((state) => state.companyId);
   const role = useAuthSelector((state) => state.role);

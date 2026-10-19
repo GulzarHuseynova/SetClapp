@@ -1,4 +1,4 @@
-import { companyService } from '../../services/company.service';
+﻿import { companyService } from '../../services/company.service';
 import { getStoredUser } from '../../storage/auth.storage';
 import { asString, findStringDeep, isRecord, normalizeArray } from '../../utils/api.utils';
 import {addLocalAuditLog,employeeToRecord,getLocalEmployeesForCompany,readLocalAuditLogs,saveLocalEmployeeOverride,setLocalEmployeeMustChangePassword,} from '../../storage/local-auth/employee-local-auth';
@@ -15,8 +15,6 @@ import {patchCompanyUsersCache,readCompanyUsersCache,saveCompanyUsersCache,toLoc
 import {buildBaseUserPayload,buildUpdateUserPayload,getUploadedPhotoUrl, postUserWithOptionalPhoto,putUserWithOptionalPhoto,} from './company-user-payloads';
 import { buildCurrentCompanyUpdatePayload,buildLocalCompanyFallback,createLocalEmployee, getCreatedEmployeeId, getEmployeeBeforeState,persistCompanyInfo, updateEmployeeLocalState,} from './company-user-local';
 import type { AddUserPayload, CompanyInfo, NormalizedUser, UpdateUserPayload } from '../../types/company.type';
-
-
 
 const hydrateUsersWithPersistentPhotoData = async (
   users: NormalizedUser[],
@@ -260,7 +258,6 @@ export const companyActions = {
     return saveLocal(createdUser, backendPhotoUrl);
   },
 
-
   updateUserProfile: async (userId: string, payload: UpdateUserPayload, userSnapshot?: Partial<NormalizedUser>) => {
     const companyId = userSnapshot?.companyId || getSavedCompanyId();
     const companyVoen = userSnapshot?.companyVoen || getSavedCompanyVoen();
@@ -284,19 +281,19 @@ export const companyActions = {
     };
 
     const updateLocal = (apiData?: unknown) => {
-      // Yeni şəkil/fon yüklənibsə keşdəki köhnə fayl göstərilməsin deyə URL versiyası yenilənir.
+      
       if (photoFile) bumpAssetVersion(userId, 'photo');
       if (cardBackgroundFile || normalizeInlineImageData(profilePayload.cardBackgroundUrl)) bumpAssetVersion(userId, 'background');
       const normalizedApiData = apiData && typeof apiData === 'object' ? normalizeUser(apiData) : undefined;
       const responsePhoto = getUploadedPhotoUrl(apiData) || normalizeAssetUrl(normalizedApiData?.photoUrl || normalizedApiData?.photo);
       const existingPhoto = normalizeAssetUrl(patch.photoUrl || patch.photo) || snapshotPhoto;
-      // Foto dəyişdirilməyibsə sosial şəbəkə update response-i mövcud şəkli
-      // boş və ya köhnə dəyərlə əvəz etməməlidir. Yeni foto seçiləndə isə
-      // formadakı seçilmiş şəkil backend-in köhnə cavabından üstün tutulur.
-      // Yeni fayl seçiləndə həmin fayldan hazırlanmış data URL lokal əsas mənbədir.
-      // Yeni foto ayrıca employee photo endpointinə yüklənir. Upload cavabındakı
-      // backend photoUrl lokal preview-dən üstün saxlanılır ki, QR/VCF başqa cihazda da
-      // həmin server şəklindən istifadə edə bilsin.
+      
+      
+      
+      
+      
+      
+      
       const selectedPhotoData = photoFile ? (payloadPhotoData || localPhotoData) : localPhotoData;
       if (selectedPhotoData) {
         void writePersistentImage(employeePhotoImageKey(companyId, userId, userSnapshot?.email), selectedPhotoData);
@@ -487,10 +484,10 @@ export const companyActions = {
     const companyVoen = getSavedCompanyVoen();
     const localLogs = readLocalAuditLogs(companyId, companyVoen).map(normalizeAuditLog);
 
-    // Company Admin tokeni ilə backend-də /api/AuditLog endpointləri icazəsizdir (403),
-    // /api/CompanyAdmin/audit-logs və /api/CompanyAdmin/logs isə mövcud deyil (404).
-    // Bu endpointləri hər səhifə açılışında çağırmaq DevTools-da qırmızı error yaradırdı.
-    // Ona görə Company Admin panelində yalnız mövcud lokal audit qeydləri göstərilir.
+    
+    
+    
+    
     return localLogs;
   },
 

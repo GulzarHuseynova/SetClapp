@@ -1,4 +1,4 @@
-import { runtimeStorage } from '../../storage/runtime.storage';
+﻿import { runtimeStorage } from '../../storage/runtime.storage';
 import { employeeToRecord, getLocalEmployeesForCompany } from '../../storage/local-auth/employee-local-auth';
 import { getSavedCompanyId, getSavedCompanyVoen } from '../../storage/company.storage';
 import { normalizeUser, normalizeUserWithLocalOverride } from '../../mappers/company.mapper';
@@ -29,7 +29,7 @@ export const saveCompanyUsersCache = (companyId: string, companyVoen: string, us
     runtimeStorage.setItem(getCompanyUsersCacheKey(companyId, companyVoen), JSON.stringify(filterCompanyUsers(users)));
     localStorage.removeItem(getCompanyUsersCacheKey(companyId, companyVoen));
   } catch {
-    // Cache yazılmasa da əsas iş axını pozulmasın.
+    
   }
 };
 
@@ -77,7 +77,7 @@ export const patchCompanyUsersCache = (patch: Partial<NormalizedUser>) => {
       runtimeStorage.setItem(key, JSON.stringify(filterCompanyUsers(nextUsers)));
       localStorage.removeItem(key);
     } catch {
-      // Cache yenilənməsə UI state və override əsas mənbə kimi qalır.
+      
     }
   }
 };

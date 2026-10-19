@@ -32,7 +32,6 @@ export function useSuperAdminController(onLogout?: SuperAdminProps['onLogout']) 
   const [editLogoName, setEditLogoName] = useState('');
   const [editLogoDataUrl, setEditLogoDataUrl] = useState('');
 
-
   const replaceCompanyInState = useCallback((updatedCompany: ApiCompany) => {
     setCompanies((previous) => {
       const normalized = normalizeCompanyForUi(updatedCompany);
@@ -536,7 +535,6 @@ export function useSuperAdminController(onLogout?: SuperAdminProps['onLogout']) 
       setLimitLoadingId(null);
     }
   };
-
 
   return {
     activeLoadingId,

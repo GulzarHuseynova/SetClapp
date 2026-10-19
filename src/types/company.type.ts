@@ -1,4 +1,4 @@
-export interface AddUserPayload {
+﻿export interface AddUserPayload {
   companyId: string;
   firstName: string;
   lastName: string;
@@ -95,7 +95,7 @@ export interface NormalizedCompanyInfo {
 
 export interface NormalizedUser {
   id: string;
-  // Yalnız addUser/updateUserProfile nəticəsində: işçi saxlanıldı, amma şəkil serverə yüklənmədi.
+  
   photoUploadFailed?: boolean;
   firstName: string;
   lastName: string;

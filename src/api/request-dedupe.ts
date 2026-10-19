@@ -1,11 +1,10 @@
-import axios, { type AxiosAdapter, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
+﻿import axios, { type AxiosAdapter, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 
 const buildRequestKey = (config: InternalAxiosRequestConfig) => [
   axios.getUri(config),
   config.responseType || 'json',
   String(config.headers.get('Authorization') ?? ''),
 ].join('|');
-
 
 export const createDedupedAdapter = (baseAdapter: AxiosAdapter): AxiosAdapter => {
   const inFlight = new Map<string, Promise<AxiosResponse>>();

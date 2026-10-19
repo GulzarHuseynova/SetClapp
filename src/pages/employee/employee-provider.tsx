@@ -55,7 +55,7 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
           const publicProfile = await fetchPublicCardProfile(userId, "Direct");
           if (publicProfile) fallbackCard = mapUserToCard(publicProfile, fallbackCard);
         } catch {
-          // Şəxsi profil endpoint-i əlçatan olmasa belə backend/login keşindən kartı göstəririk.
+          
         }
       }
 
@@ -172,7 +172,6 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
     reader.readAsDataURL(file);
   };
 
-
   const handleCardBackground = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = "";
@@ -205,7 +204,7 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
         throw new Error("Backend kart fonunun URL-ni qaytarmadı.");
       }
 
-      // Backend eyni URL qaytara bilər: brauzer keşindən köhnə fon görünməsin.
+      
       cardBackground = appendCacheBust(cardBackground);
       setCard((previous) => ({ ...previous, cardBackground }));
       setDraft((previous) => ({ ...previous, cardBackground }));

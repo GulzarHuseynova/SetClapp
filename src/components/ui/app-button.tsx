@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+﻿import { Button } from 'antd';
 import type { AppButtonProps, AppButtonTone } from '../../types/ui.type';
 
 const BASE_CLASSES =
@@ -9,7 +9,7 @@ const TONE_CLASSES: Record<AppButtonTone, string> = {
     '!border-(color:--color-primary-border) !bg-(color:--color-primary) !text-white hover:!border-(color:--color-primary-hover-border) hover:!bg-(color:--color-primary-hover) focus:!border-(color:--color-primary-border) focus:!bg-(color:--color-primary)',
   secondary:
     '!border-(color:--color-primary-border) !bg-white !text-(color:--color-primary-text) hover:!border-(color:--color-primary-hover-border) hover:!text-(color:--fg-12466c)',
-  // Vizitkartdakı əməliyyat düymələri: secondary kimi, amma mətn kartın digər yazıları ilə eyni tondadır.
+  
   muted:
     '!border-(color:--color-primary-border) !bg-white !text-(color:--color-action-text) hover:!border-(color:--color-primary-hover-border) hover:!text-(color:--fg-35566a)',
   danger:

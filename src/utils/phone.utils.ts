@@ -1,9 +1,9 @@
-import type { CountryPhoneOption } from '../types/phone.type';
+﻿import type { CountryPhoneOption } from '../types/phone.type';
 import { buildCountryPhoneOptions } from '../constants/country-calling-codes';
 
 export const DEFAULT_PHONE_COUNTRY_CODE = '+994';
 
-// Bütün ölkələrin zəng kodları (ölkə adları və bayraqlar ISO koddan yaradılır).
+
 export const COUNTRY_PHONE_OPTIONS: CountryPhoneOption[] = buildCountryPhoneOptions();
 
 const cleanPhoneDigits = (value?: string | null) => String(value || '').replace(/\D/g, '');
@@ -68,7 +68,7 @@ export const normalizePhoneForInput = (value?: string | null, fallbackCode = DEF
 
 export const normalizePhoneForBackend = (value?: string | null) => normalizePhoneForInput(value) || '';
 
-// Saxlanmış əlaqə linkindən ("tel:+994..." və ya "https://wa.me/994...") nömrəni çıxarır; nömrə sahəsi üçündür.
+
 export const phoneFromContactLink = (value?: string | null) => {
   const text = String(value || '').trim();
   if (!text) return '';

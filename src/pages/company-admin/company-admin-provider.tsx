@@ -57,7 +57,7 @@ const toFiniteNumber = (value: unknown): number => {
 
 const EMPTY_ANALYTICS: AnalyticsSnapshot = { count: 0, chart: [], ranking: [], logs: [] };
 
-// Analitika sorğuları və cavabın normallaşdırılması; state-dən asılı deyil ki, nəticə keşlənə bilsin.
+
 const loadAnalyticsSnapshot = async (params?: ScanLogParams): Promise<AnalyticsSnapshot> => {
   const [count, chart, ranking, logs] = await Promise.all([
     analyticsActions.getScansCount(params).catch(() => 0),
@@ -250,7 +250,7 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
     setScanLogs(snapshot.logs);
   }, []);
 
-  // Eyni dövr üçün gedən sorğu təkrarlanmır; bitən nəticə keşə yazılır.
+  
   const loadAnalyticsCached = useCallback((params: ScanLogParams | undefined, cacheKey: string) => {
     const pending = analyticsPendingRef.current.get(cacheKey);
     if (pending) return pending;
@@ -266,7 +266,7 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
     return request;
   }, []);
 
-  // cacheKey verilərsə keşdəki nəticə dərhal göstərilir, sonra fonda yenilənir.
+  
   const fetchAnalytics = useCallback(async (params?: ScanLogParams, cacheKey?: string) => {
     const requestId = ++analyticsRequestRef.current;
     const cached = cacheKey ? analyticsCacheRef.current.get(cacheKey) : undefined;
@@ -290,7 +290,7 @@ export function CompanyAdminProvider({ children }: { children: ReactNode }) {
     try {
       await loadAnalyticsCached(params, cacheKey);
     } catch {
-      // Əvvəlcədən yükləmə uğursuz olsa, dövr seçiləndə adi qaydada yüklənəcək.
+      
     }
   }, [loadAnalyticsCached]);
 
@@ -589,9 +589,9 @@ const uploadCompanyLogo = async (file: File) => {
 
   const activeUsersList = usersList.filter((user) => user.isActive !== false);
 
-  // Audit log üçün əvvəlki vizual fallback saxlanılır. Analitika üçün isə
-  // helper artıq backend/local fallback-i özü həll edir; boş nəticə real filtr
-  // nəticəsi ola bildiyi üçün onu saxta məlumatla əvəz etmirik.
+  
+  
+  
   const fallbackAuditLogs: AuditLogRow[] = activeUsersList.map((user) => ({
     key: `employee-${user.id || user.email}`,
     date: new Date().toISOString(),

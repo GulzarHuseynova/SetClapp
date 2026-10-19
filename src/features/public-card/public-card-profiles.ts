@@ -1,4 +1,4 @@
-import { runtimeStorage } from '../../storage/runtime.storage';
+﻿import { runtimeStorage } from '../../storage/runtime.storage';
 import { publicAxiosInstance } from '../../api/client';
 import { asBoolean, asNumber, findDeep, findStringDeep, isRecord, normalizeArray, unwrapData, type AnyRecord } from '../../utils/api.utils';
 import { findLocalEmployeeById, readLocalEmployeeAccounts, type LocalEmployeeAccount } from '../../storage/local-auth/employee-local-auth';
@@ -36,7 +36,7 @@ const readCardBackground = (record: AnyRecord) => normalizeAssetUrl(
     ])
 );
 
-// Yeni fon yükləndikdən sonra brauzer keşindəki köhnə faylı göstərməsin (bax: utils/asset-version.ts).
+
 const getCardBackgroundFromRecord = (record: AnyRecord) =>
   withAssetVersion(readCardBackground(record), String(record.id ?? record.userId ?? record.employeeId ?? ''), 'background');
 
@@ -219,8 +219,8 @@ const mergePublicContactPhones = (
   if (result.length === 0) {
     fallbacks.forEach((group) => append(group));
   } else if (!result.some((phone) => isWhatsappContact(phone.type))) {
-    // Public endpoint əsas telefonları qaytarıb WhatsApp sahəsini buraxdıqda yalnız
-    // çatışmayan WhatsApp nömrəsini lokal/saxlanmış profildən tamamlayırıq.
+    
+    
     fallbacks.forEach((group) => append(group, true));
   }
 
@@ -673,8 +673,8 @@ export const fetchPublicCardProfile = async (
   const cleanId = decodeURIComponent(id || '').trim();
   if (!cleanId) return null;
 
-  // Public card həmişə backend public endpoint-dən yüklənir. Bu sorğu Network-də
-  // görünür və giriş tokenindən asılı deyil. Session məlumatı yalnız fallback-dir.
+  
+  
   const storedProfile = findStoredPublicCardProfile(cleanId);
 
   try {

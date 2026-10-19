@@ -1,4 +1,4 @@
-import { authService } from '../../services/auth.service';
+﻿import { authService } from '../../services/auth.service';
 import { cleanupLegacyAuthStorage, patchStoredUser } from '../../storage/auth.storage';
 import { findLocalCompanyAdminAccount } from '../../storage/local-auth/company-admin-local-auth';
 import { applyLocalEmployeeOverrideToAccount, findLocalEmployeeOverride, localEmployeeAccountInfo, readLocalEmployeeAccounts, saveLocalEmployeeAccount } from '../../storage/local-auth/employee-local-auth';
@@ -72,7 +72,7 @@ export const login = async (payload: LoginFormValues): Promise<LoginResponse> =>
     const response = await authService.login(buildLoginPayload(payload));
     loginData = response.data;
   } catch (error) {
-    // Giriş yalnız backend tərəfindən təsdiqlənir; lokal/oflayn fallback yoxdur.
+    
     if (isNetworkOrTimeoutError(error)) {
       throw new Error('Serverə qoşulmaq mümkün olmadı. İnternet bağlantısını yoxlayıb yenidən cəhd edin.', { cause: error });
     }
@@ -92,7 +92,7 @@ export const login = async (payload: LoginFormValues): Promise<LoginResponse> =>
   }
 
   localStorage.setItem('token', accessToken);
-  // refreshToken cavabda qala bilər, amma localStorage/sessionStorage-ə yazılmır.
+  
   cleanupLegacyAuthStorage();
 
   let accountInfo: Record<string, unknown> | null = null;
@@ -100,13 +100,13 @@ export const login = async (payload: LoginFormValues): Promise<LoginResponse> =>
     const accountResponse = await authService.getAccountInfo();
     accountInfo = accountResponse.data;
   } catch {
-    // Account info is optional; token data is enough for routing.
+    
   }
 
   const decoded = parseJwt(accessToken);
   const backendRole = extractRole(accountInfo, loginData, decoded);
   const companyVoen = enteredVoen || extractCompanyVoen(accountInfo, loginData, decoded);
-  // Lokal qeyd yalnız şirkət məlumatını tamamlamaq üçündür; rolu backend müəyyən edir.
+  
   const localCompanyAdminAfterApi = backendRole === ROLES.COMPANY_ADMIN
     ? findLocalCompanyAdminAccount(payload.email, companyVoen)
     : null;

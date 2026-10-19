@@ -1,4 +1,4 @@
-import { runtimeStorage } from '../runtime.storage';
+﻿import { runtimeStorage } from '../runtime.storage';
 import type { LocalCompanyAdminAccount } from '../../types/local-auth.type';
 import { normalizeEmail, normalizeVoen } from './local-auth.utils';
 
@@ -12,7 +12,7 @@ const writeStorage = (key: string, value: string) => {
   localStorage.removeItem(key);
 };
 
-// Şifrələr brauzerdə saxlanılmır; köhnə qeydlərdəki şifrə sahəsi oxunarkən silinir.
+
 const stripSecrets = (account: LocalCompanyAdminAccount & { password?: unknown }): LocalCompanyAdminAccount => {
   const rest = { ...account };
   delete rest.password;

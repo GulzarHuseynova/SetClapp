@@ -1,9 +1,5 @@
-import type { CountryPhoneOption } from '../types/phone.type';
+﻿import type { CountryPhoneOption } from '../types/phone.type';
 
-// ISO 3166-1 ölkə kodu | beynəlxalq zəng kodu (ITU E.164) | Azərbaycanca ad. Bir neçə ölkə eyni kodu paylaşa bilər:
-// +1 (ABŞ, Kanada və Şimali Amerika Nömrələmə Planının digər üzvləri), +7 (Rusiya, Qazaxıstan) və s.
-// Adlar brauzerin Intl məlumatından yox, statik yazılıb: bəzi brauzerlər Azərbaycan dilini "dəstəkləyir", amma
-// ingilis adları qaytarır, bu isə axtarışı pozur.
 const COUNTRY_CALLING_CODES = `
 AF|93|Əfqanıstan
 AX|358|Aland adaları
@@ -250,10 +246,8 @@ ZM|260|Zambiya
 ZW|263|Zimbabve
 `;
 
-// Siyahının əvvəlində görünən, ən çox istifadə olunan ölkələr (əvvəlki siyahının ardıcıllığı).
 const PRIORITY_COUNTRIES = ['AZ', 'TR', 'GE', 'RU', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'UA', 'KZ', 'AE', 'SA', 'CN', 'IN'];
 
-// Axtarışda hərf fərqlərini (ə/e, ı/i, ş/s və s.) və böyük-kiçik hərfi nəzərə almır.
 export const normalizeCountrySearch = (value: unknown) =>
   String(value ?? '')
     .normalize('NFD')
@@ -268,10 +262,8 @@ export const normalizeCountrySearch = (value: unknown) =>
     .replace(/ğ/g, 'g')
     .trim();
 
-// ISO kodundan bayraq emojisi (hər hərf müvafiq "regional indicator" simvoluna çevrilir).
 const flagOf = (iso: string) => String.fromCodePoint(...[...iso].map((char) => 0x1f1e6 + char.charCodeAt(0) - 65));
 
-// İngilis adları yalnız axtarış üçündür ("Germany" yazıb Almaniyanı tapmaq); brauzer vermirsə atılır.
 const englishRegionNames = () => {
   try {
     return new Intl.DisplayNames(['en'], { type: 'region' });
@@ -296,7 +288,7 @@ export const buildCountryPhoneOptions = (): CountryPhoneOption[] => {
   });
 
   const options = [...byCode.entries()].map(([value, { countries }]) => {
-    // Kodu paylaşan ölkələrdən əsas olanı (siyahıda əvvəlcə gələn prioritetli, yoxsa ilk) göstərilir.
+    
     const main = PRIORITY_COUNTRIES.find((iso) => countries.includes(iso)) || countries[0];
     const nameOf = (iso: string) => azNames.get(iso) || enNames?.of(iso) || iso;
     const searchText = normalizeCountrySearch([

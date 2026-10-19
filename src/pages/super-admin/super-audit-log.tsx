@@ -391,9 +391,9 @@ function SuperAuditLog() {
     }
   }, []);
 
-  // NOTE: loadLogs synchronously calls setLoading(true) before its first await.
-  // Calling it directly in the effect body trips react-hooks/set-state-in-effect,
-  // so the call is deferred to a microtask/macrotask outside the effect body itself.
+  
+  
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       void loadLogs(pagination.current, pagination.pageSize);

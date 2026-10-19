@@ -1,4 +1,4 @@
-import { Ecc, QrCode } from '@rc-component/qrcode/es/libs/qrcodegen';
+﻿import { Ecc, QrCode } from '@rc-component/qrcode/es/libs/qrcodegen';
 import type { PublicCardProfile, QrDownloadFormat } from '../../types/public-card.type';
 import { getFullName } from './public-card-shared';
 import { buildOfflineQrVCard } from './public-card-vcard';
@@ -48,7 +48,7 @@ const buildQrSvg = (payload: string, size = 600) => {
   });
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${cellCount} ${cellCount}" shape-rendering="crispEdges">
+<svg xmlns="http:
   <rect width="100%" height="100%" fill="#fff"/>
   <g fill="#111827">${rects.join('')}</g>
 </svg>`;

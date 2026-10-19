@@ -1,6 +1,6 @@
-import type { NormalizedUser } from './company.type';
+﻿import type { NormalizedUser } from './company.type';
 
-// HTML export faylında işçini tapmaq və "Əlavə məlumat"-dakı təkrarlanan sosial linkləri təmizləmək üçün lazım olan sahələr.
+
 export type HtmlExportEmployee = Pick<
   NormalizedUser,
   | 'id'

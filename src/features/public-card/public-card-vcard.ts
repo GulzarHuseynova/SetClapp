@@ -1,4 +1,4 @@
-import { API_TARGET_URL } from '../../api/client';
+﻿import { API_TARGET_URL } from '../../api/client';
 import type { PublicCardProfile } from '../../types/public-card.type';
 import { getFullName } from './public-card-shared';
 import { downloadBlob } from '../../utils/download.utils';
@@ -61,7 +61,7 @@ const getPhotoFetchCandidates = (source: string) => {
     const target = API_TARGET_URL ? new URL(API_TARGET_URL) : null;
     if (target && parsed.origin === target.origin) add(`${parsed.pathname}${parsed.search}`);
   } catch {
-    // source data/blob/relative URL ola bilər; aşağıdakı birbaşa namizəd kifayətdir.
+    
   }
 
   add(source);
@@ -134,7 +134,7 @@ const imageToCompactJpeg = (image: HTMLImageElement) => {
     );
     context.restore();
 
-    // Əsas şəkil contain prinsipi ilə yerləşir: heç bir tərəf kəsilmir.
+    
     const contentSide = side * 0.94;
     const containScale = Math.min(contentSide / sourceWidth, contentSide / sourceHeight);
     const width = Math.max(1, Math.round(sourceWidth * containScale));
@@ -160,7 +160,7 @@ const resolveEmbeddedPhoto = async (photo: string) => {
     const image = await loadImage(objectUrl);
     return imageToCompactJpeg(image);
   } catch {
-    // Artıq uyğun inline JPEG/PNG-dirsə ən azı həmin məlumatı VCF-də saxla.
+    
     return /^data:image\/(?:jpeg|jpg|png);base64,/i.test(source) ? source : '';
   } finally {
     if (objectUrl) URL.revokeObjectURL(objectUrl);

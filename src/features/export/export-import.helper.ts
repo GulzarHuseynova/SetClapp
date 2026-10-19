@@ -1,4 +1,4 @@
-import { exportImportService } from '../../services/export-import.service';
+﻿import { exportImportService } from '../../services/export-import.service';
 import type { HtmlExportEmployee } from '../../types/export-import.type';
 import type { QrDownloadFormat } from '../../types/public-card.type';
 import { getSavedCompanyId } from '../../storage/company.storage';
@@ -193,8 +193,8 @@ const patchEmployeeHtmlBlob = async (blob: Blob, employee?: HtmlExportEmployee) 
 const buildSelectedHtmlZip = async (userIds: string[], employees: HtmlExportEmployee[]) => {
   const files: { fileName: string; blob: Blob }[] = [];
 
-  // Hər HTML ayrıca və ardıcıl hazırlanır. Beləliklə bir işçinin endpoint
-  // cavabı və şəkli başqa işçinin faylına qarışmır.
+  
+  
   for (const userId of userIds) {
     const employee = employees.find((item) => item.id === userId);
     const { blob, fileName } = await getBlob(
@@ -315,9 +315,9 @@ export const exportImportActions = {
       return;
     }
 
-    // Swagger-də bunun üçün ayrıca batch endpoint var. İlk olaraq onu istifadə edirik.
-    // Backend batch faylı qaytarmasa, əvvəldən işləyən user/{id} endpoint-ləri ilə
-    // hər işçinin HTML-ni ayrıca alıb bir ZIP-ə yığırıq.
+    
+    
+    
     try {
       const { blob, fileName } = await getBlob(
         exportImportService.exportSelectedHtml(cleanIds),

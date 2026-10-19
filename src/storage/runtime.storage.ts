@@ -1,5 +1,5 @@
-const PERSISTENT_RUNTIME_PREFIXES = [
-  // Login zamanı təyin olunan rol token yaşadıqca qalmalıdır (bax: auth.storage).
+﻿const PERSISTENT_RUNTIME_PREFIXES = [
+  
   'authMeta',
   'employee-password-changed:',
   'employee-password-required:',
@@ -210,7 +210,7 @@ class RuntimeStorage implements Storage {
     try {
       this.browserStorage?.clear();
     } catch {
-      // sessionStorage bloklansa belə memory fallback təmizlənir.
+      
     }
     this.values.clear();
   }
@@ -222,7 +222,7 @@ class RuntimeStorage implements Storage {
       const browserValue = this.browserStorage?.getItem(normalizedKey);
       if (browserValue !== null && browserValue !== undefined) return browserValue;
     } catch {
-      // memory fallback aşağıda oxunur.
+      
     }
 
     return this.values.get(normalizedKey) ?? null;
@@ -238,7 +238,7 @@ class RuntimeStorage implements Storage {
     try {
       this.browserStorage?.removeItem(normalizedKey);
     } catch {
-      // memory və IndexedDB yenə təmizlənir.
+      
     }
 
     this.values.delete(normalizedKey);
@@ -296,6 +296,6 @@ export const hydratePersistentRuntimeStorage = async (): Promise<void> => {
       localStorage.removeItem(key);
     });
   } catch {
-    // Brauzer storage-a icazə verməzsə tətbiq session/memory ilə davam edir.
+    
   }
 };

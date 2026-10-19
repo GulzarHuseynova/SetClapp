@@ -1,4 +1,4 @@
-import { ROLES } from '../constants/roles';
+﻿import { ROLES } from '../constants/roles';
 import type { AnyRecord, NormalizedRole } from '../types/common.type';
 
 export type { AnyRecord, NormalizedRole } from '../types/common.type';
@@ -268,7 +268,6 @@ export const cleanObject = (data: Record<string, unknown>) => {
 export const isGuidLike = (value?: string) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test((value || '').trim());
 
-// findStringDeep-dən fərqli olaraq açar tam uyğun gəlməlidir (endsWith yox) və yalnız string/number qaytarılır.
 export const findStringInObject = (source: unknown, keys: string[]) => {
   if (!source || typeof source !== 'object') return '';
 

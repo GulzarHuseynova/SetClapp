@@ -1,4 +1,4 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 import { getAuthHeaders } from '../utils/api.utils';
 import { createDedupedAdapter } from './request-dedupe';
 
@@ -43,7 +43,6 @@ const TRUSTED_API_ORIGINS = new Set(
   [window.location.origin, toOrigin(API_BASE_URL), toOrigin(API_TARGET_URL)].filter(Boolean)
 );
 
-// Token yalnız öz API-mizə göndərilir; xarici şəkil URL-lərinə sızmamalıdır.
 const isTrustedApiRequest = (url: string, baseURL?: string) => {
   try {
     const base = new URL(baseURL || '/', window.location.origin);

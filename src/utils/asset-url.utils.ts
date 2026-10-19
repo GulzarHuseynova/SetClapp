@@ -1,4 +1,4 @@
-import { API_BASE_URL, API_TARGET_URL } from '../api/client';
+﻿import { API_BASE_URL, API_TARGET_URL } from '../api/client';
 
 const unusableAssetValues = new Set(['', '-', '--', 'null', 'undefined', 'string', '[object object]', 'n/a', 'na', 'yoxdur', 'yox']);
 const imageExtensionPattern = /\.(png|jpe?g|webp|gif|svg|bmp|avif)(\?.*)?$/i;
@@ -47,8 +47,7 @@ const isBrokenEmployeePhotoEndpoint = (value: unknown) => {
   );
 };
 
-// Sosial şəbəkə profil linkləri (məs. linkedin.com/in/...) şəkil deyil, səhifədir: <img src> kimi yüklənmir və
-// brauzer ERR_BLOCKED_BY_RESPONSE xətası verir.
+
 const socialProfileHostPattern = /^(https?:)?\/\/([a-z0-9-]+\.)*(linkedin|facebook|fb|instagram|twitter|x|tiktok|youtube|youtu|wa|t|telegram)\.(com|me|be)(\/|$)/i;
 const isSocialProfileLink = (text: string) => socialProfileHostPattern.test(text) && !imageExtensionPattern.test(text);
 

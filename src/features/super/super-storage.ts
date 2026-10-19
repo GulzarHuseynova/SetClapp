@@ -1,4 +1,4 @@
-import { readLocalCompanyAdminAccounts, saveLocalCompanyAdminAccount } from '../../storage/local-auth/company-admin-local-auth';
+﻿import { readLocalCompanyAdminAccounts, saveLocalCompanyAdminAccount } from '../../storage/local-auth/company-admin-local-auth';
 import type { ApiCompany, CreateCompanyPayload } from '../../types/super.type';
 import { normalizeCompany, readAppStorage, writeAppStorage } from './super-shared';
 const SUPER_COMPANIES_CACHE_KEY = 'superAdminCompaniesCache';
@@ -26,7 +26,7 @@ export const saveCompaniesCache = (companies: ApiCompany[]) => {
   try {
     writeAppStorage(SUPER_COMPANIES_CACHE_KEY, JSON.stringify(companies));
   } catch {
-    // Cache is optional. If storage is full/unavailable, API data still works.
+    
   }
 };
 

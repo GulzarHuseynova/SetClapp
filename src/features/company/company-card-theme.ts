@@ -1,4 +1,4 @@
-import { normalizeAssetUrl } from '../../utils/asset-url.utils';
+﻿import { normalizeAssetUrl } from '../../utils/asset-url.utils';
 import { runtimeStorage, canUseIndexedDb } from '../../storage/runtime.storage';
 
 const COMPANY_CARD_BACKGROUND_PREFIX = 'companyCardBackground:';
@@ -92,7 +92,7 @@ const readRuntimeValue = (key: string) => {
     return runtimeValue;
   }
 
-  // Köhnə versiyada bu məlumat localStorage-də qalıbsa runtime və IndexedDB-yə köçürürük.
+  
   const legacyValue = localStorage.getItem(key);
   if (legacyValue !== null) {
     const normalized = normalizeAssetUrl(legacyValue);

@@ -1,4 +1,4 @@
-import type { ThemeConfig } from 'antd';
+﻿import type { ThemeConfig } from 'antd';
 import {
   BRAND_DARK_LINK_COLOR,
   BRAND_DARK_LINK_HOVER_COLOR,
@@ -7,7 +7,7 @@ import {
   DEFAULT_BRAND_COLOR,
 } from './colors';
 
-// Inline stillərdə istifadə üçün: şirkətin seçdiyi kart rənginə uyğun dəyişir (src/store/brandStore.ts).
+
 export const BRAND_COLOR_VAR = 'var(--color-primary)';
 
 export const BRAND_THEME: ThemeConfig = {
@@ -19,7 +19,7 @@ export const BRAND_THEME: ThemeConfig = {
   },
 };
 
-// Tünd rejim: antd tokenləri (CSS tərəfi: src/styles/tokens.css -> --dark-*).
+
 export const DARK_TOKENS: ThemeConfig['token'] = {
   colorBgBase: DARK_PALETTE.surface,
   colorBgContainer: DARK_PALETTE.surface,

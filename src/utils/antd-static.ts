@@ -1,4 +1,4 @@
-import { message as staticMessage, Modal } from 'antd';
+﻿import { message as staticMessage, Modal } from 'antd';
 import type { MessageInstance } from 'antd/es/message/interface';
 import type { HookAPI as ModalHookAPI } from 'antd/es/modal/useModal';
 
@@ -7,12 +7,8 @@ interface AntdAppApi {
   modal: ModalHookAPI;
 }
 
-// antd-nin statik funksiyaları React kontekstindən kənarda render olunur: theme-i görmür və
-// "Static function can not consume context" xəbərdarlığı verir. Ona görə çağırışlar ən son
-// mount olmuş antd <App> kontekstinə yönləndirilir (səhifə daxilindəki App kökdəkini örtür).
 const registeredApps: AntdAppApi[] = [];
-// App hələ mount olmayıbsa (məs. testlərdə) statik funksiyalar işləyir. Statik Modal nəticəsində
-// hook API-dəki `then` yoxdur; layihədə modal nəticəsi await edilmədiyi üçün fərq yoxdur.
+
 const staticFallback: AntdAppApi = { message: staticMessage, modal: Modal as unknown as ModalHookAPI };
 
 const currentApp = () => registeredApps[registeredApps.length - 1] ?? staticFallback;

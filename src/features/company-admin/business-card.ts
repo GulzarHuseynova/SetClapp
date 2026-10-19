@@ -1,4 +1,4 @@
-import type { AddUserFormValues, UserData } from '../../types/company-admin.type';
+﻿import type { AddUserFormValues, UserData } from '../../types/company-admin.type';
 import type { EmployeeLinkSnapshot } from '../../types/business-card.type';
 
 const readImageFileAsDataUrl = (file: File): Promise<string> => new Promise((resolve, reject) => {
@@ -275,7 +275,7 @@ const writeEmployeeLinkSnapshots = (items: EmployeeLinkSnapshot[]) => {
   try {
     window.localStorage.setItem(EMPLOYEE_LINK_SNAPSHOT_KEY, JSON.stringify(items));
   } catch {
-    // Browser storage əlçatmaz olsa backend/local override axını davam edir.
+    
   }
 };
 

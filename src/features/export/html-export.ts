@@ -1,7 +1,7 @@
-import type { HtmlExportEmployee } from '../../types/export-import.type';
+﻿import type { HtmlExportEmployee } from '../../types/export-import.type';
 import { stripSocialLinksFromAdditionalInfo } from '../profile/profile-info';
 
-// Azərbaycan hərflərini və aksentləri atıb mətni müqayisə üçün hazırlayır.
+
 const normalizeComparableText = (value: unknown) =>
   String(value ?? '')
     .normalize('NFD')
@@ -205,8 +205,8 @@ const sanitizeStandaloneHtmlFrames = (document: Document) => {
   Array.from(document.querySelectorAll('iframe')).forEach((frame) => {
     const source = String(frame.getAttribute('src') || '').trim();
 
-    // Boş iframe src="" standalone file:// HTML-də cari faylı yenidən açmağa
-    // çalışır və Chrome "Unsafe attempt to load URL file:///..." xətası yazır.
+    
+    
     if (!source || source === '#' || source === '.' || source === './') {
       frame.setAttribute('src', 'about:blank');
     }
@@ -220,9 +220,7 @@ const sanitizeStandaloneHtmlFrames = (document: Document) => {
   });
 };
 
-// "Əlavə məlumat"-dakı sosial linklər export zamanı statik təmizlənir
-// (removeDuplicateSocialAdditionalInfo). Bu runtime yalnız səhifənin öz JS-i sonradan
-// əlavə edə biləcəyi iframe-ləri təhlükəsizləşdirir; mətnə toxunmur.
+
 const appendStandaloneHtmlCleanupRuntime = (document: Document) => {
   const script = document.createElement('script');
   script.setAttribute('data-setclapp-export-cleanup', 'true');
@@ -251,8 +249,7 @@ const appendStandaloneHtmlCleanupRuntime = (document: Document) => {
   document.body.appendChild(script);
 };
 
-// Backend şablonu işçi şəklini və kart fonunu özü yazır (ZIP ixracı ilə eyni). Burada yalnız
-// oflayn açılışa mane olan siyasətlər, təkrarlanan sosial linklər və təhlükəli iframe-lər təmizlənir.
+
 export const patchExportedHtml = async (blob: Blob, employees: HtmlExportEmployee[]) => {
   if (typeof DOMParser === 'undefined') return blob;
 

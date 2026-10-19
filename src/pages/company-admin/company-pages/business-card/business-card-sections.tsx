@@ -136,8 +136,8 @@ export function EmployeesTable({
 
   const selectedRouteId = decodeURIComponent(employeeId || '').trim();
   const detailUser = employeeDetailState.key === selectedRouteId ? employeeDetailState.user : null;
-  // Açıq kart ayrıca GET /api/User/{id} ilə yüklənir və redaktədən sonra özü yenilənmirdi: şəkil, fon və
-  // dəyişən sahələr səhifə yenilənənə qədər köhnə qalırdı. İndi siyahıdakı yenilənmiş qeyd üstünə qoyulur.
+  
+  
   const selectedEmployee = useMemo(() => {
     if (!detailUser) return null;
     const keys = [detailUser.id, detailUser.email].map(normalizeIdentity).filter(Boolean);

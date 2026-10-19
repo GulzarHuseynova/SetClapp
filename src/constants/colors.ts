@@ -1,20 +1,15 @@
-// Layihənin əsas rəngləri üçün TƏK mənbə. Başqa yerdə (TS) #185582 kimi brend rəngi yazmayın.
-// CSS-də rənglər src/styles/theme-colors.css (generasiya olunmuş --bg/--fg/--bd-*) və
-// src/styles/tokens.css (--pro-*, --ca-*, --brand-sky-*, --login-*, --dark-*) faylındadır.
+﻿
 
-/** Standart (şirkət rəng seçməyibsə) əsas brend rəngi. */
+
+
 export const DEFAULT_BRAND_COLOR = '#185582';
 export const BRAND_HOVER_COLOR = '#12466c';
-/** Tünd rejimdə --color-primary dəyişəninin dəyəri (src/styles/theme-colors.css). */
+
 export const BRAND_DARK_BASE_COLOR = '#1d669c';
 export const BRAND_DARK_LINK_COLOR = '#6fb1e3';
 export const BRAND_DARK_LINK_HOVER_COLOR = '#9ccbee';
 
-/**
- * Tənzimləmələr səhifəsindəki hazır rənglər.
- * `light` — kanonik (açıq rejim) rəngi; brandStore həmişə bunu saxlayır.
- * `dark`  — tünd rejimdə swatch arxa planı üçün açıq variant (hesablanmır, açıq yazılıb).
- */
+
 export const BRAND_PRESETS = [
   { name: 'Standart',   light: DEFAULT_BRAND_COLOR, dark: '#2a76ab' },
   { name: 'Mavi',       light: '#1d4ed8',           dark: '#4b72ee' },
@@ -28,10 +23,7 @@ export const BRAND_PRESETS = [
   { name: 'Qara-boz',   light: '#334155',           dark: '#6b8198' },
 ] as const;
 
-/**
- * Tünd rejim paleti. antd tokenləri buradan götürülür; CSS-də eyni dəyərlər tokens.css-dəki
- * --dark-* dəyişənləridir (src/constants/colors.test.ts ikisinin eyni qalmasını yoxlayır).
- */
+
 export const DARK_PALETTE = {
   bg: '#0f141a',
   surface: '#171e27',

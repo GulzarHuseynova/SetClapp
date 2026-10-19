@@ -1,4 +1,4 @@
-import { runtimeStorage } from '../../storage/runtime.storage';
+﻿import { runtimeStorage } from '../../storage/runtime.storage';
 import axios from 'axios';
 import { asBoolean, asNumber, asString, extractCompanyId, findDeep, findStringDeep, type AnyRecord, cleanObject } from '../../utils/api.utils';
 import type { ApiCompany, CreateCompanyAdminPayload, CreateCompanyPayload } from '../../types/super.type';
@@ -50,7 +50,7 @@ const cleanupLegacyGlobalLogo = () => {
     clean(localStorage);
     clean(runtimeStorage);
   } catch {
-    // Storage cleanup is best-effort only.
+    
   }
 };
 
@@ -109,7 +109,7 @@ export const getSavedCompanyLimit = (companyId?: string, voen?: string) => {
         if (!Number.isNaN(parsed) && parsed > 0) return parsed;
       }
     } catch {
-      // Ignore unavailable local storage entries.
+      
     }
   }
 
@@ -121,7 +121,7 @@ export const saveCompanyLimitToStorage = (companyId: string, voen: string, limit
     try {
       writeAppStorage(key, String(limit));
     } catch {
-      // Ignore unavailable local storage entries.
+      
     }
   });
 };
@@ -272,8 +272,8 @@ export const buildUpdateCompanyPayload = (payload: CreateCompanyPayload): Record
   const rawLimit = payload.userLimit ?? payload.UserLimit ?? payload.employeeLimit ?? payload.limit;
   const limit = Number(rawLimit || 0);
 
-  // UpdateCompanyDto: name, voen, address, email, phone, logoUrl, userLimit.
-  // Base64/file göndərmirik. Əgər backend özü logoUrl qaytarırsa onu saxlayırıq.
+  
+  
   const logoUrl = (payload.logoUrl || payload.logo || '').trim();
 
   return cleanObject({

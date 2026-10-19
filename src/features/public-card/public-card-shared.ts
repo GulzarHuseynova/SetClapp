@@ -1,4 +1,4 @@
-import { runtimeStorage } from '../../storage/runtime.storage';
+﻿import { runtimeStorage } from '../../storage/runtime.storage';
 import { asString, findStringDeep, normalizeArray, type AnyRecord } from '../../utils/api.utils';
 import { getSavedCompanyLogo, getSavedCompanySnapshot, mapCompanyLogoResponse } from '../../storage/company.storage';
 import { normalizeAssetUrl } from '../../utils/asset-url.utils';
@@ -52,8 +52,8 @@ const normalizeEmployeePhotoValue = (value: unknown, depth = 0): string => {
   if (!text) return '';
   if (isInlinePhoto(text)) return text;
 
-  // Public endpoint bəzi istifadəçilər üçün photoData-nı data URL prefiksi
-  // olmadan xam base64 kimi qaytara bilir.
+  
+  
   const compact = text.replace(/\s+/g, '');
   if (compact.length > 160 && rawBase64ImagePattern.test(compact)) {
     return `data:${rawImageMime(compact)};base64,${compact}`;
@@ -62,11 +62,7 @@ const normalizeEmployeePhotoValue = (value: unknown, depth = 0): string => {
   return normalizeAssetUrl(text);
 };
 
-/**
- * Public kart üçün şəkil seçərkən lokal seçilmiş data/blob şəkli üstün tutulur.
- * Backend bəzən truthy, amma açılmayan köhnə photoUrl qaytardığı üçün sadə `a || b`
- * yanaşması düzgün lokal şəkli kölgədə qoyurdu.
- */
+
 export const pickPublicCardPhoto = (...values: unknown[]) => {
   const normalized = values
     .map((value) => normalizeEmployeePhotoValue(value))
@@ -123,7 +119,7 @@ export const getEmployeePhotoFromRecord = (record: AnyRecord) => {
   const deepValue = findStringDeep(record, keys);
 
   const photo = pickPublicCardPhoto(...directValues, deepValue);
-  // Yeni şəkil yükləndikdən sonra brauzer keşindəki köhnə faylı göstərməsin (bax: utils/asset-version.ts).
+  
   return withAssetVersion(photo, recordOwnerId(record), 'photo');
 };
 
@@ -200,9 +196,9 @@ export const getPublicCardUrl = (employeeId: string, source: ScanSource = 'QR') 
   const cleanId = encodeURIComponent(employeeId || 'card');
   const origin = getPublicCardOrigin();
 
-  // Direct keçiddə browser URL-ni lazımsız ?source=Direct parametrindən təmiz saxlayırıq.
-  // PublicCard özü Direct-i default qəbul edir və məlumat üçün GET /api/cards/{id}
-  // sorğusunu source=Direct ilə backend-ə göndərir.
+  
+  
+  
   if (source === 'Direct') return `${origin}/card/${cleanId}`;
   return `${origin}/card/${cleanId}?source=${source}`;
 };

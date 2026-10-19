@@ -1,11 +1,10 @@
-import { useSyncExternalStore } from 'react';
+﻿import { useSyncExternalStore } from 'react';
 import { authReducer, getInitialAuthState, normalizeRole } from './authSlice';
 import type { AuthAction, AuthState } from '../types/auth-store.type';
 
 export type { AuthAction, AuthState, UserRole } from '../types/auth-store.type';
 
-// İlkin vəziyyət modul import olunanda yox, ilk istifadədə oxunur: main.tsx əvvəlcə
-// IndexedDB-dəki davamlı məlumatları (rol daxil) bərpa edir, sonra tətbiqi render edir.
+
 let state: AuthState | null = null;
 const listeners = new Set<() => void>();
 
