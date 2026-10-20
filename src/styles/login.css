@@ -11,61 +11,57 @@ body,
 }
 
 body {
-  font-family: Inter, Arial, "Segoe UI", sans-serif;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .login-page {
   width: 100%;
   min-height: 100dvh;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
+  padding: 32px 16px;
+  gap: 20px;
   color: var(--color-text);
   background: var(--color-page-bg);
 }
 
-.login-mobile-shell {
-  width: min(500px, 100vw);
-  min-height: 100dvh;
-  padding: 30px 24px 36px;
-  display: grid;
-  align-content: start;
-  gap: 22px;
-  background: linear-gradient(180deg, var(--color-surface-tint) 0%, var(--bg-e0f1fb) 100%);
-}
-
 .login-brand-card,
 .login-card {
-  width: 100%;
-  border: 1px solid var(--color-border);
+  width: min(452px, 100%);
+  border: 1px solid rgba(24, 85, 130, 0.14);
   background: var(--color-surface);
-  box-shadow: 0 12px 32px rgba(24, 85, 130, 0.07);
+  box-shadow: 0 1px 3px rgba(24, 85, 130, 0.06), 0 8px 24px rgba(24, 85, 130, 0.10);
 }
 
 .login-brand-card {
-  min-height: 116px;
-  padding: 20px 24px;
+  min-height: 90px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  border-radius: 24px;
+  gap: 14px;
+  border-radius: 20px;
 }
 
 .login-brand-mark {
-  width: 66px;
-  height: 66px;
-  flex: 0 0 66px;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: 1px dashed var(--color-primary-border-light);
-  border-radius: 16px;
-  background: var(--color-surface-soft);
+  border: 1px solid rgba(24, 85, 130, 0.18);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(24, 85, 130, 0.06) 0%, rgba(24, 85, 130, 0.02) 100%);
 }
 
 .login-brand-mark img {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
 }
 
@@ -84,56 +80,62 @@ body {
 }
 
 .login-brand-card span {
-  color: var(--color-text-subtle);
-  font-size: 14px;
-  line-height: 1.35;
+  color: #4a6478;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
 }
 
 .login-card {
   padding: 28px 24px 24px;
   border-radius: 24px;
+  border-top: 2px solid rgba(24, 85, 130, 0.22);
 }
 
 .login-card-head {
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .login-card-head h1 {
   margin: 0 0 6px;
-  color: var(--color-text);
-  font-size: 24px;
-  line-height: 1.16;
-  font-weight: 800;
-  letter-spacing: -0.4px;
+  color: #0f1c28;
+  font-size: 22px;
+  line-height: 1.18;
+  font-weight: 600;
+  letter-spacing: -0.3px;
 }
 
 .login-card-head p {
   margin: 0;
-  color: var(--color-text-subtle);
-  font-size: 14px;
+  color: #556676;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 .login-form .ant-form-item {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .login-form .ant-form-item-label {
-  padding-bottom: 7px;
+  padding-bottom: 6px;
 }
 
 .login-form .ant-form-item-label > label {
-  color: var(--fg-111519);
-  font-size: 14px;
+  color: #1a2a38;
+  font-size: 13px;
   font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .login-input.ant-input-affix-wrapper,
 .login-input.ant-input,
 .login-autocomplete .ant-input-affix-wrapper {
-  min-height: 54px !important;
-  padding-inline: 15px !important;
-  border: 1px solid var(--bd-d8dfdd) !important;
-  border-radius: 14px !important;
+  min-height: 48px !important;
+  padding-inline: 14px !important;
+  border: 1.5px solid #cad8e3 !important;
+  border-radius: 12px !important;
   background: var(--color-surface) !important;
   box-shadow: none !important;
 }
@@ -145,56 +147,69 @@ body {
 .login-autocomplete .ant-input-affix-wrapper:hover,
 .login-autocomplete .ant-input-affix-wrapper-focused {
   border-color: var(--login-accent) !important;
-  box-shadow: 0 0 0 3px rgba(24, 85, 130, 0.08) !important;
+  box-shadow: 0 0 0 3px rgba(24, 85, 130, 0.09) !important;
 }
 
 .login-input .ant-input-prefix,
 .login-autocomplete .ant-input-prefix,
 .login-input .ant-input-password-icon {
-  color: var(--fg-73807c);
-  font-size: 17px;
+  color: #7a93a8;
+  font-size: 16px;
 }
 
 .login-input .ant-input,
 .login-autocomplete .ant-input {
-  color: var(--fg-111519) !important;
-  font-size: 15px !important;
+  color: #0f1c28 !important;
+  font-size: 14.5px !important;
+  font-weight: 500 !important;
   background: transparent !important;
 }
 
+.login-input .ant-input::placeholder,
+.login-autocomplete .ant-input::placeholder {
+  color: #9fb4c3 !important;
+  font-weight: 400 !important;
+}
+
 .login-button.ant-btn {
-  height: 58px;
-  margin-top: 4px;
+  height: 48px;
+  margin-top: 6px;
   border: 0 !important;
-  border-radius: 14px;
-  background: var(--login-accent) !important;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1a6098 0%, var(--login-accent) 100%) !important;
   color: #ffffff !important;
-  box-shadow: none !important;
-  font-size: 16px;
-  font-weight: 800;
+  box-shadow: 0 3px 10px rgba(24, 85, 130, 0.28) !important;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease !important;
 }
 
 .login-button.ant-btn:hover,
-.login-button.ant-btn:focus,
-.login-button.ant-btn:active {
-  background: var(--color-primary-hover) !important;
+.login-button.ant-btn:focus {
+  opacity: 0.92 !important;
+  box-shadow: 0 5px 16px rgba(24, 85, 130, 0.34) !important;
+}
+
+.login-button.ant-btn:not(:disabled):active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(24, 85, 130, 0.20) !important;
 }
 
 @media (max-width: 520px) {
-  .login-mobile-shell {
-    width: 100vw;
-    padding: 24px 18px 30px;
+  .login-page {
+    padding: 24px 16px 36px;
   }
 
   .login-brand-card,
   .login-card {
-    border-radius: 22px;
+    border-radius: 20px;
   }
 }
 
 @media (max-height: 720px) {
-  .login-mobile-shell {
-    padding-top: 18px;
+  .login-page {
+    padding-top: 20px;
     gap: 14px;
   }
 
@@ -214,6 +229,6 @@ body {
   }
 
   .login-form .ant-form-item {
-    margin-bottom: 13px;
+    margin-bottom: 12px;
   }
 }

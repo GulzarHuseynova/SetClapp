@@ -119,8 +119,7 @@ function Login({ onLoginSuccess }: LoginProps) {
 
   return (
     <section className="login-page">
-      <div className="login-mobile-shell">
-        <div className="login-brand-card">
+      <div className="login-brand-card">
           <div className="login-brand-mark">
             <img src="/setclapp-icon.png" alt="SetClapp" />
           </div>
@@ -205,7 +204,6 @@ function Login({ onLoginSuccess }: LoginProps) {
             </AppButton>
           </Form>
         </main>
-      </div>
     </section>
   );
 }
